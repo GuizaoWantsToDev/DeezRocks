@@ -15,6 +15,9 @@ public class Rock : MonoBehaviour
     [SerializeField] private float boulderRockGravity;
     [SerializeField] private float boulderRockDamage;
 
+    [SerializeField] private float destructionRadius = 1f;
+    [SerializeField] private GameObject debris;
+
     private Rigidbody2D rockRB;
     private float rockDamage;
     public enum RockType
@@ -46,9 +49,10 @@ public class Rock : MonoBehaviour
             SetDamage(boulderRockDamage);
         }
     }
-    
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
+        ContactPoint2D contact = collision.GetContact(0);
+
         //will check if the collision is within the layermask
         if ((whatDestroysRock.value & (1 << collision.gameObject.layer)) > 0)
         {
@@ -60,8 +64,19 @@ public class Rock : MonoBehaviour
                 iDamageable.Damage(rockDamage);
             }
 
+            Collider2D[] pieces = Physics2D.OverlapCircleAll(contact.point, destructionRadius);
+
+            foreach (Collider2D piece in pieces)
+            {
+                if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece"))
+                {
+                    piece.gameObject.SetActive(false);
+                    Instantiate(debris, piece.transform.position, transform.rotation);
+                }
+            }
+
             Destroy(gameObject);
-        }
+        } 
     }
 
     private void SetVelocity(float rockSpeed)

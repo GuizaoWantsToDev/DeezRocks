@@ -81,11 +81,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private float playerGravity;
 
-    //DIRECTION
-    private Vector2 mousePosition;
-    public Vector2 direction;
-
-
     //Animation
 
     [SerializeField]
@@ -111,13 +106,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         playerAnimator.SetBool("IsRunning", inputValue != 0f);
-    }
-
-    private void GetMouseDirection()
-    {
-        mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        direction = (mousePosition - (Vector2)myTransform.transform.position).normalized;
-    }
+    }  
 
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -248,9 +237,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
-        GetMouseDirection();
-
+    { 
         if (isDashing)
         {
             return;

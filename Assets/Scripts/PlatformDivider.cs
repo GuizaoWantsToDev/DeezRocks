@@ -190,28 +190,23 @@ public class PlatformDivider : MonoBehaviour
             // --- 8. TEXTURE TO SPRITE CONVERSION ---
             // We convert our painted Texture2D into a Unity Sprite. 
             // We use 'SpriteMeshType.FullRect' and '0' extrude to prevent Unity from adding invisible pixel margins around the piece, avoiding gaps.
-            Sprite pieceSprite = Sprite.Create(pieceTexture, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
+            Sprite pieceSprite = Sprite.Create(pieceTexture, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 2, SpriteMeshType.Tight);
 
-            // Create the actual empty GameObject in the Unity Scene
+
             GameObject pieceObject = new GameObject("PlatformPiece_" + pieceID.x + "_" + pieceID.y);
-
-            // --- 9. ADDING TAG AND COLLIDER ---
-            // Assigning the "Platform" tag allows player scripts to easily detect physics collisions with it.
-            pieceObject.tag = "Platform";
             pieceObject.transform.SetParent(this.transform);
+
+            pieceObject.layer = LayerMask.NameToLayer("PlatformPiece");
 
             // Calculate the exact local position to reconstruct the platform perfectly, taking the original pivot into account.
             float localX = (minX + pieceWidth / 2f - (originalPivot.x * cutSmoothness)) / pixelsPerUnit;
             float localY = (minY + pieceHeight / 2f - (originalPivot.y * cutSmoothness)) / pixelsPerUnit;
 
-            pieceObject.transform.localPosition = new Vector3(localX, localY, 0f);
-            pieceObject.transform.localScale = Vector3.one;
+            pieceObject.transform.localPosition = new Vector2(localX, localY);  
 
-            // Add the SpriteRenderer to make it visible in the game
             SpriteRenderer pieceRenderer = pieceObject.AddComponent<SpriteRenderer>();
             pieceRenderer.sprite = pieceSprite;
-
-            // Add the PolygonCollider2D. Unity will automatically draw the physics shape perfectly around our painted pixels!
+            
             pieceObject.AddComponent<PolygonCollider2D>();
             pieceObject.AddComponent<PieceCleanUp>();
         }

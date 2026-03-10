@@ -1,20 +1,34 @@
-/*using Unity.VisualScripting;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseDirection
+public class MouseDirection : MonoBehaviour
 {
-    private Vector2 mousePosition;
-    private Vector2 direction;  
-    
-    private void start()
+    public static MouseDirection Instance { get; private set; } = null;
+
+    private Vector2 mousePosition = new();
+    public Vector2 direction = new();
+    private GameObject player;
+    private void Awake()
     {
-      Transform player = player.GetComponent<TransformZ>Transform.GetComponent<PlayerController>;
-    } 
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        player = GameObject.FindWithTag("Player");
+    }
     private void GetMouseDirection()
     {
         mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         direction = (mousePosition - (Vector2)player.transform.position).normalized;
     }
+    private void Update()
+    {
+        GetMouseDirection();
+    }
 }
-*/
