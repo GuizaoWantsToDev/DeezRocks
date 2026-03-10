@@ -248,7 +248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlatformDivider
   gridColumns: 12
   gridRows: 8
-  cutSmoothness: 1
+  cutSmoothness: 2
 --- !u!212 &213117938
 SpriteRenderer:
   serializedVersion: 2
@@ -355,7 +355,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlatformDivider
   gridColumns: 12
   gridRows: 8
-  cutSmoothness: 1
+  cutSmoothness: 2
 --- !u!212 &425050341
 SpriteRenderer:
   serializedVersion: 2
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlatformDivider
   gridColumns: 12
   gridRows: 8
-  cutSmoothness: 1
+  cutSmoothness: 2
 --- !u!212 &496410949
 SpriteRenderer:
   serializedVersion: 2

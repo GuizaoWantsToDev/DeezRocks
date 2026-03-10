@@ -1,125 +1,99 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlatformDivider : MonoBehaviour
 {
-    [Header("Grid Setup")]
+    [Header("Configuração da Grelha")]
     public int gridColumns = 10;
     public int gridRows = 4;
 
-    [Header("Visuals")]
-    [Tooltip("Multiplier for virtual resolution. 2 or 3 smoothly blends diagonal cuts to remove jagged edges.")]
-    [Range(1, 4)]
-    public int cutSmoothness = 2;
-
-    private SpriteRenderer platformRenderer;
-    private Texture2D platformTexture;
+    private SpriteRenderer parentSpriteRenderer;
+    private Texture2D sourceTexture;
     private Vector2Int[,] voronoiSeedPoints;
 
-    private int imageWidth;
-    private int imageHeight;
+    private int totalImageWidth;
+    private int totalImageHeight;
     private int cellWidthPixels;
     private int cellHeightPixels;
     private float pixelsPerUnit;
 
     void Start()
     {
-        platformRenderer = GetComponent<SpriteRenderer>();;
+        parentSpriteRenderer = GetComponent<SpriteRenderer>();
+        sourceTexture = parentSpriteRenderer.sprite.texture;
 
-        platformTexture = platformRenderer.sprite.texture;
+        // --- 1. DIMENSÕES REAIS (Escala 1:1) ---
+        totalImageWidth = Mathf.RoundToInt(parentSpriteRenderer.sprite.rect.width);
+        totalImageHeight = Mathf.RoundToInt(parentSpriteRenderer.sprite.rect.height);
+        pixelsPerUnit = parentSpriteRenderer.sprite.pixelsPerUnit;
 
-        // --- 1. GETTING THE RECTANGLE SIZE & SMOOTHNESS ---
-        // We read the exact width and height of the original artwork's rectangle in pixels.
-        // Then, we multiply these dimensions by our 'cutSmoothness' multiplier.
-        // This creates a high-resolution virtual canvas, acting as Anti-Aliasing to make diagonal cuts perfectly smooth.
-        imageWidth = Mathf.RoundToInt(platformRenderer.sprite.rect.width) * cutSmoothness;
-        imageHeight = Mathf.RoundToInt(platformRenderer.sprite.rect.height) * cutSmoothness;
-        pixelsPerUnit = platformRenderer.sprite.pixelsPerUnit * cutSmoothness;
-
-        // --- 2. HOW THE GRID WORKS INSIDE THE RECTANGLE ---
-        // We divide the total image width and height by our desired columns and rows.
-        // This tells us exactly how many pixels wide and tall each invisible grid cell is.
-        // Mathf.Max ensures a cell is at least 1 pixel wide to prevent division-by-zero errors.
-        cellWidthPixels = Mathf.Max(1, imageWidth / gridColumns);
-        cellHeightPixels = Mathf.Max(1, imageHeight / gridRows);
+        // --- 2. CÁLCULO DO TAMANHO DAS CÉLULAS ---
+        cellWidthPixels = Mathf.Max(1, totalImageWidth / gridColumns);
+        cellHeightPixels = Mathf.Max(1, totalImageHeight / gridRows);
 
         GenerateSeedPoints();
-        DividePlatform();
+        DividePlatformIntoPixels();
 
-        platformRenderer.enabled = false;
+        // Esconde a plataforma original após a divisão
+        parentSpriteRenderer.enabled = false;
     }
 
     private void GenerateSeedPoints()
     {
         voronoiSeedPoints = new Vector2Int[gridColumns, gridRows];
 
-        for (int x = 0; x < gridColumns; x++)
+        for (int col = 0; col < gridColumns; col++)
         {
-            for (int y = 0; y < gridRows; y++)
+            for (int row = 0; row < gridRows; row++)
             {
-                int randomPosX = (x * cellWidthPixels) + Random.Range(0, cellWidthPixels);
-                int fixedPosY = (y * cellHeightPixels) + Random.Range(0, cellWidthPixels); //(cellHeightPixels / 2);
-
-                // Save this seed point into our array for this specific cell
-                voronoiSeedPoints[x, y] = new Vector2Int(randomPosX, fixedPosY);
+                // Gera um ponto aleatório dentro de cada célula da grelha
+                int randomX = (col * cellWidthPixels) + Random.Range(0, cellWidthPixels);
+                int randomY = (row * cellHeightPixels) + Random.Range(0, cellHeightPixels);
+                voronoiSeedPoints[col, row] = new Vector2Int(randomX, randomY);
             }
         }
     }
 
-    private void DividePlatform()
+    private void DividePlatformIntoPixels()
     {
-        // This dictionary is crucial: it groups pixels together. 
-        // The Key is the Seed Point coordinates, and the Value is the list of all pixels belonging to that seed.
+        // Agrupa os píxeis por peça (ID da semente -> Lista de Píxeis)
         Dictionary<Vector2Int, List<Vector2Int>> pixelsGroupedByPiece = new Dictionary<Vector2Int, List<Vector2Int>>();
 
-        // --- 5. CREATING THE VORONOI SHAPES ---
-        // We use a nested loop to scan every single pixel of our high-resolution virtual image (width * height).
-        for (int x = 0; x < imageWidth; x++)
+        for (int x = 0; x < totalImageWidth; x++)
         {
-            for (int y = 0; y < imageHeight; y++)
+            for (int y = 0; y < totalImageHeight; y++)
             {
-                // Find out which grid cell this specific pixel lives in
                 int currentGridX = Mathf.Clamp(x / cellWidthPixels, 0, gridColumns - 1);
                 int currentGridY = Mathf.Clamp(y / cellHeightPixels, 0, gridRows - 1);
 
                 float shortestDistance = Mathf.Infinity;
-                Vector2Int closestSeedCoordinates = new Vector2Int();
+                Vector2Int closestSeedIndex = new Vector2Int();
 
-                // --- 6. SHAPE SELECTION (THE 9-NEIGHBOR RULE) ---
-                // To figure out which shape this pixel belongs to, we don't check all seeds (which would cause lag).
-                // We only check the distance to the seed in the pixel's current cell and its 8 immediate neighbor cells.
+                // Verifica a semente da célula atual e das 8 vizinhas (Regra dos 9 vizinhos)
                 for (int offsetX = -1; offsetX <= 1; offsetX++)
                 {
                     for (int offsetY = -1; offsetY <= 1; offsetY++)
                     {
-                        int neighborCellX = currentGridX + offsetX;
-                        int neighborCellY = currentGridY + offsetY;
+                        int neighborX = currentGridX + offsetX;
+                        int neighborY = currentGridY + offsetY;
 
-                        // Skip if the neighbor cell we are trying to check is outside the platform's grid boundaries
-                        if (neighborCellX < 0 || neighborCellY < 0 || neighborCellX >= gridColumns || neighborCellY >= gridRows) continue;
+                        if (neighborX < 0 || neighborY < 0 || neighborX >= gridColumns || neighborY >= gridRows)
+                            continue;
 
-                        // Calculate the physical distance from our current pixel to this neighbor's seed point
-                        float distanceToSeed = Vector2.Distance(
-                            new Vector2(x, y),
-                            new Vector2(voronoiSeedPoints[neighborCellX, neighborCellY].x, voronoiSeedPoints[neighborCellX, neighborCellY].y)
-                        );
+                        float distance = Vector2.Distance(new Vector2(x, y), (Vector2)voronoiSeedPoints[neighborX, neighborY]);
 
-                        // If this seed is the closest one we've found so far, it becomes the new "owner" of this pixel
-                        if (distanceToSeed < shortestDistance)
+                        if (distance < shortestDistance)
                         {
-                            shortestDistance = distanceToSeed;
-                            closestSeedCoordinates = new Vector2Int(neighborCellX, neighborCellY);
+                            shortestDistance = distance;
+                            closestSeedIndex = new Vector2Int(neighborX, neighborY);
                         }
                     }
                 }
 
-                // Add this pixel to the list of the winning seed in our dictionary
-                if (!pixelsGroupedByPiece.ContainsKey(closestSeedCoordinates))
-                {
-                    pixelsGroupedByPiece[closestSeedCoordinates] = new List<Vector2Int>();
-                }
-                pixelsGroupedByPiece[closestSeedCoordinates].Add(new Vector2Int(x, y));
+                if (!pixelsGroupedByPiece.ContainsKey(closestSeedIndex))
+                    pixelsGroupedByPiece[closestSeedIndex] = new List<Vector2Int>();
+
+                pixelsGroupedByPiece[closestSeedIndex].Add(new Vector2Int(x, y));
             }
         }
 
@@ -128,85 +102,81 @@ public class PlatformDivider : MonoBehaviour
 
     private void CreatePieceGameObjects(Dictionary<Vector2Int, List<Vector2Int>> pixelsGroupedByPiece)
     {
-        int spriteStartX = Mathf.RoundToInt(platformRenderer.sprite.rect.x);
-        int spriteStartY = Mathf.RoundToInt(platformRenderer.sprite.rect.y);
-        Vector2 originalPivot = platformRenderer.sprite.pivot;
+        // Dados da Sprite original para mapeamento UV correto
+        float spriteSheetX = parentSpriteRenderer.sprite.rect.x;
+        float spriteSheetY = parentSpriteRenderer.sprite.rect.y;
+        float textureFullWidth = sourceTexture.width;
+        float textureFullHeight = sourceTexture.height;
 
-        // --- 7. SEPARATION AND CREATION OF UNIQUE GAMEOBJECTS ---
-        // We iterate through every constructed Voronoi piece in our dictionary.
-        foreach (var pieceData in pixelsGroupedByPiece)
+        // Calcula a percentagem do Pivot (ex: 0.5 para Centro)
+        Vector2 pivotOffsetPercent = new Vector2(
+            parentSpriteRenderer.sprite.pivot.x / parentSpriteRenderer.sprite.rect.width,
+            parentSpriteRenderer.sprite.pivot.y / parentSpriteRenderer.sprite.rect.height
+        );
+
+        foreach (var pieceEntry in pixelsGroupedByPiece)
         {
-            Vector2Int pieceID = pieceData.Key;
-            List<Vector2Int> piecePixels = pieceData.Value;
-
+            List<Vector2Int> piecePixels = pieceEntry.Value;
             if (piecePixels.Count == 0) continue;
 
-            // Find the exact Bounding Box (the extreme left, right, top, and bottom edges) of this specific piece.
-            // This ensures we only create a small texture as big as the piece itself, saving memory.
-            int minX = imageWidth, maxX = 0;
-            int minY = imageHeight, maxY = 0;
-
+            // Define os limites (Bounding Box) da peça individual
+            int minX = totalImageWidth, maxX = 0, minY = totalImageHeight, maxY = 0;
             foreach (Vector2Int pixel in piecePixels)
             {
-                if (pixel.x < minX) minX = pixel.x;
-                if (pixel.x > maxX) maxX = pixel.x;
-                if (pixel.y < minY) minY = pixel.y;
-                if (pixel.y > maxY) maxY = pixel.y;
+                if (pixel.x < minX) minX = pixel.x; if (pixel.x > maxX) maxX = pixel.x;
+                if (pixel.y < minY) minY = pixel.y; if (pixel.y > maxY) maxY = pixel.y;
             }
 
             int pieceWidth = maxX - minX + 1;
             int pieceHeight = maxY - minY + 1;
 
             Texture2D pieceTexture = new Texture2D(pieceWidth, pieceHeight);
-            pieceTexture.filterMode = platformTexture.filterMode;
+            pieceTexture.filterMode = sourceTexture.filterMode;
             pieceTexture.wrapMode = TextureWrapMode.Clamp;
 
-            // Ghost Background logic: We paint the invisible areas with the artwork's original colors but set Alpha to 0.
-            // This plays a huge role in the 'Smoothness' system, stopping Unity from generating dark outlines when blending the piece's edges.
+            // --- GHOST BACKGROUND (Evita fendas e outlines) ---
             for (int x = 0; x < pieceWidth; x++)
             {
                 for (int y = 0; y < pieceHeight; y++)
                 {
-                    float u = (spriteStartX + ((float)(minX + x) / cutSmoothness)) / platformTexture.width;
-                    float v = (spriteStartY + ((float)(minY + y) / cutSmoothness)) / platformTexture.height;
-
-                    Color ghostColor = platformTexture.GetPixelBilinear(u, v);
-                    ghostColor.a = 0f;
-                    pieceTexture.SetPixel(x, y, ghostColor);
+                    float u = (spriteSheetX + minX + x) / textureFullWidth;
+                    float v = (spriteSheetY + minY + y) / textureFullHeight;
+                    Color color = sourceTexture.GetPixelBilinear(u, v);
+                    color.a = 0f; // Fundo invisível mas com a cor correta
+                    pieceTexture.SetPixel(x, y, color);
                 }
             }
 
-            // Paint the actual visible pixels belonging to this piece on top of the ghost background
+            // --- PINTURA DOS PÍXEIS VISÍVEIS DA PEÇA ---
             foreach (Vector2Int pixel in piecePixels)
             {
-                float u = (spriteStartX + ((float)pixel.x / cutSmoothness)) / platformTexture.width;
-                float v = (spriteStartY + ((float)pixel.y / cutSmoothness)) / platformTexture.height;
-
-                Color pixelColor = platformTexture.GetPixelBilinear(u, v);
-                pieceTexture.SetPixel(pixel.x - minX, pixel.y - minY, pixelColor);
+                float u = (spriteSheetX + pixel.x) / textureFullWidth;
+                float v = (spriteSheetY + pixel.y) / textureFullHeight;
+                pieceTexture.SetPixel(pixel.x - minX, pixel.y - minY, sourceTexture.GetPixelBilinear(u, v));
             }
             pieceTexture.Apply();
 
-            // --- 8. TEXTURE TO SPRITE CONVERSION ---
-            // We convert our painted Texture2D into a Unity Sprite. 
-            // We use 'SpriteMeshType.FullRect' and '0' extrude to prevent Unity from adding invisible pixel margins around the piece, avoiding gaps.
-            Sprite pieceSprite = Sprite.Create(pieceTexture, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 2, SpriteMeshType.Tight);
+            // Criação do Sprite da peça
+            Sprite pieceSprite = Sprite.Create(pieceTexture, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
 
-
-            GameObject pieceObject = new GameObject("PlatformPiece_" + pieceID.x + "_" + pieceID.y);
+            // Setup do GameObject da peça
+            GameObject pieceObject = new GameObject($"PlatformPiece_{pieceEntry.Key.x}_{pieceEntry.Key.y}");
             pieceObject.transform.SetParent(this.transform);
-
             pieceObject.layer = LayerMask.NameToLayer("PlatformPiece");
 
-            // Calculate the exact local position to reconstruct the platform perfectly, taking the original pivot into account.
-            float localX = (minX + pieceWidth / 2f - (originalPivot.x * cutSmoothness)) / pixelsPerUnit;
-            float localY = (minY + pieceHeight / 2f - (originalPivot.y * cutSmoothness)) / pixelsPerUnit;
+            // --- CÁLCULO DE POSICIONAMENTO LOCAL ---
+            float pieceCenterX = minX + (pieceWidth / 2f);
+            float pieceCenterY = minY + (pieceHeight / 2f);
 
-            pieceObject.transform.localPosition = new Vector2(localX, localY);  
+            float localPosX = (pieceCenterX - (pivotOffsetPercent.x * totalImageWidth)) / pixelsPerUnit;
+            float localPosY = (pieceCenterY - (pivotOffsetPercent.y * totalImageHeight)) / pixelsPerUnit;
 
+            pieceObject.transform.localPosition = new Vector3(localPosX, localPosY, 0);
+
+            // Adiciona Componentes
             SpriteRenderer pieceRenderer = pieceObject.AddComponent<SpriteRenderer>();
             pieceRenderer.sprite = pieceSprite;
-            
+
             pieceObject.AddComponent<PolygonCollider2D>();
             pieceObject.AddComponent<PieceCleanUp>();
         }
@@ -214,15 +184,7 @@ public class PlatformDivider : MonoBehaviour
 
     private void OnValidate()
     {
-        if (gridColumns <= 0)
-        {
-            gridColumns = 1;
-            Debug.LogWarning("GridColumns is 0 or less");
-        }
-        if (gridRows <= 0)
-        {
-            gridRows = 1;
-            Debug.LogError("GridRows is 0 or less");
-        }
+        if (gridColumns <= 0) gridColumns = 1;
+        if (gridRows <= 0) gridRows = 1;
     }
 }
