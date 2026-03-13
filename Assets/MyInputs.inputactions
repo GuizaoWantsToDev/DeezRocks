@@ -100,7 +100,7 @@
                 {
                     "name": "",
                     "id": "d255add5-0147-43c3-8ef6-44629e231d65",
-                    "path": "<Mouse>/forwardButton",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -20,11 +20,7 @@ public class Debris : MonoBehaviour
         if (collision.gameObject.CompareTag("Player"))
         {
             Destroy(gameObject);
-            EnergyManager.Instance.RefiillEnergy(energyAmount);
-        }
-        if (collision.gameObject.CompareTag("Bounds"))
-        {
-            Destroy(gameObject);
+            EnergyManager.Instance.RefillEnergy(energyAmount);
         }
     }
 }
