@@ -9,12 +9,15 @@ public class Rock : MonoBehaviour
     [SerializeField] private float normalRockSpeed;
     [SerializeField] private float normalRockGravity;
     [SerializeField] private float normalRockDamage;
+    [SerializeField] public float normalEnergyCost;
 
     [Header("General Rock Stats")]
     [SerializeField] private float boulderRockSpeed;
     [SerializeField] private float boulderRockGravity;
     [SerializeField] private float boulderRockDamage;
+    [SerializeField] public float boulderEnergyCost;
 
+    [Header("Other")]
     [SerializeField] private float destructionRadius = 1f;
     [SerializeField] private GameObject debris;
 

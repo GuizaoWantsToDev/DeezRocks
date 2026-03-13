@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -29,6 +30,9 @@ public class MouseDirection : MonoBehaviour
     }
     private void Update()
     {
-        GetMouseDirection();
+        if (player == null)
+            return;
+        else
+            GetMouseDirection();
     }
 }

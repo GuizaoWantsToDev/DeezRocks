@@ -1,16 +1,13 @@
+using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Components")]
-    [SerializeField]
-    private Rigidbody2D myRigidBody2D;
-    [SerializeField]
-    private SpriteRenderer mySpriteRenderer;
+    [SerializeField] public Rigidbody2D myRigidBody2D;
+    [SerializeField] private SpriteRenderer mySpriteRenderer;
 
     [SerializeField]
     private Transform myTransform;
@@ -19,8 +16,8 @@ public class PlayerController : MonoBehaviour
     private TrailRenderer myTrailRenderer;
 
     [Header("Movement Settings")]
-    [SerializeField]
-    private float mSpeed;
+    [SerializeField] private float mSpeed; 
+    [SerializeField] private float maxVerticalSpeed;
     private float inputValue;
 
     [Header("Jump Settings")]
@@ -31,25 +28,18 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Dash Settings")]
-    [SerializeField]
-    private float dashTime;
-
-    [SerializeField]
-    private float dashCoolDown;
-
-    [SerializeField]
-    private float dashingPower;
-
+    [SerializeField] private float dashTime;
+    [SerializeField] private float dashCoolDown;
+    [SerializeField] private float dashingPower;
+        
     private bool canDash, isDashing;
     private bool dashOnCooldown;
 
     [Header("Wall Interaction")]
-    [SerializeField]
-    private float wallSlidingSpeed;
-    private bool isWalled;
+    [SerializeField] private float wallSlidingSpeed;
+    public bool isWalled;
 
-    [SerializeField]
-    private float wallJumpTime;
+    [SerializeField] private float wallJumpTime;
 
     [SerializeField]
     private Vector2 wallJumpPower;
@@ -59,36 +49,31 @@ public class PlayerController : MonoBehaviour
 
     [Header("Collision Checks")]
     private bool isGrounded;
-    [SerializeField]
-    private LayerMask groundLayer;
+    [SerializeField] private LayerMask groundLayer;
 
-    [SerializeField]
-    private Vector2 groundCheckSize;
+    [SerializeField] private Vector2 groundCheckSize;
 
-    [SerializeField]
-    private Transform groundCheck;
+    [SerializeField] private Transform groundCheck;
 
-    [SerializeField]
-    private LayerMask wallLayer;
+    [SerializeField] private LayerMask wallLayer;
 
-    [SerializeField]
-    private Vector2 wallCheckSize;
+    [SerializeField] private Vector2 wallCheckSize;
 
-    [SerializeField]
-    private Transform wallCheckHead,wallCheckFoot;
+    [SerializeField] private Transform wallCheckHead,wallCheckFoot;
 
     [Header("Physics")]
-    [SerializeField]
-    private float playerGravity;
+    [SerializeField] private float playerGravity;
 
     //Animation
 
     [SerializeField]
-    private Animator playerAnimator;
-
+    public Animator playerAnimator;
+    private bool fastFall;
+    private RockThrow rockThrow;
     private void Start()
     {
         GameManager.Instance.AddPlayer(gameObject);
+        rockThrow= GetComponent<RockThrow>();
     }
     public void OnMove(InputAction.CallbackContext context)
     {
@@ -98,42 +83,39 @@ public class PlayerController : MonoBehaviour
         }
         if (context.canceled)
         {
-            inputValue = 0f;
-
-            if (!isWallJumping) 
-            {
-                myRigidBody2D.linearVelocityX = 0f;
-            }
+            inputValue = 0f;  
         }
         playerAnimator.SetBool("IsRunning", inputValue != 0f);
     }  
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (jumpsRemaining > 0 && !isWalled)
+        if (jumpsRemaining > 0 && !isWalled && !rockThrow.inThrowState)
         {
             if (context.performed && !isDashing)
             {
                 myRigidBody2D.linearVelocityY = 0f;
                 myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
                 jumpsRemaining--;
-            }
-            else if (context.canceled)
-            {
-                myRigidBody2D.linearVelocity = new Vector2(myRigidBody2D.linearVelocity.x, myRigidBody2D.linearVelocity.y * 0.5f);
-                jumpsRemaining--;
-            }
+            } 
         }
         else if (context.performed && canWallJump && isWalled)
         { 
+            myRigidBody2D.linearVelocityY = 0f;
             isWallJumping = true;
             myTransform.right = -myTransform.right;
-            myRigidBody2D.linearVelocityY = 0f;
 
             myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
             
 
             Invoke(nameof(CancelWallJump), wallJumpTime);
+        }
+    }
+    public void OnFall(InputAction.CallbackContext context)
+    {
+        if (context.performed && !isWalled && !rockThrow.inThrowState)
+        {
+            fastFall = true;
         }
     }
     public void OnCollisionEnter2D(Collision2D collision)
@@ -155,6 +137,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        fastFall = false;
         myRigidBody2D.gravityScale = 0f;
         myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
         myTrailRenderer.emitting = true;
@@ -162,7 +145,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashTime);
 
         myTrailRenderer.emitting = false;
-        myRigidBody2D.gravityScale = playerGravity;
+        ResetGravity();
         isDashing = false;
 
         dashOnCooldown = true;
@@ -175,7 +158,6 @@ public class PlayerController : MonoBehaviour
         if (isWalled && !isGrounded)
         {
             myRigidBody2D.linearVelocity = new Vector2(myRigidBody2D.linearVelocity.x, Mathf.Max(myRigidBody2D.linearVelocityY, -wallSlidingSpeed));
-            
         }
     }
 
@@ -184,8 +166,7 @@ public class PlayerController : MonoBehaviour
         if (IsWallSliding())
         {
             isWallJumping = false;
-            canWallJump = true;
-
+            canWallJump = true; 
             CancelInvoke(nameof(CancelWallJump));
         }
         else if (!IsWallSliding()) 
@@ -201,34 +182,33 @@ public class PlayerController : MonoBehaviour
     private void GroundCheck()
     {
         if (Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer) != null)
-        {
-            myRigidBody2D.linearVelocityX = inputValue * mSpeed;
-            jumpsRemaining = maxJumps;
+        { 
             isGrounded = true; 
+            fastFall = false;
+
+            if(myRigidBody2D.linearVelocityY == 0f)
+            jumpsRemaining = maxJumps; 
         }
         else
         {
             isGrounded = false;
         }
     }
-    private bool IsWallSliding()
+    public bool IsWallSliding()
     {
         return Physics2D.OverlapBox(wallCheckHead.position, wallCheckSize, 0f, wallLayer) != null && Physics2D.OverlapBox(wallCheckFoot.position, wallCheckSize, 0f, wallLayer) != null;
-    }
-    /*private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
-        Gizmos.DrawWireCube(wallCheck.position, wallCheckSize);
-    }*/
-
+    } 
 
     private void CheckFlip()
     {
-        if (inputValue * myTransform.right.x < 0f)
+        if (inputValue * myTransform.right.x < 0f && !rockThrow.inThrowState)
         {
             myTransform.right = -myTransform.right;
         }
+    }
+    public void ResetGravity()
+    {
+        myRigidBody2D.gravityScale = playerGravity;
     }
 
     public void Die()
@@ -242,10 +222,17 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        if (!isWallJumping && inputValue != 0) 
+        if (!isWallJumping && !rockThrow.inThrowState) 
         {
             myRigidBody2D.linearVelocityX = inputValue * mSpeed;
         }
+
+        if (fastFall == true)
+        {
+            myRigidBody2D.linearVelocityY = -maxVerticalSpeed;
+        }
+        myRigidBody2D.linearVelocity = new Vector2(myRigidBody2D.linearVelocityX, Mathf.Clamp(myRigidBody2D.linearVelocityY, -maxVerticalSpeed, maxVerticalSpeed));
+        jumpsRemaining = Mathf.Clamp(jumpsRemaining, 0, maxJumps);
 
         playerAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
         playerAnimator.SetBool("IsWallSliding", IsWallSliding());
@@ -255,7 +242,7 @@ public class PlayerController : MonoBehaviour
             if (IsWallSliding() && inputValue != 0)
             {
                 isWalled = true;
-
+                jumpsRemaining = 1;
             }
             else if (!IsWallSliding())
             {

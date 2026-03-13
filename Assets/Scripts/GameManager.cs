@@ -40,7 +40,6 @@ public class GameManager : MonoBehaviour
         {
             playerController.Die();
         }
-
-        //Destroy(gameObject);
+        Destroy(other.gameObject);
     }  
 }
