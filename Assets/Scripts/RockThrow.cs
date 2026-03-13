@@ -12,6 +12,7 @@ public class RockThrow : MonoBehaviour
     [SerializeField]
     private GameObject rock;
     private GameObject rockInst;
+    private float energyCost = 2f;
 
 
     private void Start()
@@ -25,14 +26,15 @@ public class RockThrow : MonoBehaviour
 
     private void HandleRockDirection()
     {
-       throwPoint.transform.right = player.direction;
+       throwPoint.transform.right = MouseDirection.Instance.direction;
     }
 
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && EnergyManager.Instance.currentEnergy > 0f)
         {
             rockInst = Instantiate(rock, throwDirection.position, throwPoint.transform.rotation);
+            EnergyManager.Instance.UseEnergy(energyCost);
         }
-    }  
+    } 
 }

@@ -25,7 +25,7 @@ public class PieceCleanUp : MonoBehaviour
                 Destroy(piecePollygonCollider);
 
                 BoxCollider2D colliderSwitch = gameObject.AddComponent<BoxCollider2D>();
-                colliderSwitch.size = new Vector2(0.1f, 0.1f);
+                colliderSwitch.size = new Vector2(0.3f, 0.3f);
             }
     }
     private bool IsCompletelyTransparent()
