@@ -3211,6 +3211,10 @@ PrefabInstance:
       value: 1.101
       objectReference: {fileID: 0}
     - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: mSpeed
+      value: 36
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: wallJumpTime
       value: 0.3
       objectReference: {fileID: 0}
