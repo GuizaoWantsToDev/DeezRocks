@@ -26,23 +26,10 @@ public class RockThrow : MonoBehaviour
         HandleRockDirection();
 
         player.playerAnimator.SetBool("ThrowState", inThrowState);
-
     }
     private void HandleRockDirection()
     {
-        throwPoint.transform.right = MouseDirection.Instance.direction;
-        angle = Mathf.Atan2(MouseDirection.Instance.direction.y, MouseDirection.Instance.direction.x) * Mathf.Rad2Deg;
-        Vector3 localScale = Vector3.one;
-
-        if (angle > 90 || angle < -90)
-        {
-            localScale.y = -1f;
-        }
-        else
-        {
-            localScale.y = 1f;
-        }
-        throwDirection.localScale = localScale;
+        throwPoint.transform.right = MouseDirection.Instance.direction;  
     }
     public void OnThrow(InputAction.CallbackContext context)
     {
