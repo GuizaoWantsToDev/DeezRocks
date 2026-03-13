@@ -1,7 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -29,9 +31,26 @@ public class GameManager : MonoBehaviour
         }  
     }
 
+    private void Update()
+    {
+        if(players.Count <= 1)
+        {
+            StartCoroutine(ReloadGame());
+        }
+    }
+    IEnumerator ReloadGame()
+    {
+        yield return new WaitForSeconds(5f);
+        SceneManager.LoadScene("Prototype");
+    }
+
     public void AddPlayer(GameObject player)
     {
         players.Add(player);
+    }
+    public void RemovePlayer(GameObject player)
+    {
+        players.Remove(player);
     }
 
     private void OnTriggerExit2D(Collider2D other)

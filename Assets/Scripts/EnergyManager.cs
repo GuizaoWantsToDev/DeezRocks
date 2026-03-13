@@ -1,5 +1,6 @@
 using UnityEngine.UI;
 using UnityEngine;
+using System.Collections;
 
 public class EnergyManager : MonoBehaviour
 {
@@ -7,6 +8,9 @@ public class EnergyManager : MonoBehaviour
 
     [SerializeField] private Image energyBar;
     [SerializeField] private float maxEnergy = 100f;
+
+    [SerializeField] private float passiveCooldown;
+    [SerializeField] private float passiveEnergyAmount;
 
     public float currentEnergy;
 
@@ -21,6 +25,21 @@ public class EnergyManager : MonoBehaviour
             Destroy(gameObject);
         }
         currentEnergy = maxEnergy;
+        StartCoroutine(PassiveEnergy());
+    }
+
+    private void Update()
+    {
+        currentEnergy = Mathf.Clamp(currentEnergy, 0, maxEnergy);
+    }
+    IEnumerator PassiveEnergy()
+    {
+        while(true)
+        {
+            yield return new WaitForSeconds(passiveCooldown);
+            RefillEnergy(passiveEnergyAmount);
+        } 
+        
     }
 
     public void UseEnergy(float energy)
@@ -28,7 +47,7 @@ public class EnergyManager : MonoBehaviour
         currentEnergy -= energy;
         UpdateEnergyBar();
     }
-    public void RefiillEnergy(float energy)
+    public void RefillEnergy(float energy)
     {
         currentEnergy += energy;
         UpdateEnergyBar();

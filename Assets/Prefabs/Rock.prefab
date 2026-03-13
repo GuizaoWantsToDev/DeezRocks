@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4937167246935274422}
   - component: {fileID: 7185504644259293361}
   - component: {fileID: 6583019903933359413}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Rock
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,15 +172,31 @@ MonoBehaviour:
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 768
-  normalRockSpeed: 25
-  normalRockGravity: 2
-  normalRockDamage: 20
-  normalEnergyCost: 10
-  boulderRockSpeed: 20
-  boulderRockGravity: 1
-  boulderRockDamage: 40
-  boulderEnergyCost: 20
+  level1RockSize: 0
+  level1RockSpeed: 50
+  level1RockGravity: 1
+  level1RockDamage: 20
+  level1EnergyCost: 10
+  level2RockSize: 0
+  level2RockSpeed: 40
+  level2RockGravity: 1
+  level2RockDamage: 30
+  level2EnergyCost: 20
+  level3RockSize: 0
+  level3RockSpeed: 30
+  level3RockGravity: 1
+  level3RockDamage: 40
+  level3EnergyCost: 30
+  level4RockSize: 0
+  level4RockSpeed: 20
+  level4RockGravity: 1
+  level4RockDamage: 50
+  level4EnergyCost: 40
+  level5RockSize: 0
+  level5RockSpeed: 10
+  level5RockGravity: 1
+  level5RockDamage: 60
+  level5EnergyCost: 50
   destructionRadius: 3
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
-  rockEnergyCost: 0
   rockType: 0

@@ -8,12 +8,8 @@ public class PlayerController : MonoBehaviour
     [Header("Components")]
     [SerializeField] public Rigidbody2D myRigidBody2D;
     [SerializeField] private SpriteRenderer mySpriteRenderer;
-
-    [SerializeField]
-    private Transform myTransform;
-
-    [SerializeField]
-    private TrailRenderer myTrailRenderer;
+    [SerializeField] private Transform myTransform;
+    [SerializeField] private TrailRenderer myTrailRenderer;
 
     [Header("Movement Settings")]
     [SerializeField] private float mSpeed; 
@@ -68,8 +64,12 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     public Animator playerAnimator;
-    private bool fastFall;
+    public bool fastFall;
     private RockThrow rockThrow;
+    public bool isKnockBacked;
+    [SerializeField] public float knockBackTime;
+    private bool canCancel;
+
     private void Start()
     {
         GameManager.Instance.AddPlayer(gameObject);
@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed)
         {
-            inputValue = context.ReadValue<float>();
+            inputValue = context.ReadValue<float>();  
         }
         if (context.canceled)
         {
@@ -175,6 +175,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void CancelKnockBack()
+    {
+        canCancel = true;
+    }
     private void CancelWallJump()
     {
         isWallJumping = false;
@@ -213,7 +217,8 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        GameObject.Destroy(gameObject);
+        Destroy(gameObject);
+        GameManager.Instance.RemovePlayer(gameObject);
     }
 
     private void FixedUpdate()
@@ -222,9 +227,15 @@ public class PlayerController : MonoBehaviour
         {
             return;
         }
-        if (!isWallJumping && !rockThrow.inThrowState) 
+        if (!isWallJumping && !rockThrow.inThrowState && !isKnockBacked) 
         {
             myRigidBody2D.linearVelocityX = inputValue * mSpeed;
+        }
+
+        if (inputValue != 0 && canCancel)
+        {
+            isKnockBacked = false;
+            canCancel = false;
         }
 
         if (fastFall == true)
