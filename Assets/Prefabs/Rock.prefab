@@ -172,12 +172,15 @@ MonoBehaviour:
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 768
-  normalRockSpeed: 20
+  normalRockSpeed: 25
   normalRockGravity: 2
   normalRockDamage: 20
-  boulderRockSpeed: 10
+  normalEnergyCost: 10
+  boulderRockSpeed: 20
   boulderRockGravity: 1
   boulderRockDamage: 40
+  boulderEnergyCost: 20
   destructionRadius: 3
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
+  rockEnergyCost: 0
   rockType: 0

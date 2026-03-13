@@ -37,4 +37,5 @@ public class EnergyManager : MonoBehaviour
     {
         energyBar.fillAmount = currentEnergy / maxEnergy;
     }
+
 }
