@@ -62,22 +62,22 @@ public class RockThrow : MonoBehaviour
                     Rock newRock = rockInst.GetComponent<Rock>();
                     newRock.rockType = newRockType;
                     newRock.InitializeRockStats();
+                    player.isKnockBacked = true;
+
+                    player.myRigidBody2D.AddForce(-MouseDirection.Instance.direction * knockBackForce, ForceMode2D.Impulse);
                 }
-                player.isKnockBacked = true;
 
-                player.myRigidBody2D.AddForce(-MouseDirection.Instance.direction * knockBackForce, ForceMode2D.Impulse);
-
-
-                if (rock.rockType == Rock.RockType.Level1)
+                if (newRockType == Rock.RockType.Level1)
                     EnergyManager.Instance.UseEnergy(rock.level1EnergyCost);
-                else if (rock.rockType == Rock.RockType.Level2)
+                else if (newRockType == Rock.RockType.Level2)
                     EnergyManager.Instance.UseEnergy(rock.level2EnergyCost);
-                else if (rock.rockType == Rock.RockType.Level3)
+                else if (newRockType == Rock.RockType.Level3)
                     EnergyManager.Instance.UseEnergy(rock.level3EnergyCost);
-                else if (rock.rockType == Rock.RockType.Level4)
+                else if (newRockType == Rock.RockType.Level4)
                     EnergyManager.Instance.UseEnergy(rock.level4EnergyCost);
-                else if (rock.rockType == Rock.RockType.Level5)
+                else if (newRockType == Rock.RockType.Level5)
                     EnergyManager.Instance.UseEnergy(rock.level5EnergyCost);
+                
 
                 inThrowState = false;
                 armRender.enabled = false;
@@ -88,17 +88,23 @@ public class RockThrow : MonoBehaviour
     }
     private IEnumerator IncreaseRock()
     {
-        yield return new WaitForSeconds(delayInRock);
-        newRockType = Rock.RockType.Level2;
-        rockInst.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
-        yield return new WaitForSeconds(delayInRock);
-        newRockType = Rock.RockType.Level3;
-        rockInst.transform.localScale = new Vector3(2f, 2f, 0f);
-        yield return new WaitForSeconds(delayInRock);
-        newRockType = Rock.RockType.Level4;
-        rockInst.transform.localScale = new Vector3(2.5f, 2.5f, 0f);
-        yield return new WaitForSeconds(delayInRock);
-        newRockType = Rock.RockType.Level5;
-        rockInst.transform.localScale = new Vector3(3f, 3f, 0f);
+        
+             
+            yield return new WaitForSeconds(delayInRock);
+            newRockType = Rock.RockType.Level2;
+            rockInst.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
+
+            yield return new WaitForSeconds(delayInRock);
+            newRockType = Rock.RockType.Level3;
+            rockInst.transform.localScale = new Vector3(2f, 2f, 0f);
+
+            yield return new WaitForSeconds(delayInRock);
+            newRockType = Rock.RockType.Level4;
+            rockInst.transform.localScale = new Vector3(2.5f, 2.5f, 0f);
+
+            yield return new WaitForSeconds(delayInRock);
+            newRockType = Rock.RockType.Level5;
+            rockInst.transform.localScale = new Vector3(3f, 3f, 0f);
+        
     }
 }

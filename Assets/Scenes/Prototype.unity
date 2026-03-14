@@ -248,10 +248,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 563732914}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -576.22, y: 364}
-  m_SizeDelta: {x: 289.12, y: 55.025}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 144.56, y: -27.512497}
+  m_SizeDelta: {x: 289.12, y: 55.024994}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &180740749
 MonoBehaviour:
@@ -1700,6 +1700,7 @@ GameObject:
   - component: {fileID: 1339428582}
   - component: {fileID: 1339428584}
   - component: {fileID: 1339428585}
+  - component: {fileID: 1339428586}
   m_Layer: 8
   m_Name: 2
   m_TagString: Untagged
@@ -1889,6 +1890,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.0022669, y: 1.8571548}
   m_EdgeRadius: 0
+--- !u!114 &1339428586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339428576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4ec591d9115639428483451e3da88a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1416504341
 GameObject:
   m_ObjectHideFlags: 0
@@ -2241,7 +2254,7 @@ Camera:
   far clip plane: 1000
   field of view: 26.9
   orthographic: 1
-  orthographic size: 31
+  orthographic size: 40
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -2266,7 +2279,7 @@ Transform:
   m_GameObject: {fileID: 1644054405}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.21007, y: -12.58037, z: -10.4377}
+  m_LocalPosition: {x: -4.21007, y: -11.82537, z: -10.4377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2454,10 +2467,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 563732914}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -576.22, y: 364}
-  m_SizeDelta: {x: 283.12, y: 49.029}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 145.4, y: -27.3}
+  m_SizeDelta: {x: 283.12, y: 49.02899}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1787766520
 MonoBehaviour:
@@ -2683,6 +2696,7 @@ GameObject:
   - component: {fileID: 1853930604}
   - component: {fileID: 1853930605}
   - component: {fileID: 1853930603}
+  - component: {fileID: 1853930606}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2703,8 +2717,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   mapLimit: {fileID: 1853930605}
-  players:
-  - {fileID: 1339428576}
+  players: []
   playerController: {fileID: 1689960938}
 --- !u!4 &1853930604
 Transform:
@@ -2767,6 +2780,72 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 200, y: 150}
   m_EdgeRadius: 0
+--- !u!114 &1853930606
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853930602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
+  m_Actions: {fileID: -944628639613478452, guid: a9648a5b6f1b7c243946267b3e5e9650, type: 3}
+  m_NotificationBehavior: 2
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 0c338802-349a-4247-9ba2-6a02be140421
+    m_ActionName: 'Movement/Moving[/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 887c8ff8-3dc0-4dc4-8cda-50b175d95c67
+    m_ActionName: 'Movement/Jumping[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d9f38900-2247-41cb-be48-12f2e9eab6d7
+    m_ActionName: 'Movement/Dash[/Keyboard/leftShift]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7719ae1f-8c53-49d4-9ce0-72ace7c6130a
+    m_ActionName: 'Movement/RockThrow[/Keyboard/f]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2dafccfb-9d3a-41f4-8426-b60b47d3f57e
+    m_ActionName: 'Movement/Fall[/Keyboard/s]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1853930603}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: OnRestart
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: 697188cd-c06e-4144-9d4b-baad9a7bb24e
+    m_ActionName: 'Restart/Restart[/Keyboard/r]'
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Restart
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &1977616648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2816,7 +2895,7 @@ Transform:
   m_GameObject: {fileID: 1977616648}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.21007, y: -12.58037, z: -0.4377}
+  m_LocalPosition: {x: -4.21007, y: -11.82537, z: -0.4377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2974,7 +3053,7 @@ MonoBehaviour:
   LateralAdjustment: 0
   FovRange: {x: 1, y: 100}
   DollyRange: {x: -100, y: 100}
-  OrthoSizeRange: {x: 15, y: 31}
+  OrthoSizeRange: {x: 18, y: 40}
 --- !u!114 &2113867028
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3000,7 +3079,7 @@ MonoBehaviour:
     CustomLookAtTarget: 0
   Lens:
     FieldOfView: 26.9
-    OrthographicSize: 24
+    OrthographicSize: 18
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -3027,7 +3106,7 @@ Transform:
   m_GameObject: {fileID: 2113867023}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -4.21007, y: -12.58037, z: -10.4377}
+  m_LocalPosition: {x: -4.21007, y: -11.82537, z: -10.4377}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3082,7 +3161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2246492216901968377, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -6.5
+      value: -4.99
       objectReference: {fileID: 0}
     - target: {fileID: 2246492216901968377, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3221,6 +3300,18 @@ PrefabInstance:
       value: 1.101
       objectReference: {fileID: 0}
     - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: mSpeed
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: jumpPower
+      value: 28
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: dashingPower
+      value: 54
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: wallJumpTime
       value: 0.3
       objectReference: {fileID: 0}
@@ -3229,8 +3320,20 @@ PrefabInstance:
       value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: wallJumpPower.x
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: wallJumpPower.y
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: maxVerticalSpeed
-      value: 40
+      value: 44
+      objectReference: {fileID: 0}
+    - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
+      propertyPath: wallSlidingSpeed
+      value: 1.8
       objectReference: {fileID: 0}
     - target: {fileID: 8370720862507015804, guid: 751921a221ec76743a518bbf8f82768b, type: 3}
       propertyPath: groundLayer.m_Bits
