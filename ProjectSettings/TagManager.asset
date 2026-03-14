@@ -10,7 +10,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Main
   - Water
   - UI
   - Ground
@@ -18,7 +18,7 @@ TagManager:
   - Player
   - PlatformPiece
   - Rock
-  - 
+  - Debris
   - 
   - 
   - 

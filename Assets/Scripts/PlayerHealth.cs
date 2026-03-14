@@ -16,6 +16,7 @@ public class PlayerHealth : MonoBehaviour, IDamageable
 
         if (currentHealth <= 0)
         {
+            GameManager.Instance.RemovePlayer(gameObject);
             Destroy(gameObject);
         }
     }

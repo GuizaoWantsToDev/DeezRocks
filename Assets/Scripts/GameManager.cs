@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -37,6 +38,11 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(ReloadGame());
         }
+    }
+
+    public void OnRestart(InputAction.CallbackContext context)
+    {
+        SceneManager.LoadScene("Prototype");
     }
     IEnumerator ReloadGame()
     {
