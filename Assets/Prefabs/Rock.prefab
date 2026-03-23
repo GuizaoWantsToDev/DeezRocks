@@ -172,6 +172,9 @@ MonoBehaviour:
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 768
+  energyCostPerLevel: 0
+  damagePerLevel: 0
+  sizeIncreasePerLevel: 0
   level1RockSize: 0
   level1RockSpeed: 50
   level1RockGravity: 1

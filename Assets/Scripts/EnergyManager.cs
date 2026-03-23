@@ -7,7 +7,7 @@ public class EnergyManager : MonoBehaviour
     public static EnergyManager Instance { get; private set; } = null;
 
     [SerializeField] private Image energyBar;
-    [SerializeField] private float maxEnergy = 100f;
+    [SerializeField] private float maxEnergy;
 
     [SerializeField] private float passiveCooldown;
     [SerializeField] private float passiveEnergyAmount;
@@ -25,6 +25,7 @@ public class EnergyManager : MonoBehaviour
             Destroy(gameObject);
         }
         currentEnergy = maxEnergy;
+
         StartCoroutine(PassiveEnergy());
     }
 

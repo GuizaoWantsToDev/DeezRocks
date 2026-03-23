@@ -23,10 +23,9 @@ public class PieceCleanUp : MonoBehaviour
             if (piecePollygonCollider.points.Length == 5)
             {
                 Destroy(piecePollygonCollider);
-
                 BoxCollider2D colliderSwitch = gameObject.AddComponent<BoxCollider2D>();
                 colliderSwitch.size = new Vector2(0.3f, 0.3f);
-            }
+             }
     }
     private bool IsCompletelyTransparent()
     {

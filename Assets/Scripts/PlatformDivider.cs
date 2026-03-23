@@ -4,8 +4,9 @@ using UnityEngine;
 public class PlatformDivider : MonoBehaviour
 {
     [Header("Configuração da Grelha")]
-    public int gridColumns = 10;
-    public int gridRows = 4;
+    [SerializeField] private int gridColumns;
+    [SerializeField] private int gridRows;
+    [Range(0f, 1f)] public float randomness; // Controla os spikes!
 
     private SpriteRenderer parentSpriteRenderer;
     private Texture2D sourceTexture;
@@ -46,9 +47,29 @@ public class PlatformDivider : MonoBehaviour
         {
             for (int row = 0; row < gridRows; row++)
             {
-                // Gera um ponto aleatório dentro de cada célula da grelha
-                int randomX = (col * cellWidthPixels) + Random.Range(0, cellWidthPixels);
-                int randomY = (row * cellHeightPixels) + Random.Range(0, cellHeightPixels);
+                // --- O NOVO SEGREDO: Hexágonos Deitados (Flat-Topped) ---
+                float offsetY = 0f;
+                if (col % 2 != 0) // Agora olhamos para as COLUNAS ímpares (1, 3, 5...)
+                {
+                    offsetY = cellHeightPixels / 2f; // Empurra meia célula para cima/baixo
+                }
+
+                // Calcula o centro já com o empurrão no Y
+                float centerX = (col * cellWidthPixels) + (cellWidthPixels / 2f);
+                float centerY = (row * cellHeightPixels) + offsetY + (cellHeightPixels / 2f);
+
+                // Calcula a margem de manobra (Jitter)
+                float maxJitterX = (cellWidthPixels / 2f) * randomness;
+                float maxJitterY = (cellHeightPixels / 2f) * randomness;
+
+                // Planta a semente
+                int randomX = Mathf.RoundToInt(centerX + Random.Range(-maxJitterX, maxJitterX));
+                int randomY = Mathf.RoundToInt(centerY + Random.Range(-maxJitterY, maxJitterY));
+
+                // Garante que o ponto não sai da imagem (importante porque as linhas ímpares foram empurradas!)
+                randomX = Mathf.Clamp(randomX, 0, totalImageWidth - 1);
+                randomY = Mathf.Clamp(randomY, 0, totalImageHeight - 1);
+
                 voronoiSeedPoints[col, row] = new Vector2Int(randomX, randomY);
             }
         }

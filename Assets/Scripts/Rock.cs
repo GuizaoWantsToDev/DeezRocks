@@ -5,6 +5,10 @@ public class Rock : MonoBehaviour
     [Header("General Rock Stats")]
     [SerializeField] private LayerMask whatDestroysRock;
 
+    [SerializeField] private float energyCostPerLevel;
+    [SerializeField] private float damagePerLevel;
+    [SerializeField] private float sizeIncreasePerLevel;
+
     [Header("Level 1 Rock Stats")]
     [SerializeField] private float level1RockSize;
     [SerializeField] private float level1RockSpeed;
@@ -117,7 +121,7 @@ public class Rock : MonoBehaviour
                 if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece"))
                 {
                     piece.gameObject.SetActive(false);
-                    Instantiate(debris, piece.transform.position, transform.rotation);
+                   // Instantiate(debris, piece.transform.position, transform.rotation);
                 }
             }
 
