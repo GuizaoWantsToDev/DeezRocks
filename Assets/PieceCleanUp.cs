@@ -18,16 +18,27 @@ public class PieceCleanUp : MonoBehaviour
             return;
         }
 
-        FixBrokenColliders();
+        FixBrokenPieces();
     }
 
-    private void FixBrokenColliders()
+    private void FixBrokenPieces()
     {
         if (polygonCollider != null && polygonCollider.points.Length == 5)
         {
             Destroy(polygonCollider);
-            BoxCollider2D boxCollider = gameObject.AddComponent<BoxCollider2D>();
-            boxCollider.size = new Vector2(0.3f, 0.3f);
+
+            float searchRadius = 0.5f; 
+            Collider2D[] nearbyPieces = Physics2D.OverlapCircleAll(transform.position, searchRadius);
+
+            foreach (Collider2D neighbor in nearbyPieces)
+            {
+                if (neighbor.gameObject != gameObject && neighbor.gameObject.layer == gameObject.layer)
+                {
+                    transform.SetParent(neighbor.transform);
+
+                    break;
+                }
+            }
         }
     }
 

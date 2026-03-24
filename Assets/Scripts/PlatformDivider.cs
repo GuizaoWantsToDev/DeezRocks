@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlatformDivider : MonoBehaviour
@@ -78,10 +78,10 @@ public class PlatformDivider : MonoBehaviour
                 float shortestDist = Mathf.Infinity;
                 Vector2Int closestSeed = new Vector2Int();
 
-                // Check 9 neighboring cells
-                for (int offsetX = -1; offsetX <= 1; offsetX++)
+               
+                for (int offsetX = -2; offsetX <= 2; offsetX++)
                 {
-                    for (int offsetY = -1; offsetY <= 1; offsetY++)
+                    for (int offsetY = -2; offsetY <= 2; offsetY++)
                     {
                         int neighborX = gridX + offsetX;
                         int neighborY = gridY + offsetY;
