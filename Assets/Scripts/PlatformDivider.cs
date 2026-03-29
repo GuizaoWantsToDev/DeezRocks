@@ -1,196 +1,187 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlatformDivider : MonoBehaviour
 {
-    [Header("Grid Configuration")]
+    [Header("Configuração da Grelha")]
     public int gridColumns = 10;
     public int gridRows = 4;
-    [Range(0f, 1f)] public float randomness = 0.2f;
 
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer parentSpriteRenderer;
     private Texture2D sourceTexture;
-    private Vector2Int[,] seedPoints;
+    private Vector2Int[,] voronoiSeedPoints;
 
-    private int imageWidth;
-    private int imageHeight;
-    private int cellWidth;
-    private int cellHeight;
+    private int totalImageWidth;
+    private int totalImageHeight;
+    private int cellWidthPixels;
+    private int cellHeightPixels;
     private float pixelsPerUnit;
 
-    private void Start()
+    void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        sourceTexture = spriteRenderer.sprite.texture;
+        parentSpriteRenderer = GetComponent<SpriteRenderer>();
+        sourceTexture = parentSpriteRenderer.sprite.texture;
 
-        imageWidth = Mathf.RoundToInt(spriteRenderer.sprite.rect.width);
-        imageHeight = Mathf.RoundToInt(spriteRenderer.sprite.rect.height);
-        pixelsPerUnit = spriteRenderer.sprite.pixelsPerUnit;
+        // --- 1. DIMENSÕES REAIS (Escala 1:1) ---
+        totalImageWidth = Mathf.RoundToInt(parentSpriteRenderer.sprite.rect.width);
+        totalImageHeight = Mathf.RoundToInt(parentSpriteRenderer.sprite.rect.height);
+        pixelsPerUnit = parentSpriteRenderer.sprite.pixelsPerUnit;
 
-        cellWidth = Mathf.Max(1, imageWidth / gridColumns);
-        cellHeight = Mathf.Max(1, imageHeight / gridRows);
+        // --- 2. CÁLCULO DO TAMANHO DAS CÉLULAS ---
+        cellWidthPixels = Mathf.Max(1, totalImageWidth / gridColumns);
+        cellHeightPixels = Mathf.Max(1, totalImageHeight / gridRows);
 
         GenerateSeedPoints();
-        DividePlatform();
+        DividePlatformIntoPixels();
 
-        spriteRenderer.enabled = false;
+        // Esconde a plataforma original após a divisão
+        parentSpriteRenderer.enabled = false;
     }
 
     private void GenerateSeedPoints()
     {
-        seedPoints = new Vector2Int[gridColumns, gridRows];
+        voronoiSeedPoints = new Vector2Int[gridColumns, gridRows];
 
         for (int col = 0; col < gridColumns; col++)
         {
             for (int row = 0; row < gridRows; row++)
             {
-                // Flat-topped hexagon offset (zigzag on Y axis)
-                float offsetY = (col % 2 != 0) ? cellHeight / 2f : 0f;
-
-                float centerX = (col * cellWidth) + (cellWidth / 2f);
-                float centerY = (row * cellHeight) + offsetY + (cellHeight / 2f);
-
-                float maxJitterX = (cellWidth / 2f) * randomness;
-                float maxJitterY = (cellHeight / 2f) * randomness;
-
-                int randomX = Mathf.RoundToInt(centerX + Random.Range(-maxJitterX, maxJitterX));
-                int randomY = Mathf.RoundToInt(centerY + Random.Range(-maxJitterY, maxJitterY));
-
-                randomX = Mathf.Clamp(randomX, 0, imageWidth - 1);
-                randomY = Mathf.Clamp(randomY, 0, imageHeight - 1);
-
-                seedPoints[col, row] = new Vector2Int(randomX, randomY);
+                // Gera um ponto aleatório dentro de cada célula da grelha
+                int randomX = (col * cellWidthPixels) + Random.Range(0, cellWidthPixels);
+                int randomY = (row * cellHeightPixels) + Random.Range(0, cellHeightPixels);
+                voronoiSeedPoints[col, row] = new Vector2Int(randomX, randomY);
             }
         }
     }
 
-    private void DividePlatform()
+    private void DividePlatformIntoPixels()
     {
-        var pixelsByPiece = new Dictionary<Vector2Int, List<Vector2Int>>();
+        // Agrupa os píxeis por peça (ID da semente -> Lista de Píxeis)
+        Dictionary<Vector2Int, List<Vector2Int>> pixelsGroupedByPiece = new Dictionary<Vector2Int, List<Vector2Int>>();
 
-        for (int x = 0; x < imageWidth; x++)
+        for (int x = 0; x < totalImageWidth; x++)
         {
-            for (int y = 0; y < imageHeight; y++)
+            for (int y = 0; y < totalImageHeight; y++)
             {
-                int gridX = Mathf.Clamp(x / cellWidth, 0, gridColumns - 1);
-                int gridY = Mathf.Clamp(y / cellHeight, 0, gridRows - 1);
+                int currentGridX = Mathf.Clamp(x / cellWidthPixels, 0, gridColumns - 1);
+                int currentGridY = Mathf.Clamp(y / cellHeightPixels, 0, gridRows - 1);
 
-                float shortestDist = Mathf.Infinity;
-                Vector2Int closestSeed = new Vector2Int();
+                float shortestDistance = Mathf.Infinity;
+                Vector2Int closestSeedIndex = new Vector2Int();
 
-               
-                for (int offsetX = -2; offsetX <= 2; offsetX++)
+                // Verifica a semente da célula atual e das 8 vizinhas (Regra dos 9 vizinhos)
+                for (int offsetX = -1; offsetX <= 1; offsetX++)
                 {
-                    for (int offsetY = -2; offsetY <= 2; offsetY++)
+                    for (int offsetY = -1; offsetY <= 1; offsetY++)
                     {
-                        int neighborX = gridX + offsetX;
-                        int neighborY = gridY + offsetY;
+                        int neighborX = currentGridX + offsetX;
+                        int neighborY = currentGridY + offsetY;
 
                         if (neighborX < 0 || neighborY < 0 || neighborX >= gridColumns || neighborY >= gridRows)
                             continue;
 
-                        float dist = Vector2.Distance(new Vector2(x, y), (Vector2)seedPoints[neighborX, neighborY]);
+                        float distance = Vector2.Distance(new Vector2(x, y), (Vector2)voronoiSeedPoints[neighborX, neighborY]);
 
-                        if (dist < shortestDist)
+                        if (distance < shortestDistance)
                         {
-                            shortestDist = dist;
-                            closestSeed = new Vector2Int(neighborX, neighborY);
+                            shortestDistance = distance;
+                            closestSeedIndex = new Vector2Int(neighborX, neighborY);
                         }
                     }
                 }
 
-                if (!pixelsByPiece.ContainsKey(closestSeed))
-                    pixelsByPiece[closestSeed] = new List<Vector2Int>();
+                if (!pixelsGroupedByPiece.ContainsKey(closestSeedIndex))
+                    pixelsGroupedByPiece[closestSeedIndex] = new List<Vector2Int>();
 
-                pixelsByPiece[closestSeed].Add(new Vector2Int(x, y));
+                pixelsGroupedByPiece[closestSeedIndex].Add(new Vector2Int(x, y));
             }
         }
 
-        CreatePieceObjects(pixelsByPiece);
+        CreatePieceGameObjects(pixelsGroupedByPiece);
     }
 
-    private void CreatePieceObjects(Dictionary<Vector2Int, List<Vector2Int>> pixelsByPiece)
+    private void CreatePieceGameObjects(Dictionary<Vector2Int, List<Vector2Int>> pixelsGroupedByPiece)
     {
-        float sheetX = spriteRenderer.sprite.rect.x;
-        float sheetY = spriteRenderer.sprite.rect.y;
+        // Dados da Sprite original para mapeamento UV correto
+        float spriteSheetX = parentSpriteRenderer.sprite.rect.x;
+        float spriteSheetY = parentSpriteRenderer.sprite.rect.y;
+        float textureFullWidth = sourceTexture.width;
+        float textureFullHeight = sourceTexture.height;
 
-        Vector2 pivotPercent = new Vector2(
-            spriteRenderer.sprite.pivot.x / spriteRenderer.sprite.rect.width,
-            spriteRenderer.sprite.pivot.y / spriteRenderer.sprite.rect.height
+        // Calcula a percentagem do Pivot (ex: 0.5 para Centro)
+        Vector2 pivotOffsetPercent = new Vector2(
+            parentSpriteRenderer.sprite.pivot.x / parentSpriteRenderer.sprite.rect.width,
+            parentSpriteRenderer.sprite.pivot.y / parentSpriteRenderer.sprite.rect.height
         );
 
-        foreach (var piece in pixelsByPiece)
+        foreach (var pieceEntry in pixelsGroupedByPiece)
         {
-            List<Vector2Int> pixels = piece.Value;
-            if (pixels.Count == 0) continue;
+            List<Vector2Int> piecePixels = pieceEntry.Value;
+            if (piecePixels.Count == 0) continue;
 
-            int minX = imageWidth, maxX = 0, minY = imageHeight, maxY = 0;
-            foreach (Vector2Int p in pixels)
+            // Define os limites (Bounding Box) da peça individual
+            int minX = totalImageWidth, maxX = 0, minY = totalImageHeight, maxY = 0;
+            foreach (Vector2Int pixel in piecePixels)
             {
-                if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
-                if (p.y < minY) minY = p.y; if (p.y > maxY) maxY = p.y;
+                if (pixel.x < minX) minX = pixel.x; if (pixel.x > maxX) maxX = pixel.x;
+                if (pixel.y < minY) minY = pixel.y; if (pixel.y > maxY) maxY = pixel.y;
             }
 
             int pieceWidth = maxX - minX + 1;
             int pieceHeight = maxY - minY + 1;
 
-            Texture2D pieceTex = new Texture2D(pieceWidth, pieceHeight);
-            pieceTex.filterMode = FilterMode.Point; // Hard edges
-            pieceTex.wrapMode = TextureWrapMode.Clamp;
+            Texture2D pieceTexture = new Texture2D(pieceWidth, pieceHeight);
+            pieceTexture.filterMode = sourceTexture.filterMode;
+            pieceTexture.wrapMode = TextureWrapMode.Clamp;
 
-            // 1. Transparent ghost background (Hard cut)
+            // --- GHOST BACKGROUND (Evita fendas e outlines) ---
             for (int x = 0; x < pieceWidth; x++)
             {
                 for (int y = 0; y < pieceHeight; y++)
                 {
-                    int srcX = Mathf.RoundToInt(sheetX) + minX + x;
-                    int srcY = Mathf.RoundToInt(sheetY) + minY + y;
-                    Color c = sourceTexture.GetPixel(srcX, srcY);
-                    c.a = 0f;
-                    pieceTex.SetPixel(x, y, c);
+                    float u = (spriteSheetX + minX + x) / textureFullWidth;
+                    float v = (spriteSheetY + minY + y) / textureFullHeight;
+                    Color color = sourceTexture.GetPixelBilinear(u, v);
+                    color.a = 0f; // Fundo invisível mas com a cor correta
+                    pieceTexture.SetPixel(x, y, color);
                 }
             }
 
-            // 2. Solid visible pixels (Hard cut, no bilinear blurring)
-            foreach (Vector2Int p in pixels)
+            // --- PINTURA DOS PÍXEIS VISÍVEIS DA PEÇA ---
+            foreach (Vector2Int pixel in piecePixels)
             {
-                int srcX = Mathf.RoundToInt(sheetX) + p.x;
-                int srcY = Mathf.RoundToInt(sheetY) + p.y;
-                pieceTex.SetPixel(p.x - minX, p.y - minY, sourceTexture.GetPixel(srcX, srcY));
+                float u = (spriteSheetX + pixel.x) / textureFullWidth;
+                float v = (spriteSheetY + pixel.y) / textureFullHeight;
+                pieceTexture.SetPixel(pixel.x - minX, pixel.y - minY, sourceTexture.GetPixelBilinear(u, v));
             }
-            pieceTex.Apply();
+            pieceTexture.Apply();
 
-            Sprite pieceSprite = Sprite.Create(pieceTex, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
+            // Criação do Sprite da peça
+            Sprite pieceSprite = Sprite.Create(pieceTexture, new Rect(0, 0, pieceWidth, pieceHeight), new Vector2(0.5f, 0.5f), pixelsPerUnit, 0, SpriteMeshType.FullRect);
 
-            GameObject pieceObj = new GameObject($"Piece_{piece.Key.x}_{piece.Key.y}");
-            pieceObj.transform.SetParent(this.transform);
-            pieceObj.layer = LayerMask.NameToLayer("PlatformPiece");
+            // Setup do GameObject da peça
+            GameObject pieceObject = new GameObject($"PlatformPiece_{pieceEntry.Key.x}_{pieceEntry.Key.y}");
+            pieceObject.transform.SetParent(this.transform);
+            pieceObject.layer = LayerMask.NameToLayer("PlatformPiece");
 
-            float centerX = minX + (pieceWidth / 2f);
-            float centerY = minY + (pieceHeight / 2f);
+            // --- CÁLCULO DE POSICIONAMENTO LOCAL ---
+            float pieceCenterX = minX + (pieceWidth / 2f);
+            float pieceCenterY = minY + (pieceHeight / 2f);
 
-            float localX = (centerX - (pivotPercent.x * imageWidth)) / pixelsPerUnit;
-            float localY = (centerY - (pivotPercent.y * imageHeight)) / pixelsPerUnit;
+            float localPosX = (pieceCenterX - (pivotOffsetPercent.x * totalImageWidth)) / pixelsPerUnit;
+            float localPosY = (pieceCenterY - (pivotOffsetPercent.y * totalImageHeight)) / pixelsPerUnit;
 
-            pieceObj.transform.localPosition = new Vector3(localX, localY, 0);
+            pieceObject.transform.localPosition = new Vector3(localPosX, localPosY, 0);
 
-            SpriteRenderer renderer = pieceObj.AddComponent<SpriteRenderer>();
-            renderer.sprite = pieceSprite;
+            // Adiciona Componentes
+            SpriteRenderer pieceRenderer = pieceObject.AddComponent<SpriteRenderer>();
+            pieceRenderer.sprite = pieceSprite;
 
-            pieceObj.AddComponent<PolygonCollider2D>();
-            pieceObj.AddComponent<PieceCleanUp>();
-
-            // --- Gap Filler: Creates a background copy to hide seams ---
-            GameObject gapFiller = new GameObject("GapFiller");
-            gapFiller.transform.SetParent(pieceObj.transform);
-            gapFiller.transform.localPosition = new Vector3(-0.01f, -0.01f, 0.01f);
-
-            SpriteRenderer fillerRenderer = gapFiller.AddComponent<SpriteRenderer>();
-            fillerRenderer.sprite = pieceSprite;
-            fillerRenderer.sortingLayerID = renderer.sortingLayerID;
-            fillerRenderer.sortingOrder = renderer.sortingOrder - 1; // Renders behind the main piece
+            pieceObject.AddComponent<PolygonCollider2D>();
+            pieceObject.AddComponent<PieceCleanUp>();
         }
     }
+
     private void OnValidate()
     {
         if (gridColumns <= 0) gridColumns = 1;

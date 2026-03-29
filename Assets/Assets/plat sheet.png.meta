@@ -1,0 +1,475 @@
+fileFormatVersion: 2
+guid: fa6167998e79a6e439d62cc22a5835a8
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4965168589937645969
+    second: plat sheet_0
+  - first:
+      213: 2653765335406604577
+    second: plat sheet_1
+  - first:
+      213: 3399532027422676181
+    second: plat sheet_2
+  - first:
+      213: 8344387794178404644
+    second: plat sheet_3
+  - first:
+      213: -4809146441571353269
+    second: plat sheet_4
+  - first:
+      213: -8794839097413429145
+    second: plat sheet_5
+  - first:
+      213: 8668271578052832765
+    second: plat sheet_6
+  - first:
+      213: 1588309508642930012
+    second: plat sheet_7
+  - first:
+      213: -5366434272207241855
+    second: plat sheet_8
+  - first:
+      213: 878614472488794300
+    second: plat sheet_9
+  - first:
+      213: 1363771286806316647
+    second: plat sheet_10
+  - first:
+      213: -1173419706342033139
+    second: plat sheet_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: plat sheet_0
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 1342
+        width: 484
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f66e6da597d281bb0800000000000000
+      internalID: -4965168589937645969
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_1
+      rect:
+        serializedVersion: 2
+        x: 1098
+        y: 1575
+        width: 510
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 121f726238114d420800000000000000
+      internalID: 2653765335406604577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_2
+      rect:
+        serializedVersion: 2
+        x: 1795
+        y: 1263
+        width: 168
+        height: 797
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d497111e509d2f20800000000000000
+      internalID: 3399532027422676181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_3
+      rect:
+        serializedVersion: 2
+        x: 2098
+        y: 1564
+        width: 545
+        height: 308
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 421fb140d783dc370800000000000000
+      internalID: 8344387794178404644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_4
+      rect:
+        serializedVersion: 2
+        x: 2931
+        y: 1350
+        width: 484
+        height: 258
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b4d3e459aca724db0800000000000000
+      internalID: -4809146441571353269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_5
+      rect:
+        serializedVersion: 2
+        x: 1053
+        y: 1264
+        width: 612
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76894fd107472f580800000000000000
+      internalID: -8794839097413429145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_6
+      rect:
+        serializedVersion: 2
+        x: 2124
+        y: 1270
+        width: 612
+        height: 167
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfd2472e213eb4870800000000000000
+      internalID: 8668271578052832765
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_7
+      rect:
+        serializedVersion: 2
+        x: 817
+        y: 632
+        width: 169
+        height: 566
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5d7908351fca0610800000000000000
+      internalID: 1588309508642930012
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_8
+      rect:
+        serializedVersion: 2
+        x: 2775
+        y: 626
+        width: 169
+        height: 566
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18dfa9646789685b0800000000000000
+      internalID: -5366434272207241855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_9
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 173
+        width: 477
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cb836372537713c00800000000000000
+      internalID: 878614472488794300
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_10
+      rect:
+        serializedVersion: 2
+        x: 1166
+        y: 79
+        width: 476
+        height: 393
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 766c7f082c61de210800000000000000
+      internalID: 1363771286806316647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_11
+      rect:
+        serializedVersion: 2
+        x: 3085
+        y: 169
+        width: 477
+        height: 279
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d093a0f7efc27bfe0800000000000000
+      internalID: -1173419706342033139
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_12
+      rect:
+        serializedVersion: 2
+        x: 1642
+        y: 238
+        width: 544
+        height: 182
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 379fce9d5e4d7fd438265e26f12d20d2
+      internalID: -1142518934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat sheet_13
+      rect:
+        serializedVersion: 2
+        x: 2187
+        y: 85
+        width: 471
+        height: 390
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 98f4685899b30904d9e36ce90408d16a
+      internalID: -1147109075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      plat sheet_0: -4965168589937645969
+      plat sheet_1: 2653765335406604577
+      plat sheet_10: 1363771286806316647
+      plat sheet_11: -1173419706342033139
+      plat sheet_12: -1142518934
+      plat sheet_13: -1147109075
+      plat sheet_2: 3399532027422676181
+      plat sheet_3: 8344387794178404644
+      plat sheet_4: -4809146441571353269
+      plat sheet_5: -8794839097413429145
+      plat sheet_6: 8668271578052832765
+      plat sheet_7: 1588309508642930012
+      plat sheet_8: -5366434272207241855
+      plat sheet_9: 878614472488794300
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

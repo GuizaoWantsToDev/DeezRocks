@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            playerController.Die();
+            //playerController.Die();
         }
         Destroy(other.gameObject);
     }  

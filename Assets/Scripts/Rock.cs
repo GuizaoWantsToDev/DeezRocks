@@ -45,7 +45,7 @@ public class Rock : MonoBehaviour
     [SerializeField] public float level5EnergyCost;
 
     [Header("Other")]
-    [SerializeField] private float destructionRadius = 1f;
+    [SerializeField] private float destructionRadius;
     [SerializeField] private GameObject debris;
 
     private Rigidbody2D rockRB;
@@ -63,6 +63,8 @@ public class Rock : MonoBehaviour
     void Start()
     {
         rockRB = GetComponent<Rigidbody2D>();
+        CircleCollider2D rockCollider = GetComponent<CircleCollider2D>();
+        destructionRadius = rockCollider.radius;
     }
 
     public void InitializeRockStats()
@@ -121,7 +123,7 @@ public class Rock : MonoBehaviour
                 if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece"))
                 {
                     piece.gameObject.SetActive(false);
-                   // Instantiate(debris, piece.transform.position, transform.rotation);
+                    Instantiate(debris, piece.transform.position, transform.rotation);
                 }
             }
 
