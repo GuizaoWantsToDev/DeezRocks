@@ -1,0 +1,482 @@
+fileFormatVersion: 2
+guid: 23fb43a7386c1dd4faedc968d51cf941
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -1106988031102091426
+    second: plat test sketch 2_0
+  - first:
+      213: 8824518068787308131
+    second: plat test sketch 2_1
+  - first:
+      213: 7744219487154442555
+    second: plat test sketch 2_2
+  - first:
+      213: 5204040627837209676
+    second: plat test sketch 2_3
+  - first:
+      213: 4055477733714273315
+    second: plat test sketch 2_4
+  - first:
+      213: 7174918826337661824
+    second: plat test sketch 2_5
+  - first:
+      213: -6010070478045957255
+    second: plat test sketch 2_6
+  - first:
+      213: -556313989034569506
+    second: plat test sketch 2_7
+  - first:
+      213: -6071294375696778881
+    second: plat test sketch 2_8
+  - first:
+      213: -3325111382209948682
+    second: plat test sketch 2_9
+  - first:
+      213: -1246931672354593150
+    second: plat test sketch 2_10
+  - first:
+      213: 2420039040113728259
+    second: plat test sketch 2_11
+  - first:
+      213: -4894783016298611781
+    second: plat test sketch 2_12
+  - first:
+      213: -1298582161952216097
+    second: plat test sketch 2_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 1024
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: plat test sketch 2_0
+      rect:
+        serializedVersion: 2
+        x: 4883
+        y: 6654
+        width: 2028
+        height: 1223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5ffc83304033a0f0800000000000000
+      internalID: -1106988031102091426
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_1
+      rect:
+        serializedVersion: 2
+        x: 7661
+        y: 5410
+        width: 664
+        height: 3171
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3666514ed6cf67a70800000000000000
+      internalID: 8824518068787308131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_2
+      rect:
+        serializedVersion: 2
+        x: 8868
+        y: 7642
+        width: 11
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b319f7ac79ef87b60800000000000000
+      internalID: 7744219487154442555
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_3
+      rect:
+        serializedVersion: 2
+        x: 8932
+        y: 7637
+        width: 54
+        height: 8
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c4c00faf067783840800000000000000
+      internalID: 5204040627837209676
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_4
+      rect:
+        serializedVersion: 2
+        x: 9006
+        y: 6610
+        width: 2028
+        height: 1223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 324ab801383f74830800000000000000
+      internalID: 4055477733714273315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_5
+      rect:
+        serializedVersion: 2
+        x: 1630
+        y: 5725
+        width: 1923
+        height: 1023
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0837e1088ae629360800000000000000
+      internalID: 7174918826337661824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_6
+      rect:
+        serializedVersion: 2
+        x: 4704
+        y: 5415
+        width: 2434
+        height: 660
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 97332013eb0f79ca0800000000000000
+      internalID: -6010070478045957255
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_7
+      rect:
+        serializedVersion: 2
+        x: 8970
+        y: 5439
+        width: 2433
+        height: 660
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed0930cdf539748f0800000000000000
+      internalID: -556313989034569506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_8
+      rect:
+        serializedVersion: 2
+        x: 12186
+        y: 5757
+        width: 1923
+        height: 1023
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7934c1beed6ebba0800000000000000
+      internalID: -6071294375696778881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_9
+      rect:
+        serializedVersion: 2
+        x: 3764
+        y: 2897
+        width: 669
+        height: 2250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f394c8a0d4dad1d0800000000000000
+      internalID: -3325111382209948682
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_10
+      rect:
+        serializedVersion: 2
+        x: 11565
+        y: 2873
+        width: 668
+        height: 2250
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 286ee12204202bee0800000000000000
+      internalID: -1246931672354593150
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_11
+      rect:
+        serializedVersion: 2
+        x: 1562
+        y: 1068
+        width: 1895
+        height: 1107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30b5e806fa4b59120800000000000000
+      internalID: 2420039040113728259
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_12
+      rect:
+        serializedVersion: 2
+        x: 5205
+        y: 749
+        width: 5836
+        height: 1554
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bbbf7e4c7cc321cb0800000000000000
+      internalID: -4894783016298611781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat test sketch 2_13
+      rect:
+        serializedVersion: 2
+        x: 12800
+        y: 1052
+        width: 1894
+        height: 1107
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fdbed2567628afde0800000000000000
+      internalID: -1298582161952216097
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 138999fa5a8763b4ba329314f3d5b4cb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      plat test sketch 2_0: -1106988031102091426
+      plat test sketch 2_1: 8824518068787308131
+      plat test sketch 2_10: -1246931672354593150
+      plat test sketch 2_11: 2420039040113728259
+      plat test sketch 2_12: -4894783016298611781
+      plat test sketch 2_13: -1298582161952216097
+      plat test sketch 2_14: -157551661
+      plat test sketch 2_2: 7744219487154442555
+      plat test sketch 2_3: 5204040627837209676
+      plat test sketch 2_4: 4055477733714273315
+      plat test sketch 2_5: 7174918826337661824
+      plat test sketch 2_6: -6010070478045957255
+      plat test sketch 2_7: -556313989034569506
+      plat test sketch 2_8: -6071294375696778881
+      plat test sketch 2_9: -3325111382209948682
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -172,7 +172,7 @@ public class PlatformToMeshDivider : MonoBehaviour
             float localY = (centerY - (pivotPercent.y * imageHeight)) / pixelsPerUnit;
 
             pieceObj.transform.localPosition = new Vector3(localX, localY, 0);
-
+            pieceObj.transform.localScale = new Vector3(1, 1, 0);
             SpriteRenderer renderer = pieceObj.AddComponent<SpriteRenderer>();
             renderer.sprite = pieceSprite;
 
