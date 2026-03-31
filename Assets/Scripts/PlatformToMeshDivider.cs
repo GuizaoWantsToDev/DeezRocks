@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Reflection; // O PÉ DE CABRA!
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(SpriteRenderer))]
 [RequireComponent(typeof(PolygonCollider2D))]
 public class PlatformToMeshDivider : MonoBehaviour
 {
-    [Header("Configuração OG (ZigZag)")]
+    [Header("Configurações")]
     public int gridColumns = 10;
     public int gridRows = 4;
-    [Range(0f, 1f)] public float randomness = 0.2f;
-
-    [Header("Configuração de Saída")]
     public string pieceLayer = "PlatformPiece";
 
     private SpriteRenderer spriteRenderer;
     private PolygonCollider2D mainCollider;
+    private ShadowCaster2D originalShadow;
     private Texture2D sourceTexture;
     private Vector2Int[,] seedPoints;
 
@@ -25,6 +25,7 @@ public class PlatformToMeshDivider : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         mainCollider = GetComponent<PolygonCollider2D>();
+        originalShadow = GetComponent<ShadowCaster2D>();
         sourceTexture = spriteRenderer.sprite.texture;
 
         imageWidth = Mathf.RoundToInt(spriteRenderer.sprite.rect.width);
@@ -37,29 +38,31 @@ public class PlatformToMeshDivider : MonoBehaviour
         GenerateSeedPoints();
         DividePlatform();
 
+        // Limpeza final: Desligar tudo da plataforma original!
         spriteRenderer.enabled = false;
         mainCollider.enabled = false;
+        if (originalShadow != null) originalShadow.enabled = false;
     }
 
     private void GenerateSeedPoints()
     {
         seedPoints = new Vector2Int[gridColumns, gridRows];
 
+        // Randomness removido! Usamos o valor máximo (100% de desvio) diretamente
+        float halfW = cellWidth / 2f;
+        float halfH = cellHeight / 2f;
+
         for (int col = 0; col < gridColumns; col++)
         {
-            // AQUI ESTÁ A TUA CENA DOS HEXÁGONOS (ZigZag)
-            float offsetY = (col % 2 != 0) ? cellHeight / 2f : 0f;
+            float offsetY = (col % 2 != 0) ? halfH : 0f;
 
             for (int row = 0; row < gridRows; row++)
             {
-                float centerX = (col * cellWidth) + (cellWidth / 2f);
-                float centerY = (row * cellHeight) + offsetY + (cellHeight / 2f);
+                float centerX = (col * cellWidth) + halfW;
+                float centerY = (row * cellHeight) + offsetY + halfH;
 
-                float maxJitterX = (cellWidth / 2f) * randomness;
-                float maxJitterY = (cellHeight / 2f) * randomness;
-
-                int randomX = Mathf.Clamp(Mathf.RoundToInt(centerX + Random.Range(-maxJitterX, maxJitterX)), 0, imageWidth - 1);
-                int randomY = Mathf.Clamp(Mathf.RoundToInt(centerY + Random.Range(-maxJitterY, maxJitterY)), 0, imageHeight - 1);
+                int randomX = Mathf.Clamp(Mathf.RoundToInt(centerX + Random.Range(-halfW, halfW)), 0, imageWidth - 1);
+                int randomY = Mathf.Clamp(Mathf.RoundToInt(centerY + Random.Range(-halfH, halfH)), 0, imageHeight - 1);
 
                 seedPoints[col, row] = new Vector2Int(randomX, randomY);
             }
@@ -77,6 +80,7 @@ public class PlatformToMeshDivider : MonoBehaviour
             {
                 Vector3 localPos = new Vector3((x - pivot.x) / pixelsPerUnit, (y - pivot.y) / pixelsPerUnit, 0);
                 Vector3 worldPos = transform.TransformPoint(localPos);
+
                 if (!mainCollider.OverlapPoint(worldPos)) continue;
 
                 int gridX = Mathf.Clamp(x / cellWidth, 0, gridColumns - 1);
@@ -139,9 +143,8 @@ public class PlatformToMeshDivider : MonoBehaviour
             int pieceWidth = maxX - minX + 1;
             int pieceHeight = maxY - minY + 1;
 
-            // O 'false' no fim desliga os Mipmaps e impede as fendas de longe!
             Texture2D pieceTex = new Texture2D(pieceWidth, pieceHeight, TextureFormat.RGBA32, false);
-            pieceTex.filterMode = FilterMode.Point;
+            pieceTex.filterMode = FilterMode.Bilinear;
             pieceTex.wrapMode = TextureWrapMode.Clamp;
 
             for (int x = 0; x < pieceWidth; x++)
@@ -172,40 +175,55 @@ public class PlatformToMeshDivider : MonoBehaviour
             float localY = (centerY - (pivotPercent.y * imageHeight)) / pixelsPerUnit;
 
             pieceObj.transform.localPosition = new Vector3(localX, localY, 0);
-            pieceObj.transform.localScale = new Vector3(1, 1, 0);
+            pieceObj.transform.localScale = Vector3.one;
+
             SpriteRenderer renderer = pieceObj.AddComponent<SpriteRenderer>();
             renderer.sprite = pieceSprite;
 
             PolygonCollider2D poly = pieceObj.AddComponent<PolygonCollider2D>();
 
-            List<Vector2> rawPoints = new List<Vector2>(poly.points);
-            poly.points = null;
-            List<Vector2> cleanedPoints = CleanColliderPoints(rawPoints, 0.05f);
-
-            if (cleanedPoints.Count >= 3)
+            if (poly.pathCount == 0 || poly.points.Length == 5)
             {
-                poly.points = cleanedPoints.ToArray();
+                Destroy(pieceObj);
+                continue;
             }
-            else
+
+            GameObject gapFiller = new GameObject("GapFiller");
+            gapFiller.transform.SetParent(pieceObj.transform);
+            gapFiller.transform.localPosition = new Vector3(-0.02f, -0.02f, 0f);
+
+            SpriteRenderer fillerRenderer = gapFiller.AddComponent<SpriteRenderer>();
+            fillerRenderer.sprite = pieceSprite;
+            fillerRenderer.sortingLayerID = renderer.sortingLayerID;
+            fillerRenderer.sortingOrder = renderer.sortingOrder - 1;
+
+            // --- SOMBRAS NINJA COM REFLECTION ---
+            if (originalShadow != null)
             {
-                Destroy(poly);
+                ShadowCaster2D shadowCaster = pieceObj.AddComponent<ShadowCaster2D>();
+
+                shadowCaster.castsShadows = originalShadow.castsShadows;
+                shadowCaster.selfShadows = originalShadow.selfShadows;
+
+                // 1. Extraímos os pontos do nosso colisor para Vector3
+                Vector3[] shadowPath = new Vector3[poly.points.Length];
+                for (int i = 0; i < poly.points.Length; i++)
+                {
+                    shadowPath[i] = poly.points[i];
+                }
+
+                // 2. REFLECTION: Injetamos a nossa forma e malha nova!
+                FieldInfo shapeField = typeof(ShadowCaster2D).GetField("m_ShapePath", BindingFlags.NonPublic | BindingFlags.Instance);
+                FieldInfo meshField = typeof(ShadowCaster2D).GetField("m_Mesh", BindingFlags.NonPublic | BindingFlags.Instance);
+                MethodInfo onEnableMethod = typeof(ShadowCaster2D).GetMethod("OnEnable", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                if (shapeField != null && meshField != null && onEnableMethod != null)
+                {
+                    shapeField.SetValue(shadowCaster, shadowPath);
+                    meshField.SetValue(shadowCaster, new Mesh());
+                    onEnableMethod.Invoke(shadowCaster, null);
+                }
             }
         }
-    }
-
-    private List<Vector2> CleanColliderPoints(List<Vector2> vertices, float tolerance)
-    {
-        if (vertices.Count <= 1) return vertices;
-        List<Vector2> result = new List<Vector2>();
-        result.Add(vertices[0]);
-        float toleranceSq = tolerance * tolerance;
-        for (int i = 1; i < vertices.Count; i++)
-        {
-            if (Vector2.SqrMagnitude(vertices[i] - result[result.Count - 1]) > toleranceSq)
-            {
-                result.Add(vertices[i]);
-            }
-        }
-        return result;
     }
 }
