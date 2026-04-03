@@ -1,106 +1,87 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class Rock : MonoBehaviour
 {
     [Header("General Rock Stats")]
+    [SerializeField] public float baseEnergyCost;
+    [SerializeField] private float baseDamage;
+    [SerializeField] private float baseSpeed;
+    [SerializeField] private float baseGravity;
+    [SerializeField] private float extraCostPerLevel;
+    [SerializeField] private float extraDamagePerLevel;
+    [SerializeField] private float rockTimer;
+    [SerializeField] private Sprite[] rockStage;
     [SerializeField] private LayerMask whatDestroysRock;
-
-    [SerializeField] private float energyCostPerLevel;
-    [SerializeField] private float damagePerLevel;
-    [SerializeField] private float sizeIncreasePerLevel;
-
-    [Header("Level 1 Rock Stats")]
-    [SerializeField] private float level1RockSize;
-    [SerializeField] private float level1RockSpeed;
-    [SerializeField] private float level1RockGravity;
-    [SerializeField] private float level1RockDamage;
-    [SerializeField] public float level1EnergyCost;
-
-    [Header("Level 2 Rock Stats")]
-    [SerializeField] private float level2RockSize;
-    [SerializeField] private float level2RockSpeed;
-    [SerializeField] private float level2RockGravity;
-    [SerializeField] private float level2RockDamage;
-    [SerializeField] public float level2EnergyCost;
-
-    [Header("Level 3 Rock Stats")]
-    [SerializeField] private float level3RockSize;
-    [SerializeField] private float level3RockSpeed;
-    [SerializeField] private float level3RockGravity;
-    [SerializeField] private float level3RockDamage;
-    [SerializeField] public float level3EnergyCost;
-
-    [Header("Level 4 Rock Stats")]
-    [SerializeField] private float level4RockSize;
-    [SerializeField] private float level4RockSpeed;
-    [SerializeField] private float level4RockGravity;
-    [SerializeField] private float level4RockDamage;
-    [SerializeField] public float level4EnergyCost;
-
-    [Header("Level 5 Rock Stats")]
-    [SerializeField] private float level5RockSize;
-    [SerializeField] private float level5RockSpeed;
-    [SerializeField] private float level5RockGravity;
-    [SerializeField] private float level5RockDamage;
-    [SerializeField] public float level5EnergyCost;
+    private float currentRockDamage;
+    private float currentRockSpeed;
+    private int currentRockStage = 0;
 
     [Header("Other")]
-    [SerializeField] private float destructionRadius;
     [SerializeField] private GameObject debris;
+    private RockThrow rockThrow;
+    private Rigidbody2D rockRigidBody2D;
+    private CircleCollider2D rockCollider;
+    private SpriteRenderer rockSpriteRenderer;
+    private Coroutine statsCoroutine;
 
-    private Rigidbody2D rockRB;
-    private float rockDamage;
-    public enum RockType
+    private void Start()
     {
-        Level1,
-        Level2,
-        Level3,
-        Level4,
-        Level5
-    }
-    public RockType rockType;
+        rockRigidBody2D = GetComponent<Rigidbody2D>();
+        rockCollider = GetComponent<CircleCollider2D>();
+        rockSpriteRenderer = GetComponent<SpriteRenderer>();
 
-    void Start()
+        EnergyManager.Instance.UseEnergy(baseEnergyCost);
+
+        currentRockDamage = baseDamage;
+        rockRigidBody2D.gravityScale = 0;
+        rockRigidBody2D.linearVelocity = Vector2.zero;
+
+        statsCoroutine = StartCoroutine(InitializeRockStats());
+    }
+
+    public void SetThrowReference(RockThrow reference) 
     {
-        rockRB = GetComponent<Rigidbody2D>();
-        CircleCollider2D rockCollider = GetComponent<CircleCollider2D>();
-        destructionRadius = rockCollider.radius;
+        rockThrow = reference;
     }
-
-    public void InitializeRockStats()
+    private IEnumerator InitializeRockStats()
     {
-        if(rockType == RockType.Level1)
+        while (rockThrow != null && rockThrow.inThrowState)
         {
-            SetVelocity(level1RockSpeed);
-            SetRBStats(level1RockGravity);
-            SetDamage(level1RockDamage);
-        }
-        if(rockType == RockType.Level2)
-        {
-            SetVelocity(level2RockSpeed);
-            SetRBStats(level2RockGravity);
-            SetDamage(level2RockDamage);
-        }
-        if (rockType == RockType.Level3)
-        {
-            SetVelocity(level3RockSpeed);
-            SetRBStats(level3RockGravity);
-            SetDamage(level3RockDamage);
-        }
-        if(rockType == RockType.Level4)
-        {
-            SetVelocity(level4RockSpeed);
-            SetRBStats(level4RockGravity);
-            SetDamage(level4RockDamage);
-        }
-        if(rockType == RockType.Level5)
-        {
-            SetVelocity(level5RockSpeed);
-            SetRBStats(level5RockGravity);
-            SetDamage(level5RockDamage);
-        }
+            yield return new WaitForSeconds(rockTimer);
 
+            if (EnergyManager.Instance.currentEnergy >= extraCostPerLevel && currentRockStage < rockStage.Length - 1)
+            {
+                EnergyManager.Instance.UseEnergy(extraCostPerLevel);
+                currentRockStage++;
+                rockSpriteRenderer.sprite = rockStage[currentRockStage];
+                UpdateColliderSize();
+            }
+            else if (EnergyManager.Instance.currentEnergy < extraCostPerLevel)
+            {
+                break;
+            }
+        }
     }
+
+    private void UpdateColliderSize()
+    {
+        Vector3 spriteHalfSize = rockSpriteRenderer.sprite.bounds.extents;
+        rockCollider.radius = spriteHalfSize.x > spriteHalfSize.y ? spriteHalfSize.x : spriteHalfSize.y;
+    }
+
+    public void ReleaseRock(Vector2 shootDirection)
+    {
+        if (statsCoroutine != null)
+            StopCoroutine(statsCoroutine);
+
+        rockRigidBody2D.gravityScale = baseGravity;
+        rockRigidBody2D.linearVelocity = shootDirection * baseSpeed;
+
+        rockThrow = null;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         ContactPoint2D contact = collision.GetContact(0);
@@ -113,36 +94,29 @@ public class Rock : MonoBehaviour
             IDamageable iDamageable = collision.gameObject.GetComponent<IDamageable>();
             if (iDamageable != null)
             {
-                iDamageable.Damage(rockDamage);
+                iDamageable.Damage(currentRockDamage);
             }
 
-            Collider2D[] pieces = Physics2D.OverlapCircleAll(contact.point, destructionRadius);
+            Collider2D[] pieces = Physics2D.OverlapCircleAll(contact.point,rockCollider.radius);
 
             foreach (Collider2D piece in pieces)
             {
-                if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece"))
+                if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece") || piece.gameObject.layer == LayerMask.NameToLayer("PlatformTop"))
                 {
                     piece.gameObject.SetActive(false);
                     Instantiate(debris, piece.transform.position, transform.rotation);
                 }
             }
 
-            Destroy(gameObject);
+            Destroy(gameObject); 
         } 
     }
-
-    private void SetVelocity(float rockSpeed)
+    private void OnDestroy()
     {
-        rockRB.linearVelocity = transform.right * rockSpeed;
+        if (rockThrow != null && rockThrow.inThrowState)
+        {
+            rockThrow.ResetThrowState();
+            EnergyManager.Instance.StartPassiveRegen();
+        }
     }
-
-    private void SetRBStats(float RBStats)
-    {
-       rockRB.gravityScale = RBStats;
-    }
-    
-    private void SetDamage(float Damage)
-    {
-        rockDamage = Damage;
-    } 
 }

@@ -12,10 +12,14 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private Transform throwDirection;
     [SerializeField] private GameObject rockPrefab;
     [SerializeField] private float knockBackForce;
-    [SerializeField] private float delayInRock;
+
 
     private GameObject rockInst;
-    private Rock.RockType newRockType;
+
+    [Header("Cooldown Settings")]
+    [SerializeField] private float throwCooldown = 1f;
+    private float nextThrowTime;
+
 
     private void Start()
     {
@@ -24,87 +28,87 @@ public class RockThrow : MonoBehaviour
     private void Update()
     {
         HandleRockDirection();
-
         player.playerAnimator.SetBool("ThrowState", inThrowState);
+
+        if (inThrowState && rockInst != null)
+        {
+            rockInst.transform.position = throwDirection.position;
+            rockInst.transform.rotation = throwPoint.transform.rotation;
+        }
     }
     private void HandleRockDirection()
     {
-        throwPoint.transform.right = MouseDirection.Instance.direction;  
+        throwPoint.transform.right = MouseDirection.Instance.direction;
+
+        if (MouseDirection.Instance.direction.x < 0)
+        {
+            armRender.flipY = true;
+        }
+        else
+        {
+            armRender.flipY = false;
+        }
     }
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (EnergyManager.Instance.currentEnergy > 0f && !player.isWalled && !player.IsWallSliding())
+        if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
-            if (context.performed)
+            if (EnergyManager.Instance.currentEnergy >= rock.baseEnergyCost && !player.isWalled)
             {
-                newRockType = Rock.RockType.Level1;
-                rockInst = Instantiate(rockPrefab, throwDirection.position, throwPoint.transform.rotation);
-                rockInst.transform.SetParent(throwDirection);
-                rockInst.GetComponent<Rigidbody2D>().gravityScale = 0f;
                 inThrowState = true;
-                armRender.enabled = true;
-                player.fastFall = false;
+                EnergyManager.Instance.StopPassiveRegen();
 
-                player.myRigidBody2D.gravityScale = 0f;
-                player.myRigidBody2D.linearVelocityY = 0f;
-                player.myRigidBody2D.linearVelocityX = 0f;
-
-                StartCoroutine(IncreaseRock());
-            }
-
-            if (context.canceled)
-            {
-                StopAllCoroutines();
+                rockInst = Instantiate(rockPrefab, throwDirection.position, throwPoint.transform.rotation);
 
                 if (rockInst != null)
                 {
-                    rockInst.transform.SetParent(null);
-                    Rock newRock = rockInst.GetComponent<Rock>();
-                    newRock.rockType = newRockType;
-                    newRock.InitializeRockStats();
-                    player.isKnockBacked = true;
-
-                    player.myRigidBody2D.AddForce(-MouseDirection.Instance.direction * knockBackForce, ForceMode2D.Impulse);
+                    Rock newRockScript = rockInst.GetComponent<Rock>();
+                    if (newRockScript != null) newRockScript.SetThrowReference(this);
+                    armRender.enabled = true;
                 }
+            }
+        }
 
-                if (newRockType == Rock.RockType.Level1)
-                    EnergyManager.Instance.UseEnergy(rock.level1EnergyCost);
-                else if (newRockType == Rock.RockType.Level2)
-                    EnergyManager.Instance.UseEnergy(rock.level2EnergyCost);
-                else if (newRockType == Rock.RockType.Level3)
-                    EnergyManager.Instance.UseEnergy(rock.level3EnergyCost);
-                else if (newRockType == Rock.RockType.Level4)
-                    EnergyManager.Instance.UseEnergy(rock.level4EnergyCost);
-                else if (newRockType == Rock.RockType.Level5)
-                    EnergyManager.Instance.UseEnergy(rock.level5EnergyCost);
-                
+        if (context.canceled && inThrowState)
+        {
+            FireRock();
+        }
+    }
 
-                inThrowState = false;
-                armRender.enabled = false;
-                player.ResetGravity();
+    private void FireRock()
+    {
+        if (rockInst != null)
+        {
+            Rock newRock = rockInst.GetComponent<Rock>();
+            if (newRock != null)
+            {
+                Vector2 finalDirection = throwPoint.transform.right;
+                newRock.ReleaseRock(finalDirection);
+
+                player.isKnockBacked = true;
+                player.myRigidBody2D.AddForce(-finalDirection * knockBackForce, ForceMode2D.Impulse);
                 player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
             }
         }
+        nextThrowTime = Time.time + throwCooldown;
+
+        ResetThrowState();
+        EnergyManager.Instance.StartPassiveRegen();
     }
-    private IEnumerator IncreaseRock()
+
+    public void ResetThrowState()
     {
-        
-             
-            yield return new WaitForSeconds(delayInRock);
-            newRockType = Rock.RockType.Level2;
-            rockInst.transform.localScale = new Vector3(1.5f, 1.5f, 0f);
+        inThrowState = false;
+        armRender.enabled = false;
+        rockInst = null;
+        player.ResetGravity();
+        player.playerAnimator.SetBool("ThrowState", false);
+    }
 
-            yield return new WaitForSeconds(delayInRock);
-            newRockType = Rock.RockType.Level3;
-            rockInst.transform.localScale = new Vector3(2f, 2f, 0f);
 
-            yield return new WaitForSeconds(delayInRock);
-            newRockType = Rock.RockType.Level4;
-            rockInst.transform.localScale = new Vector3(2.5f, 2.5f, 0f);
-
-            yield return new WaitForSeconds(delayInRock);
-            newRockType = Rock.RockType.Level5;
-            rockInst.transform.localScale = new Vector3(3f, 3f, 0f);
-        
+    public void ForceRelease()
+    {
+        if (inThrowState) 
+            FireRock();
     }
 }

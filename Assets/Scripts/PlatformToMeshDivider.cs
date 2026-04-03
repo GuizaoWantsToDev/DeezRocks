@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Reflection; // O PÉ DE CABRA!
+using System.Reflection; // O nosso Pé de Cabra original!
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(SpriteRenderer))]
@@ -38,7 +39,6 @@ public class PlatformToMeshDivider : MonoBehaviour
         GenerateSeedPoints();
         DividePlatform();
 
-        // Limpeza final: Desligar tudo da plataforma original!
         spriteRenderer.enabled = false;
         mainCollider.enabled = false;
         if (originalShadow != null) originalShadow.enabled = false;
@@ -48,7 +48,6 @@ public class PlatformToMeshDivider : MonoBehaviour
     {
         seedPoints = new Vector2Int[gridColumns, gridRows];
 
-        // Randomness removido! Usamos o valor máximo (100% de desvio) diretamente
         float halfW = cellWidth / 2f;
         float halfH = cellHeight / 2f;
 
@@ -182,7 +181,7 @@ public class PlatformToMeshDivider : MonoBehaviour
 
             PolygonCollider2D poly = pieceObj.AddComponent<PolygonCollider2D>();
 
-            if (poly.pathCount == 0 || poly.points.Length == 5)
+            if (poly.pathCount == 0 || poly.points.Length < 3)
             {
                 Destroy(pieceObj);
                 continue;
@@ -197,30 +196,27 @@ public class PlatformToMeshDivider : MonoBehaviour
             fillerRenderer.sortingLayerID = renderer.sortingLayerID;
             fillerRenderer.sortingOrder = renderer.sortingOrder - 1;
 
-            // --- SOMBRAS NINJA COM REFLECTION ---
+            // --- A TUA DESCOBERTA DE MESTRE EM AÇÃO ---
             if (originalShadow != null)
             {
                 ShadowCaster2D shadowCaster = pieceObj.AddComponent<ShadowCaster2D>();
-
                 shadowCaster.castsShadows = originalShadow.castsShadows;
                 shadowCaster.selfShadows = originalShadow.selfShadows;
 
-                // 1. Extraímos os pontos do nosso colisor para Vector3
-                Vector3[] shadowPath = new Vector3[poly.points.Length];
-                for (int i = 0; i < poly.points.Length; i++)
+                // Em vez de injetar vértices e hashes, invadimos o campo privado que gere aquele Dropdown!
+                // O nome da variável por trás do Dropdown é "m_CastingSource"
+                FieldInfo castingSourceField = typeof(ShadowCaster2D).GetField("m_CastingSource", BindingFlags.NonPublic | BindingFlags.Instance);
+
+                if (castingSourceField != null)
                 {
-                    shadowPath[i] = poly.points[i];
+                    // 2 = ShapeProvider (que o Unity mapeia diretamente para o PolygonCollider2D)
+                    castingSourceField.SetValue(shadowCaster, 2);
                 }
 
-                // 2. REFLECTION: Injetamos a nossa forma e malha nova!
-                FieldInfo shapeField = typeof(ShadowCaster2D).GetField("m_ShapePath", BindingFlags.NonPublic | BindingFlags.Instance);
-                FieldInfo meshField = typeof(ShadowCaster2D).GetField("m_Mesh", BindingFlags.NonPublic | BindingFlags.Instance);
+                // O Unity às vezes precisa de um empurrãozinho para atualizar a variável no mesmo frame
                 MethodInfo onEnableMethod = typeof(ShadowCaster2D).GetMethod("OnEnable", BindingFlags.NonPublic | BindingFlags.Instance);
-
-                if (shapeField != null && meshField != null && onEnableMethod != null)
+                if (onEnableMethod != null)
                 {
-                    shapeField.SetValue(shadowCaster, shadowPath);
-                    meshField.SetValue(shadowCaster, new Mesh());
                     onEnableMethod.Invoke(shadowCaster, null);
                 }
             }

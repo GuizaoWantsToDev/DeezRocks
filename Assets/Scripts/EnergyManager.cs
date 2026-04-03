@@ -14,6 +14,9 @@ public class EnergyManager : MonoBehaviour
 
     public float currentEnergy;
 
+    [SerializeField] private RockThrow rockThrow;
+
+    private Coroutine passiveEnergyCoroutine;
     private void Awake()
     {
         if (Instance == null)
@@ -26,21 +29,37 @@ public class EnergyManager : MonoBehaviour
         }
         currentEnergy = maxEnergy;
 
-        StartCoroutine(PassiveEnergy());
+    }
+    private void Start()
+    {
+        StartPassiveRegen();
+    }
+    public void StartPassiveRegen()
+    {
+        StopPassiveRegen();
+        passiveEnergyCoroutine = StartCoroutine(PassiveEnergy());
     }
 
-    private void Update()
+    public void StopPassiveRegen()
     {
-        currentEnergy = Mathf.Clamp(currentEnergy, 0, maxEnergy);
-    }
-    IEnumerator PassiveEnergy()
-    {
-        while(true)
+        if (passiveEnergyCoroutine != null)
         {
-            yield return new WaitForSeconds(passiveCooldown);
-            RefillEnergy(passiveEnergyAmount);
-        } 
-        
+            StopCoroutine(passiveEnergyCoroutine);
+            passiveEnergyCoroutine = null;
+        }
+    }
+
+    private IEnumerator PassiveEnergy()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds (passiveCooldown);
+
+            if (currentEnergy < maxEnergy)
+            {
+                RefillEnergy(passiveEnergyAmount);
+            }
+        }
     }
 
     public void UseEnergy(float energy)

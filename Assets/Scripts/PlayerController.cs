@@ -69,7 +69,7 @@ public class PlayerController : MonoBehaviour
     public bool isKnockBacked;
     [SerializeField] public float knockBackTime;
     private bool canCancel;
-
+   
     private void Start()
     {
         GameManager.Instance.AddPlayer(gameObject);
@@ -94,22 +94,32 @@ public class PlayerController : MonoBehaviour
         {
             if (context.performed && !isDashing)
             {
-                myRigidBody2D.linearVelocityY = 0f;
-                myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
-                jumpsRemaining--;
+                Jump();
             } 
         }
         else if (context.performed && canWallJump && isWalled)
-        { 
-            myRigidBody2D.linearVelocityY = 0f;
-            isWallJumping = true;
-            myTransform.right = -myTransform.right;
-
-            myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
-            
-
-            Invoke(nameof(CancelWallJump), wallJumpTime);
+        {
+            WallJump(); 
         }
+    }
+
+    private void Jump()
+    {
+        myRigidBody2D.linearVelocityY = 0f;
+        myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
+        jumpsRemaining--;
+    }
+
+    private void WallJump()
+    {
+        myRigidBody2D.linearVelocityY = 0f;
+        isWallJumping = true;
+        myTransform.right = -myTransform.right;
+
+        myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
+
+
+        Invoke(nameof(CancelWallJump), wallJumpTime);
     }
     public void OnFall(InputAction.CallbackContext context)
     {
@@ -161,7 +171,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void WallJump()
+    private void HandleWallJump()
     {
         if (IsWallSliding())
         {
@@ -201,15 +211,26 @@ public class PlayerController : MonoBehaviour
     public bool IsWallSliding()
     {
         return Physics2D.OverlapBox(wallCheckHead.position, wallCheckSize, 0f, wallLayer) != null && Physics2D.OverlapBox(wallCheckFoot.position, wallCheckSize, 0f, wallLayer) != null;
-    } 
+    }
 
     private void CheckFlip()
     {
-        if (inputValue * myTransform.right.x < 0f && !rockThrow.inThrowState)
+        if (rockThrow.inThrowState)
+        {
+            float mousePosX = MouseDirection.Instance.direction.x;
+
+            if (mousePosX > 0 && myTransform.right.x < 0) myTransform.right = Vector3.right;
+            else if (mousePosX < 0 && myTransform.right.x > 0) myTransform.right = Vector3.left;
+
+            return;
+        }
+
+        if (inputValue * myTransform.right.x < 0f)
         {
             myTransform.right = -myTransform.right;
         }
     }
+
     public void ResetGravity()
     {
         myRigidBody2D.gravityScale = playerGravity;
@@ -222,14 +243,28 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    { 
+    {
+
+        Debug.Log("Current Velocity: " + myRigidBody2D.linearVelocityY);
+
         if (isDashing)
         {
             return;
         }
-        if (!isWallJumping && !rockThrow.inThrowState && !isKnockBacked) 
+        GroundCheck();
+
+        if (rockThrow.inThrowState)
         {
-            myRigidBody2D.linearVelocityX = inputValue * mSpeed;
+            myRigidBody2D.linearVelocity = Vector2.zero;
+            myRigidBody2D.gravityScale = 0; 
+        }
+        else
+        {
+            if (!isWallJumping && !isKnockBacked)
+            {
+                myRigidBody2D.linearVelocityX = inputValue * mSpeed;
+            }
+            ResetGravity(); 
         }
 
         if (inputValue != 0 && canCancel)
@@ -259,18 +294,14 @@ public class PlayerController : MonoBehaviour
             {
                 isWalled = false;
             }
-
-            GroundCheck();
-            WallJump();
+              
+            HandleWallJump();
             WallSlide();
             CheckFlip();
 
-            if (!canDash && !isDashing && !dashOnCooldown)
+            if (!isDashing && !dashOnCooldown && isGrounded ^ isWalled)
             {
-                if (isGrounded || isWalled)
-                {
-                    canDash = true;
-                }
+                canDash = true;
             }
         }
     }

@@ -114,7 +114,7 @@ TextureImporter:
         width: 2321
         height: 722
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -132,11 +132,11 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 5193
-        y: 771
+        y: 769
         width: 1901
-        height: 1532
+        height: 1443
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -158,7 +158,7 @@ TextureImporter:
         width: 1901
         height: 1532
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -167,6 +167,28 @@ TextureImporter:
       bones: []
       spriteID: df7f671c4cc39a760800000000000000
       internalID: 7469568272727734269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: plat_test_sketch_2_3
+      rect:
+        serializedVersion: 2
+        x: 5194
+        y: 2210
+        width: 1898
+        height: 169
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87e554b6e5e0c3f45b2b0e2baa89e306
+      internalID: -1328368683
       vertices: []
       indices: 
       edges: []
@@ -188,6 +210,7 @@ TextureImporter:
       plat_test_sketch_2_0: -7077784146162682505
       plat_test_sketch_2_1: 7494146392532344845
       plat_test_sketch_2_2: 7469568272727734269
+      plat_test_sketch_2_3: -1328368683
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
