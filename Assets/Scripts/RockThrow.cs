@@ -6,6 +6,7 @@ public class RockThrow : MonoBehaviour
     private PlayerController player;
     public bool inThrowState;
     private float angle;
+    [SerializeField] private ParticleSystem particleSystems;
     [SerializeField] private SpriteRenderer armRender;
     [SerializeField] private Rock rock;
     [SerializeField] private GameObject throwPoint;
@@ -53,6 +54,7 @@ public class RockThrow : MonoBehaviour
     {
         if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
+
             if (EnergyManager.Instance.currentEnergy >= rock.baseEnergyCost && !player.isWalled)
             {
                 inThrowState = true;
@@ -75,8 +77,10 @@ public class RockThrow : MonoBehaviour
         }
     }
 
+   
     private void FireRock()
     {
+        
         if (rockInst != null)
         {
             Rock newRock = rockInst.GetComponent<Rock>();

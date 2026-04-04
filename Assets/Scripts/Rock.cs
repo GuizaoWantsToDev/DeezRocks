@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class Rock : MonoBehaviour
 {
     [Header("General Rock Stats")]
+    [SerializeField] private ParticleSystem chargeParticles;
     [SerializeField] public float baseEnergyCost;
     [SerializeField] private float baseDamage;
     [SerializeField] private float baseSpeed;
@@ -44,6 +45,9 @@ public class Rock : MonoBehaviour
     public void SetThrowReference(RockThrow reference) 
     {
         rockThrow = reference;
+        if (chargeParticles != null) chargeParticles.Play();
+
+
     }
     private IEnumerator InitializeRockStats()
     {
@@ -73,6 +77,7 @@ public class Rock : MonoBehaviour
 
     public void ReleaseRock(Vector2 shootDirection)
     {
+        if (chargeParticles != null) chargeParticles.Stop();
         if (statsCoroutine != null)
             StopCoroutine(statsCoroutine);
 
