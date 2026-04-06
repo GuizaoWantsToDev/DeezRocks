@@ -4949,7 +4949,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 2305
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -5017,11 +5017,11 @@ MonoBehaviour:
   extraDamagePerLevel: 10
   rockTimer: 2
   rockStage:
-  - {fileID: -5326963493308201217, guid: e072e069021c5924580d3f0892547d51, type: 3}
-  - {fileID: 8960278200517875464, guid: 31b687f6fb329a54e96944f06f673d7c, type: 3}
-  - {fileID: -661495608718877415, guid: 2b2cf411c92892341ae72dc08c2a4883, type: 3}
-  - {fileID: 2785764260875272861, guid: 2b2cf411c92892341ae72dc08c2a4883, type: 3}
-  - {fileID: -3887129528724398779, guid: 2b2cf411c92892341ae72dc08c2a4883, type: 3}
+  - {fileID: -1894573627690008434, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
+  - {fileID: 5272243715567677623, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
+  - {fileID: -2816086624024197602, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
+  - {fileID: -7805504018878560290, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
+  - {fileID: 81909648652747967, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 16896

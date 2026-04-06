@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -77,7 +78,9 @@ public class Rock : MonoBehaviour
 
     public void ReleaseRock(Vector2 shootDirection)
     {
-        if (chargeParticles != null) chargeParticles.Stop();
+        if (chargeParticles != null)
+            chargeParticles.gameObject.SetActive(false);
+
         if (statsCoroutine != null)
             StopCoroutine(statsCoroutine);
 

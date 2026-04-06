@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 public class RockThrow : MonoBehaviour
 {
     private PlayerController player;
@@ -14,18 +15,17 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private GameObject rockPrefab;
     [SerializeField] private float knockBackForce;
 
-
     private GameObject rockInst;
 
     [Header("Cooldown Settings")]
     [SerializeField] private float throwCooldown = 1f;
     private float nextThrowTime;
 
-
     private void Start()
     {
         player = GetComponent<PlayerController>();
     }
+
     private void Update()
     {
         HandleRockDirection();
@@ -37,6 +37,7 @@ public class RockThrow : MonoBehaviour
             rockInst.transform.rotation = throwPoint.transform.rotation;
         }
     }
+
     private void HandleRockDirection()
     {
         throwPoint.transform.right = MouseDirection.Instance.direction;
@@ -50,11 +51,11 @@ public class RockThrow : MonoBehaviour
             armRender.flipY = false;
         }
     }
+
     public void OnThrow(InputAction.CallbackContext context)
     {
         if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
-
             if (EnergyManager.Instance.currentEnergy >= rock.baseEnergyCost && !player.isWalled)
             {
                 inThrowState = true;
@@ -77,10 +78,8 @@ public class RockThrow : MonoBehaviour
         }
     }
 
-   
     private void FireRock()
     {
-        
         if (rockInst != null)
         {
             Rock newRock = rockInst.GetComponent<Rock>();
@@ -105,14 +104,12 @@ public class RockThrow : MonoBehaviour
         inThrowState = false;
         armRender.enabled = false;
         rockInst = null;
-        player.ResetGravity();
         player.playerAnimator.SetBool("ThrowState", false);
     }
 
-
     public void ForceRelease()
     {
-        if (inThrowState) 
+        if (inThrowState)
             FireRock();
     }
 }

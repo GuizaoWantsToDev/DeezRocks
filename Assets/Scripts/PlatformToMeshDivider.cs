@@ -199,7 +199,7 @@ public class PlatformToMeshDivider : MonoBehaviour
             // --- A TUA DESCOBERTA DE MESTRE EM AÇÃO ---
             if (originalShadow != null)
             {
-                ShadowCaster2D shadowCaster = pieceObj.AddComponent<ShadowCaster2D>();
+               /* ShadowCaster2D shadowCaster = pieceObj.AddComponent<ShadowCaster2D>();
                 shadowCaster.castsShadows = originalShadow.castsShadows;
                 shadowCaster.selfShadows = originalShadow.selfShadows;
 
@@ -218,7 +218,7 @@ public class PlatformToMeshDivider : MonoBehaviour
                 if (onEnableMethod != null)
                 {
                     onEnableMethod.Invoke(shadowCaster, null);
-                }
+                }*/
             }
         }
     }
