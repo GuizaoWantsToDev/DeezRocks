@@ -15,7 +15,7 @@ public class Debris : MonoBehaviour
         debrisRigidBody2D.AddForce(Vector2.up * debrisSpawnBoost, ForceMode2D.Impulse);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {

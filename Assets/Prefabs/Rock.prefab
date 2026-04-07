@@ -4964,7 +4964,7 @@ CircleCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 0
-  m_UsedByEffector: 1
+  m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
@@ -5024,8 +5024,9 @@ MonoBehaviour:
   - {fileID: 81909648652747967, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
   whatDestroysRock:
     serializedVersion: 2
-    m_Bits: 16896
+    m_Bits: 576
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
+  shockWaveManager: {fileID: 7947344431761379559, guid: 23f5c58ae1641674caf9b17349710ae9, type: 3}
 --- !u!114 &-1718670401079746667
 MonoBehaviour:
   m_ObjectHideFlags: 0

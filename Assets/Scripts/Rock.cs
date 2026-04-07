@@ -2,6 +2,7 @@ using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static UnityEngine.Audio.ProcessorInstance;
 
 public class Rock : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class Rock : MonoBehaviour
 
     [Header("Other")]
     [SerializeField] private GameObject debris;
+    [SerializeField] private GameObject shockWaveManager;
     private RockThrow rockThrow;
     private Rigidbody2D rockRigidBody2D;
     private CircleCollider2D rockCollider;
@@ -107,11 +109,15 @@ public class Rock : MonoBehaviour
 
             Collider2D[] pieces = Physics2D.OverlapCircleAll(contact.point,rockCollider.radius);
 
+            Instantiate(shockWaveManager, contact.point, transform.rotation);
+
             foreach (Collider2D piece in pieces)
             {
                 if (piece.gameObject.layer == LayerMask.NameToLayer("PlatformPiece") || piece.gameObject.layer == LayerMask.NameToLayer("PlatformTop"))
                 {
                     piece.gameObject.SetActive(false);
+
+                    
                     Instantiate(debris, piece.transform.position, transform.rotation);
                 }
             }

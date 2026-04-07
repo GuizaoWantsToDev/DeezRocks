@@ -1,93 +1,81 @@
-#if UNITY_EDITOR
-using UnityEditor;
+ï»¿using UnityEditor;
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-[CustomEditor(typeof(PlatformGenerator))]
-public class PlatformBakerEditor : Editor
+public class PlatformBakerMenu
 {
-    private PlatformGenerator baker;
-    private string basePiecesPath;
-
-    public override void OnInspectorGUI()
+    [MenuItem("Prefabs/Prefab The Selected Platform")]
+    public static void BakeSelectedPlatform()
     {
-        DrawDefaultInspector(); // Desenha as variáveis normais
+        GameObject selectedPlatform = Selection.activeGameObject;
 
-        baker = (PlatformGenerator)target;
-
-        GUILayout.Space(20);
-        GUI.backgroundColor = Color.green;
-
-        if (GUILayout.Button("?? BAKE PLATFORM TO PREFAB ??", GUILayout.Height(40)))
+        if (selectedPlatform == null)
         {
-            PrepareFolders();
-            ExecuteBake();
+            Debug.LogWarning("ERROR: No platform selected.");
+            return;
         }
-        GUI.backgroundColor = Color.white;
+
+        PlatformGridGenerator platform = selectedPlatform.GetComponent<PlatformGridGenerator>();
+
+        if (platform == null)
+        {
+            Debug.LogWarning($"ERROR: The selected platform '{selectedPlatform.name}' doesn't have the script PlatformGridGenerator");
+            return;
+        }
+
+        platform.platformSpriterenderer = platform.GetComponent<SpriteRenderer>();
+        platform.platformCollider = platform.GetComponent<PolygonCollider2D>();
+
+        MakePlatformPrefab(platform);
     }
 
-    private void PrepareFolders()
+    private static void MakePlatformPrefab(PlatformGridGenerator platform)
     {
-        // Cria a pasta principal: Assets/BakedPlatforms/NomeDaPlataforma
-        string rootPath = "Assets/BakedPlatforms";
-        if (!AssetDatabase.IsValidFolder(rootPath)) AssetDatabase.CreateFolder("Assets", "BakedPlatforms");
+        string platformName = platform.gameObject.name;
+        string baseRootPath = "Assets/Prefabs/Platforms";
 
-        string platformPath = $"{rootPath}/{baker.folderName}";
-        if (!AssetDatabase.IsValidFolder(platformPath)) AssetDatabase.CreateFolder(rootPath, baker.folderName);
+        string basePiecesPath = $"{baseRootPath}/Pieces";
 
-        // Cria subpasta para as Texturas (PNGs)
-        basePiecesPath = $"{platformPath}/Pieces";
-        if (!AssetDatabase.IsValidFolder(basePiecesPath)) AssetDatabase.CreateFolder(platformPath, "Pieces");
-    }
+        Texture2D sourceTexture = platform.platformSpriterenderer.sprite.texture;
+        int imageWidth = Mathf.RoundToInt(platform.platformSpriterenderer.sprite.rect.width);
+        int imageHeight = Mathf.RoundToInt(platform.platformSpriterenderer.sprite.rect.height);
+        float ppu = platform.platformSpriterenderer.sprite.pixelsPerUnit;
+        float sheetX = platform.platformSpriterenderer.sprite.rect.x;
+        float sheetY = platform.platformSpriterenderer.sprite.rect.y;
 
-    private void ExecuteBake()
-    {
-        if (baker.spriteRenderer.sprite == null) { Debug.LogError("Falta a Sprite original!"); return; }
+        int cellW = Mathf.Max(1, imageWidth / platform.gridColumns);
+        int cellH = Mathf.Max(1, imageHeight / platform.gridRows);
 
-        // --- 1. SETTINGS INICIAIS ---
-        Texture2D sourceTexture = baker.spriteRenderer.sprite.texture;
-        int imgW = Mathf.RoundToInt(baker.spriteRenderer.sprite.rect.width);
-        int imgH = Mathf.RoundToInt(baker.spriteRenderer.sprite.rect.height);
-        float ppu = baker.spriteRenderer.sprite.pixelsPerUnit;
-        float sheetX = baker.spriteRenderer.sprite.rect.x;
-        float sheetY = baker.spriteRenderer.sprite.rect.y;
-
-        int cellW = Mathf.Max(1, imgW / baker.gridColumns);
-        int cellH = Mathf.Max(1, imgH / baker.gridRows);
-
-        // --- 2. GERAR PONTOS VORONOI (Caos Máximo) ---
-        Vector2Int[,] seedPoints = new Vector2Int[baker.gridColumns, baker.gridRows];
+        Vector2Int[,] seedPoints = new Vector2Int[platform.gridColumns, platform.gridRows];
         float halfW = cellW / 2f; float halfH = cellH / 2f;
-        for (int c = 0; c < baker.gridColumns; c++)
+        for (int c = 0; c < platform.gridColumns; c++)
         {
             float offY = (c % 2 != 0) ? halfH : 0f;
-            for (int r = 0; r < baker.gridRows; r++)
+            for (int r = 0; r < platform.gridRows; r++)
             {
                 float cX = (c * cellW) + halfW; float cY = (r * cellH) + offY + halfH;
-                int rX = Mathf.Clamp(Mathf.RoundToInt(cX + Random.Range(-halfW, halfW)), 0, imgW - 1);
-                int rY = Mathf.Clamp(Mathf.RoundToInt(cY + Random.Range(-halfH, halfH)), 0, imgH - 1);
+                int rX = Mathf.Clamp(Mathf.RoundToInt(cX + Random.Range(-halfW, halfW)), 0, imageWidth - 1);
+                int rY = Mathf.Clamp(Mathf.RoundToInt(cY + Random.Range(-halfH, halfH)), 0, imageHeight - 1);
                 seedPoints[c, r] = new Vector2Int(rX, rY);
             }
         }
 
-        // --- 3. DIVIDIR PÍXEIS (Corta-bolachas) ---
         var pixelsByPiece = new Dictionary<Vector2Int, List<Vector2Int>>();
-        Vector2 pivot = baker.spriteRenderer.sprite.pivot;
+        Vector2 pivot = platform.platformSpriterenderer.sprite.pivot;
 
-        EditorUtility.DisplayProgressBar("Baking Plataforma", "A cortar píxeis...", 0.1f);
+        EditorUtility.DisplayProgressBar("Baking Plataforma", "A cortar pÃ­xeis...", 0.1f);
 
-        for (int x = 0; x < imgW; x++)
+        for (int x = 0; x < imageWidth; x++)
         {
-            for (int y = 0; y < imgH; y++)
+            for (int y = 0; y < imageHeight; y++)
             {
-                // Verificação de limites usando o collider original
                 Vector3 localPos = new Vector3((x - pivot.x) / ppu, (y - pivot.y) / ppu, 0);
-                Vector3 worldPos = baker.transform.TransformPoint(localPos);
-                if (!baker.mainCollider.OverlapPoint(worldPos)) continue;
+                Vector3 worldPos = platform.transform.TransformPoint(localPos);
+                if (!platform.platformCollider.OverlapPoint(worldPos)) continue;
 
-                int gridX = Mathf.Clamp(x / cellW, 0, baker.gridColumns - 1);
-                int gridY = Mathf.Clamp(y / cellH, 0, baker.gridRows - 1);
+                int gridX = Mathf.Clamp(x / cellW, 0, platform.gridColumns - 1);
+                int gridY = Mathf.Clamp(y / cellH, 0, platform.gridRows - 1);
                 float shortestDist = Mathf.Infinity; Vector2Int closestSeed = seedPoints[0, 0];
 
                 for (int oX = -2; oX <= 2; oX++)
@@ -95,7 +83,7 @@ public class PlatformBakerEditor : Editor
                     for (int oY = -2; oY <= 2; oY++)
                     {
                         int nX = gridX + oX; int nY = gridY + oY;
-                        if (nX < 0 || nY < 0 || nX >= baker.gridColumns || nY >= baker.gridRows) continue;
+                        if (nX < 0 || nY < 0 || nX >= platform.gridColumns || nY >= platform.gridRows) continue;
                         float dist = Vector2.Distance(new Vector2(x, y), seedPoints[nX, nY]);
                         if (dist < shortestDist) { shortestDist = dist; closestSeed = seedPoints[nX, nY]; }
                     }
@@ -105,21 +93,19 @@ public class PlatformBakerEditor : Editor
             }
         }
 
-        // --- 4. CRIAR OBJETOS E GRAVAR TEXTURAS ---
-        int targetLayer = LayerMask.NameToLayer(baker.pieceLayer);
-        GameObject finalRoot = new GameObject($"{baker.folderName}_Baked");
+        int targetLayer = platform.gameObject.layer;
+        GameObject finalRoot = new GameObject($"{platformName}_Baked");
         int totalPieces = pixelsByPiece.Count; int currentPiece = 0;
 
         foreach (var piece in pixelsByPiece)
         {
             currentPiece++;
-            EditorUtility.DisplayProgressBar("Baking Plataforma", $"A processar peça {currentPiece}/{totalPieces}...", 0.3f + ((float)currentPiece / totalPieces * 0.6f));
+            EditorUtility.DisplayProgressBar("Baking Plataforma", $"A processar peÃ§a {currentPiece}/{totalPieces}...", 0.3f + ((float)currentPiece / totalPieces * 0.6f));
 
             List<Vector2Int> pixels = piece.Value;
-            if (pixels.Count < 20) continue; // Ignora pedaços minúsculos
+            if (pixels.Count < 20) continue;
 
-            // Calcular limites da textura da peça
-            int minX = imgW, maxX = 0, minY = imgH, maxY = 0;
+            int minX = imageWidth, maxX = 0, minY = imageHeight, maxY = 0;
             foreach (Vector2Int p in pixels)
             {
                 if (p.x < minX) minX = p.x; if (p.x > maxX) maxX = p.x;
@@ -127,9 +113,8 @@ public class PlatformBakerEditor : Editor
             }
             int pW = maxX - minX + 1; int pH = maxY - minY + 1;
 
-            // Criar textura e preencher
             Texture2D pTex = new Texture2D(pW, pH, TextureFormat.RGBA32, false);
-            pTex.filterMode = FilterMode.Bilinear; // Suave
+            pTex.filterMode = FilterMode.Bilinear;
             Color transparent = new Color(0, 0, 0, 0);
             for (int i = 0; i < pTex.width; i++) for (int j = 0; j < pTex.height; j++) pTex.SetPixel(i, j, transparent);
             foreach (Vector2Int p in pixels)
@@ -139,51 +124,63 @@ public class PlatformBakerEditor : Editor
             }
             pTex.Apply();
 
-            // GRAVAR O FICHEIRO PNG NO DISCO!
-            string pieceName = $"P_{piece.Key.x}_{piece.Key.y}";
+            // GRAVAR O FICHEIRO PNG COM O NOME DA PLATAFORMA PARA NÃƒO SOBRESCREVER!
+            string pieceName = $"{platformName}_P_{piece.Key.x}_{piece.Key.y}";
             string relativePath = $"{basePiecesPath}/{pieceName}.png";
             byte[] bytes = pTex.EncodeToPNG();
-            File.WriteAllBytes(Application.dataPath + relativePath.Substring(6), bytes); // Salva fisicamente
-            AssetDatabase.ImportAsset(relativePath); // Diz ao Unity para importar
+            File.WriteAllBytes(Application.dataPath + relativePath.Substring(6), bytes);
+            AssetDatabase.ImportAsset(relativePath);
 
-            // CONFIGURAR AS DEFINIÇÕES DA TEXTURA IMPORTADA (Mudar para Sprite, Bilinear, etc)
+            // CONFIGURAR A TEXTURA
             TextureImporter importer = AssetImporter.GetAtPath(relativePath) as TextureImporter;
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
-            importer.spritePivot = new Vector2(0.5f, 0.5f); // Centro
+            importer.spritePivot = new Vector2(0.5f, 0.5f);
             importer.spritePixelsPerUnit = ppu;
             importer.filterMode = FilterMode.Bilinear;
             importer.mipmapEnabled = false;
-            importer.textureCompression = TextureImporterCompression.Uncompressed; // Qualidade máxima
+            importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.SaveAndReimport();
 
-            // Carregar a Sprite recém-criada como Asset
             Sprite finalSprite = AssetDatabase.LoadAssetAtPath<Sprite>(relativePath);
 
-            // Criar o GameObject na Hierarquia
+            // CRIAR O OBJETO
             GameObject pObj = new GameObject(pieceName);
             pObj.transform.SetParent(finalRoot.transform);
             pObj.layer = targetLayer;
             pObj.transform.localScale = Vector3.one;
 
-            // Posicionamento correto
             float centerX = minX + (pW / 2f); float centerY = minY + (pH / 2f);
             pObj.transform.localPosition = new Vector3((centerX - pivot.x) / ppu, (centerY - pivot.y) / ppu, 0);
 
-            // Adicionar Renderer e Material
             SpriteRenderer renderer = pObj.AddComponent<SpriteRenderer>();
             renderer.sprite = finalSprite;
-            renderer.sortingLayerID = baker.spriteRenderer.sortingLayerID;
-            renderer.sortingOrder = baker.spriteRenderer.sortingOrder;
-            if (baker.pieceMaterial != null) renderer.material = baker.pieceMaterial;
+            renderer.sortingLayerID = platform.platformSpriterenderer.sortingLayerID;
+            renderer.sortingOrder = platform.platformSpriterenderer.sortingOrder;
 
-            // Adicionar Colisor (para as peças terem física se caírem!)
-            pObj.AddComponent<PolygonCollider2D>();
+            // 1Âº Colisor: O ChÃ£o Liso (Funde-se com o Composite do Pai)
+            PolygonCollider2D groundPoly = pObj.AddComponent<PolygonCollider2D>();
+            groundPoly.compositeOperation = Collider2D.CompositeOperation.Merge;
+
+            // 2Âº Colisor: O Sensor da Pedra (Independente)
+            PolygonCollider2D targetPoly = pObj.AddComponent<PolygonCollider2D>();
+            targetPoly.compositeOperation = Collider2D.CompositeOperation.None;
+            targetPoly.isTrigger = true;
         }
 
-        // --- 5. GUARDAR COMO PREFAB FINAL ---
+        // --- 6. CRIAR O CÃ‰REBRO NO PAI (Composite) ---
+        Rigidbody2D rb = finalRoot.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static;
+
+        CompositeCollider2D comp = finalRoot.AddComponent<CompositeCollider2D>();
+        comp.geometryType = CompositeCollider2D.GeometryType.Outlines;
+        comp.generationType = CompositeCollider2D.GenerationType.Synchronous;
+
+        // --- 7. GUARDAR COMO PREFAB FINAL ---
         EditorUtility.DisplayProgressBar("Baking Plataforma", "A criar Prefab final...", 0.9f);
-        string prefabPath = $"{basePiecesPath.Replace("/Pieces", "")}/{baker.folderName}_Prefab.prefab";
+
+        // Grava o Prefab diretamente na pasta Platforms!
+        string prefabPath = $"{baseRootPath}/{platformName}_Prefab.prefab";
         PrefabUtility.SaveAsPrefabAssetAndConnect(finalRoot, prefabPath, InteractionMode.AutomatedAction);
 
         // Limpeza
@@ -191,7 +188,9 @@ public class PlatformBakerEditor : Editor
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        Debug.Log($"<color=green>? PLATAFORMA '{baker.folderName}' BAKADA COM SUCESSO!</color> Gravada em: {prefabPath}");
+        // DestrÃ³i a cena temporÃ¡ria
+        Object.DestroyImmediate(finalRoot);
+
+        Debug.Log($"<color=green>âœ… PLATAFORMA '{platformName}' BAKADA COM SUCESSO!</color> Gravada em: {prefabPath}");
     }
 }
-#endif

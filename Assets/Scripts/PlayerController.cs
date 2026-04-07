@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        if (GameManager.Instance != null) 
+        if (GameManager.Instance != null)
             GameManager.Instance.AddPlayer(gameObject);
 
         rockThrow = GetComponent<RockThrow>();
@@ -96,7 +96,7 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed && !isDashing && !rockThrow.inThrowState)
         {
-            if (jumpsRemaining > 0 && !isWalled) 
+            if (jumpsRemaining > 0 && !isWalled)
                 Jump();
             else if (canWallJump && isWalled)
                 WallJump();
@@ -105,13 +105,13 @@ public class PlayerController : MonoBehaviour
 
     public void OnFall(InputAction.CallbackContext context)
     {
-        if (context.performed && !isWalled && !rockThrow.inThrowState) 
+        if (context.performed && !isWalled && !rockThrow.inThrowState)
             fastFall = true;
     }
 
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !isWalled && !rockThrow.inThrowState) 
+        if (context.performed && canDash && !isWalled && !rockThrow.inThrowState)
             StartCoroutine(Dash());
     }
 
@@ -130,8 +130,19 @@ public class PlayerController : MonoBehaviour
         isWallJumping = true;
         isJumping = true;
 
-        wallJumpDirection = new Vector2(-myTransform.right.x, 1f).normalized;
-        myTransform.right = -myTransform.right;
+        float jumpDirX;
+        if (isTouchingWallAnim)
+        {
+            jumpDirX = -myTransform.right.x;
+        }
+        else
+        {
+            jumpDirX = myTransform.right.x;
+        }
+
+        wallJumpDirection = new Vector2(jumpDirX, 1f).normalized;
+
+        myTransform.right = new Vector3(jumpDirX, 0f, 0f);
 
         myRigidBody2D.linearVelocity = Vector2.zero;
         myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
@@ -144,7 +155,7 @@ public class PlayerController : MonoBehaviour
     {
         isJumping = false;
     }
-    private void CancelWallJump() 
+    private void CancelWallJump()
     {
         isWallJumping = false;
     }
@@ -167,6 +178,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(dashCoolDown);
         dashOnCooldown = false;
     }
+
     private void CheckGround()
     {
         bool rawGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer) != null;
@@ -189,9 +201,12 @@ public class PlayerController : MonoBehaviour
         RaycastHit2D slopeHitFront = Physics2D.Raycast(checkPos, myTransform.right, slopeCheckDistance, groundLayer);
         RaycastHit2D slopeHitBack = Physics2D.Raycast(checkPos, -myTransform.right, slopeCheckDistance, groundLayer);
 
-        if (slopeHitFront) slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
-        else if (slopeHitBack) slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
-        else slopeSideAngle = 0.0f;
+        if (slopeHitFront)
+            slopeSideAngle = Vector2.Angle(slopeHitFront.normal, Vector2.up);
+        else if (slopeHitBack)
+            slopeSideAngle = Vector2.Angle(slopeHitBack.normal, Vector2.up);
+        else
+            slopeSideAngle = 0.0f;
 
         isOnSlope = slopeHitFront || slopeHitBack;
 
@@ -205,7 +220,15 @@ public class PlayerController : MonoBehaviour
         }
 
         canWalkOnSlope = slopeDownAngle <= maxSlopeAngle && slopeSideAngle <= maxSlopeAngle;
-        myRigidBody2D.sharedMaterial = (isOnSlope && canWalkOnSlope && inputValue == 0f) ? fullFriction : noFriction;
+
+        if (isOnSlope && canWalkOnSlope && inputValue == 0f)
+        {
+            myRigidBody2D.sharedMaterial = fullFriction;
+        }
+        else
+        {
+            myRigidBody2D.sharedMaterial = noFriction;
+        }
     }
 
     public bool IsWallSliding()
@@ -243,8 +266,18 @@ public class PlayerController : MonoBehaviour
     {
         if (isWalled)
         {
-            bool pushingWall = (inputValue > 0 && myTransform.right.x > 0) || (inputValue < 0 && myTransform.right.x < 0);
-            float xVel = pushingWall ? 0f : inputValue * mSpeed;
+            bool pushingWall = isTouchingWallAnim && ((inputValue > 0 && myTransform.right.x > 0) || (inputValue < 0 && myTransform.right.x < 0));
+
+            float xVel;
+            if (pushingWall)
+            {
+                xVel = 0f;
+            }
+            else
+            {
+                xVel = inputValue * mSpeed;
+            }
+
             myRigidBody2D.linearVelocity = new Vector2(xVel, Mathf.Max(myRigidBody2D.linearVelocityY, -wallSlidingSpeed));
             return;
         }
@@ -253,7 +286,14 @@ public class PlayerController : MonoBehaviour
         {
             if (isOnSlope && canWalkOnSlope)
             {
-                myRigidBody2D.linearVelocity = inputValue == 0f ? Vector2.zero : new Vector2(mSpeed * slopeNormalPerp.x * -inputValue, mSpeed * slopeNormalPerp.y * -inputValue);
+                if (inputValue == 0f)
+                {
+                    myRigidBody2D.linearVelocity = Vector2.zero;
+                }
+                else
+                {
+                    myRigidBody2D.linearVelocity = new Vector2(mSpeed * slopeNormalPerp.x * -inputValue, mSpeed * slopeNormalPerp.y * -inputValue);
+                }
             }
             else
             {
@@ -271,14 +311,20 @@ public class PlayerController : MonoBehaviour
         if (rockThrow.inThrowState)
         {
             float mousePosX = MouseDirection.Instance.direction.x;
-            myTransform.right = mousePosX > 0 ? Vector3.right : (mousePosX < 0 ? Vector3.left : myTransform.right);
+
+            if (mousePosX > 0)
+            {
+                myTransform.right = Vector3.right;
+            }
+            else if (mousePosX < 0)
+            {
+                myTransform.right = Vector3.left;
+            }
+
             return;
         }
 
-        if (isWalled) 
-            return;
-
-        if (inputValue * myTransform.right.x < 0f) 
+        if (inputValue * myTransform.right.x < 0f)
             myTransform.right = -myTransform.right;
     }
 
@@ -294,8 +340,23 @@ public class PlayerController : MonoBehaviour
         bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.5f;
         bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.5f;
 
-        playerAnimator.SetFloat("IsJumping", jumping ? myRigidBody2D.linearVelocityY : 0f);
-        playerAnimator.SetFloat("IsFalling", falling ? myRigidBody2D.linearVelocityY : 0f);
+        if (jumping)
+        {
+            playerAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
+        }
+        else
+        {
+            playerAnimator.SetFloat("IsJumping", 0f);
+        }
+
+        if (falling)
+        {
+            playerAnimator.SetFloat("IsFalling", myRigidBody2D.linearVelocityY);
+        }
+        else
+        {
+            playerAnimator.SetFloat("IsFalling", 0f);
+        }
     }
 
     private void FixedUpdate()
@@ -357,6 +418,7 @@ public class PlayerController : MonoBehaviour
 
         if (!isDashing && !dashOnCooldown && (isGrounded || isWalled)) canDash = true;
     }
+
     public void CancelKnockBack()
     {
         canCancel = true;
