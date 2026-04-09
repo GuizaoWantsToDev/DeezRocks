@@ -14,7 +14,9 @@ public class PlayerController : MonoBehaviour
     [Header("=== MOVEMENT & PHYSICS ===")]
     [SerializeField] private float mSpeed;
     [SerializeField] private float maxVerticalSpeed;
+    [SerializeField] private float fastFallImpulse;
     [SerializeField] private float playerGravity;
+    private float currentGravity;
 
     [Header("=== JUMP SETTINGS ===")]
     [SerializeField] private float jumpPower;
@@ -55,7 +57,6 @@ public class PlayerController : MonoBehaviour
     public bool fastFall;
     public bool isKnockBacked;
 
-    // --- VARIÁVEIS PRIVADAS ---
     private float inputValue;
     private int jumpsRemaining;
     private bool isJumping;
@@ -76,7 +77,6 @@ public class PlayerController : MonoBehaviour
     private bool canCancel;
     private bool isTouchingWallAnim;
 
-
     private void Start()
     {
         if (GameManager.Instance != null)
@@ -84,6 +84,7 @@ public class PlayerController : MonoBehaviour
 
         rockThrow = GetComponent<RockThrow>();
         cc = GetComponent<CapsuleCollider2D>();
+        ResetGravity();
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -105,8 +106,16 @@ public class PlayerController : MonoBehaviour
 
     public void OnFall(InputAction.CallbackContext context)
     {
-        if (context.performed && !isWalled && !rockThrow.inThrowState)
+        if (context.performed && !isWalled && !rockThrow.inThrowState && !isDashing)
+        {
             fastFall = true;
+            currentGravity = playerGravity * 4f;
+            myRigidBody2D.AddForce(Vector2.down * fastFallImpulse, ForceMode2D.Impulse);
+        }
+        else if (context.canceled)
+        {
+            ResetGravity();
+        }
     }
 
     public void OnDash(InputAction.CallbackContext context)
@@ -119,6 +128,7 @@ public class PlayerController : MonoBehaviour
     {
         isJumping = true;
         isGrounded = false;
+        ResetGravity();
         myRigidBody2D.linearVelocityY = 0f;
         myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         jumpsRemaining--;
@@ -129,6 +139,7 @@ public class PlayerController : MonoBehaviour
     {
         isWallJumping = true;
         isJumping = true;
+        ResetGravity();
 
         float jumpDirX;
         if (isTouchingWallAnim)
@@ -155,6 +166,7 @@ public class PlayerController : MonoBehaviour
     {
         isJumping = false;
     }
+
     private void CancelWallJump()
     {
         isWallJumping = false;
@@ -164,7 +176,7 @@ public class PlayerController : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
-        fastFall = false;
+        ResetGravity();
         myRigidBody2D.gravityScale = 0f;
         myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
         myTrailRenderer.emitting = true;
@@ -185,7 +197,7 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = rawGrounded && !(isTouchingWallAnim && myRigidBody2D.linearVelocityY < -0.1f);
 
-        if (myRigidBody2D.linearVelocityY <= 0.0f) isJumping = false;
+        if (myRigidBody2D.linearVelocityY <= 0.1f) isJumping = false;
 
         if (isGrounded && !isJumping && slopeDownAngle <= maxSlopeAngle)
         {
@@ -337,8 +349,8 @@ public class PlayerController : MonoBehaviour
         playerAnimator.SetBool("IsRunning", isMoving && isGrounded);
         playerAnimator.SetBool("IsGrounded", isGrounded);
 
-        bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.5f;
-        bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.5f;
+        bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.1f;
+        bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.1f;
 
         if (jumping)
         {
@@ -367,18 +379,23 @@ public class PlayerController : MonoBehaviour
         CheckGround();
         SlopeCheck();
 
-        float currentGrav = playerGravity;
+        float gravToApply = currentGravity;
+
         if (rockThrow.inThrowState)
         {
+            if (fastFall)
+            {
+                ResetGravity();
+            }
             myRigidBody2D.linearVelocity = Vector2.zero;
-            currentGrav = 0f;
+            gravToApply = 0f;
         }
         else if (isGrounded && isOnSlope && inputValue == 0f && !isJumping)
         {
-            currentGrav = 0f;
+            gravToApply = 0f;
         }
 
-        myRigidBody2D.gravityScale = currentGrav;
+        myRigidBody2D.gravityScale = gravToApply;
 
         if (!rockThrow.inThrowState && !isWallJumping)
         {
@@ -403,8 +420,6 @@ public class PlayerController : MonoBehaviour
             canCancel = false;
         }
 
-        if (fastFall) myRigidBody2D.linearVelocityY = -maxVerticalSpeed;
-
         if (!isOnSlope)
         {
             float clampedY = Mathf.Clamp(myRigidBody2D.linearVelocityY, -maxVerticalSpeed, maxVerticalSpeed);
@@ -417,6 +432,12 @@ public class PlayerController : MonoBehaviour
         CheckFlip();
 
         if (!isDashing && !dashOnCooldown && (isGrounded || isWalled)) canDash = true;
+    }
+
+    public void ResetGravity()
+    {
+        currentGravity = playerGravity;
+        fastFall = false;
     }
 
     public void CancelKnockBack()
@@ -444,7 +465,17 @@ public class PlayerController : MonoBehaviour
 
         if (Application.isPlaying && isWalled)
         {
-            Vector2 visualJumpDir = new Vector2(-transform.right.x, 1f).normalized;
+            float jumpDirX;
+            if (isTouchingWallAnim)
+            {
+                jumpDirX = -myTransform.right.x;
+            }
+            else
+            {
+                jumpDirX = myTransform.right.x;
+            }
+
+            Vector2 visualJumpDir = new Vector2(jumpDirX, 1f).normalized;
             Vector3 startPos = transform.position;
             Vector3 endPos = startPos + (Vector3)visualJumpDir * 2f;
 

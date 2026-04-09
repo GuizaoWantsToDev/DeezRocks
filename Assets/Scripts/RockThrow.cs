@@ -59,6 +59,7 @@ public class RockThrow : MonoBehaviour
             if (EnergyManager.Instance.currentEnergy >= rock.baseEnergyCost && !player.isWalled)
             {
                 inThrowState = true;
+                player.ResetGravity();
                 EnergyManager.Instance.StopPassiveRegen();
 
                 rockInst = Instantiate(rockPrefab, throwDirection.position, throwPoint.transform.rotation);
