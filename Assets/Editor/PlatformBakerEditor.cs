@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
 
-public class PlatformBakerMenu
+public class PlatformPrefabMaker
 {
     [MenuItem("Prefabs/Prefab The Selected Platform")]
     public static void BakeSelectedPlatform()
@@ -124,14 +124,12 @@ public class PlatformBakerMenu
             }
             pTex.Apply();
 
-            // GRAVAR O FICHEIRO PNG COM O NOME DA PLATAFORMA PARA NÃO SOBRESCREVER!
             string pieceName = $"{platformName}_P_{piece.Key.x}_{piece.Key.y}";
             string relativePath = $"{basePiecesPath}/{pieceName}.png";
             byte[] bytes = pTex.EncodeToPNG();
             File.WriteAllBytes(Application.dataPath + relativePath.Substring(6), bytes);
             AssetDatabase.ImportAsset(relativePath);
 
-            // CONFIGURAR A TEXTURA
             TextureImporter importer = AssetImporter.GetAtPath(relativePath) as TextureImporter;
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
@@ -144,7 +142,6 @@ public class PlatformBakerMenu
 
             Sprite finalSprite = AssetDatabase.LoadAssetAtPath<Sprite>(relativePath);
 
-            // CRIAR O OBJETO
             GameObject pObj = new GameObject(pieceName);
             pObj.transform.SetParent(finalRoot.transform);
             pObj.layer = targetLayer;
@@ -158,17 +155,14 @@ public class PlatformBakerMenu
             renderer.sortingLayerID = platform.platformSpriterenderer.sortingLayerID;
             renderer.sortingOrder = platform.platformSpriterenderer.sortingOrder;
 
-            // 1º Colisor: O Chão Liso (Funde-se com o Composite do Pai)
             PolygonCollider2D groundPoly = pObj.AddComponent<PolygonCollider2D>();
             groundPoly.compositeOperation = Collider2D.CompositeOperation.Merge;
 
-            // 2º Colisor: O Sensor da Pedra (Independente)
             PolygonCollider2D targetPoly = pObj.AddComponent<PolygonCollider2D>();
             targetPoly.compositeOperation = Collider2D.CompositeOperation.None;
             targetPoly.isTrigger = true;
         }
 
-        // --- 6. CRIAR O CÉREBRO NO PAI (Composite) ---
         Rigidbody2D rb = finalRoot.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
 
@@ -176,21 +170,17 @@ public class PlatformBakerMenu
         comp.geometryType = CompositeCollider2D.GeometryType.Outlines;
         comp.generationType = CompositeCollider2D.GenerationType.Synchronous;
 
-        // --- 7. GUARDAR COMO PREFAB FINAL ---
         EditorUtility.DisplayProgressBar("Baking Plataforma", "A criar Prefab final...", 0.9f);
 
-        // Grava o Prefab diretamente na pasta Platforms!
         string prefabPath = $"{baseRootPath}/{platformName}_Prefab.prefab";
         PrefabUtility.SaveAsPrefabAssetAndConnect(finalRoot, prefabPath, InteractionMode.AutomatedAction);
 
-        // Limpeza
         EditorUtility.ClearProgressBar();
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
-        // Destrói a cena temporária
         Object.DestroyImmediate(finalRoot);
 
-        Debug.Log($"<color=green>✅ PLATAFORMA '{platformName}' BAKADA COM SUCESSO!</color> Gravada em: {prefabPath}");
+        Debug.Log($"<color=green>✅ Platform prefab '{platformName}' was a sucess</color> Stored in: {prefabPath}");
     }
 }
