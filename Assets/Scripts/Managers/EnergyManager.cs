@@ -17,22 +17,21 @@ public class EnergyManager : MonoBehaviour
     [SerializeField] private RockThrow rockThrow;
 
     private Coroutine passiveEnergyCoroutine;
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        currentEnergy = maxEnergy;
-
-    }
+    //private void Awake()
+    //{
+    //    if (Instance == null)
+    //    {
+    //        Instance = this;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
     private void Start()
     {
         StartPassiveRegen();
+        currentEnergy = maxEnergy;
     }
     public void StartPassiveRegen()
     {
@@ -61,7 +60,6 @@ public class EnergyManager : MonoBehaviour
             }
         }
     }
-
     public void UseEnergy(float energy)
     {
         currentEnergy -= energy;
@@ -76,5 +74,4 @@ public class EnergyManager : MonoBehaviour
     {
         energyBar.fillAmount = currentEnergy / maxEnergy;
     }
-
 }

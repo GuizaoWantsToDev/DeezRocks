@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Earth
+    uniqueID: 4090480187
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0

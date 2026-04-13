@@ -1,0 +1,1183 @@
+fileFormatVersion: 2
+guid: 25a22947d817a32418a03a92fd213d65
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8984068857421117836
+    second: TERRSA_0
+  - first:
+      213: 6812871592578393130
+    second: TERRSA_1
+  - first:
+      213: -5001585131064647165
+    second: TERRSA_2
+  - first:
+      213: -4640226104831502985
+    second: TERRSA_3
+  - first:
+      213: 2412733875101905419
+    second: TERRSA_4
+  - first:
+      213: -1753596091045279823
+    second: TERRSA_5
+  - first:
+      213: 7012393536399849464
+    second: TERRSA_6
+  - first:
+      213: -2812830351406185806
+    second: TERRSA_7
+  - first:
+      213: -703634509003488853
+    second: TERRSA_8
+  - first:
+      213: -8321363857928656767
+    second: TERRSA_9
+  - first:
+      213: 7842882597681731001
+    second: TERRSA_10
+  - first:
+      213: -6044060881282903186
+    second: TERRSA_11
+  - first:
+      213: 5645335649224452809
+    second: TERRSA_12
+  - first:
+      213: -289240794832638337
+    second: TERRSA_13
+  - first:
+      213: -5573214560780704490
+    second: TERRSA_14
+  - first:
+      213: 3787378505985023869
+    second: TERRSA_15
+  - first:
+      213: 251879662335265237
+    second: TERRSA_16
+  - first:
+      213: 6297997673308119180
+    second: TERRSA_17
+  - first:
+      213: -5597431889206022980
+    second: TERRSA_18
+  - first:
+      213: 6702491354758391900
+    second: TERRSA_19
+  - first:
+      213: 654104517251888978
+    second: TERRSA_20
+  - first:
+      213: -5164807595131117157
+    second: TERRSA_21
+  - first:
+      213: -4389550386783453095
+    second: TERRSA_22
+  - first:
+      213: 3435980235613944001
+    second: TERRSA_23
+  - first:
+      213: -6382063977181954551
+    second: TERRSA_24
+  - first:
+      213: -6476666111128421901
+    second: TERRSA_25
+  - first:
+      213: -6643212827860642910
+    second: TERRSA_26
+  - first:
+      213: 1025318749045754280
+    second: TERRSA_27
+  - first:
+      213: 8743439976569914596
+    second: TERRSA_28
+  - first:
+      213: -1261985794532029072
+    second: TERRSA_29
+  - first:
+      213: -6729162470579207250
+    second: TERRSA_30
+  - first:
+      213: -5963534505804142506
+    second: TERRSA_31
+  - first:
+      213: 2808318480967960545
+    second: TERRSA_32
+  - first:
+      213: 3036527241540574592
+    second: TERRSA_33
+  - first:
+      213: -2898976301490575222
+    second: TERRSA_34
+  - first:
+      213: 4861278249509552463
+    second: TERRSA_35
+  - first:
+      213: -2235107333817723137
+    second: TERRSA_36
+  - first:
+      213: 1451936876982856996
+    second: TERRSA_37
+  - first:
+      213: -4704853300097963730
+    second: TERRSA_38
+  - first:
+      213: 5510980953824965225
+    second: TERRSA_39
+  - first:
+      213: -7690633804766993571
+    second: TERRSA_40
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 4096
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: TERRSA_0
+      rect:
+        serializedVersion: 2
+        x: 9482
+        y: 8919
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 476c3cb49fc225380800000000000000
+      internalID: -8984068857421117836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_1
+      rect:
+        serializedVersion: 2
+        x: 11251
+        y: 8967
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a242cf70e9e2c8e50800000000000000
+      internalID: 6812871592578393130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_2
+      rect:
+        serializedVersion: 2
+        x: 1536
+        y: 8861
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3022405a2dcc69ab0800000000000000
+      internalID: -5001585131064647165
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_3
+      rect:
+        serializedVersion: 2
+        x: 3717
+        y: 8762
+        width: 26
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 775160051fa9a9fb0800000000000000
+      internalID: -4640226104831502985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_4
+      rect:
+        serializedVersion: 2
+        x: 4096
+        y: 8553
+        width: 24
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b02300b1da0cb7120800000000000000
+      internalID: 2412733875101905419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_5
+      rect:
+        serializedVersion: 2
+        x: 11858
+        y: 8502
+        width: 25
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b78bb965a9f9a7e0800000000000000
+      internalID: -1753596091045279823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_6
+      rect:
+        serializedVersion: 2
+        x: 10312
+        y: 8409
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8f7bb52a4c6015160800000000000000
+      internalID: 7012393536399849464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_7
+      rect:
+        serializedVersion: 2
+        x: 12853
+        y: 8414
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2b24ffac2b1d6f8d0800000000000000
+      internalID: -2812830351406185806
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_8
+      rect:
+        serializedVersion: 2
+        x: 3847
+        y: 8349
+        width: 49
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba1042f54203c36f0800000000000000
+      internalID: -703634509003488853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_9
+      rect:
+        serializedVersion: 2
+        x: 15731
+        y: 8378
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1886361e8a3948c80800000000000000
+      internalID: -8321363857928656767
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_10
+      rect:
+        serializedVersion: 2
+        x: 1617
+        y: 8314
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b599e15b2487dc60800000000000000
+      internalID: 7842882597681731001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_11
+      rect:
+        serializedVersion: 2
+        x: 6801
+        y: 8225
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e635c4ab6ae2f1ca0800000000000000
+      internalID: -6044060881282903186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_12
+      rect:
+        serializedVersion: 2
+        x: 14080
+        y: 8219
+        width: 29
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9ca6fd9dcd2485e40800000000000000
+      internalID: 5645335649224452809
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_13
+      rect:
+        serializedVersion: 2
+        x: 6445
+        y: 8138
+        width: 47
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7ee27197096cfbf0800000000000000
+      internalID: -289240794832638337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_14
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 8025
+        width: 21
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 615a1a792e6f7a2b0800000000000000
+      internalID: -5573214560780704490
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_15
+      rect:
+        serializedVersion: 2
+        x: 15798
+        y: 7967
+        width: 27
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7fdf2f4fa87f8430800000000000000
+      internalID: 3787378505985023869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_16
+      rect:
+        serializedVersion: 2
+        x: 4684
+        y: 7884
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5d983a7e73bde7300800000000000000
+      internalID: 251879662335265237
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_17
+      rect:
+        serializedVersion: 2
+        x: 9260
+        y: 7903
+        width: 22
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8064c1048bf66750800000000000000
+      internalID: 6297997673308119180
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_18
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 7854
+        width: 35
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbc6e6d6a5de152b0800000000000000
+      internalID: -5597431889206022980
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_19
+      rect:
+        serializedVersion: 2
+        x: 6150
+        y: 7778
+        width: 38
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c5820863068040d50800000000000000
+      internalID: 6702491354758391900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_20
+      rect:
+        serializedVersion: 2
+        x: 10595
+        y: 7807
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 257f6c4c798d31900800000000000000
+      internalID: 654104517251888978
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_21
+      rect:
+        serializedVersion: 2
+        x: 11024
+        y: 7753
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b9168f64bdae258b0800000000000000
+      internalID: -5164807595131117157
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_22
+      rect:
+        serializedVersion: 2
+        x: 11287
+        y: 7763
+        width: 21
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95008181e2f2513c0800000000000000
+      internalID: -4389550386783453095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_23
+      rect:
+        serializedVersion: 2
+        x: 13948
+        y: 7780
+        width: 21
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c83807d1dd0faf20800000000000000
+      internalID: 3435980235613944001
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_24
+      rect:
+        serializedVersion: 2
+        x: 1539
+        y: 7716
+        width: 39
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90eb04a50aa5e67a0800000000000000
+      internalID: -6382063977181954551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_25
+      rect:
+        serializedVersion: 2
+        x: 13919
+        y: 7674
+        width: 46
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f9316d9c724e16a0800000000000000
+      internalID: -6476666111128421901
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_26
+      rect:
+        serializedVersion: 2
+        x: 3824
+        y: 7592
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a35c0c51219ec3a0800000000000000
+      internalID: -6643212827860642910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_27
+      rect:
+        serializedVersion: 2
+        x: 8014
+        y: 7532
+        width: 28
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8a98b6a48f9aa3e00800000000000000
+      internalID: 1025318749045754280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_28
+      rect:
+        serializedVersion: 2
+        x: 9403
+        y: 7464
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e4466e7550f65970800000000000000
+      internalID: 8743439976569914596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_29
+      rect:
+        serializedVersion: 2
+        x: 8620
+        y: 7398
+        width: 19
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 07d445d2b968c7ee0800000000000000
+      internalID: -1261985794532029072
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_30
+      rect:
+        serializedVersion: 2
+        x: 830
+        y: 7263
+        width: 46
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea38c39b2663d92a0800000000000000
+      internalID: -6729162470579207250
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_31
+      rect:
+        serializedVersion: 2
+        x: 1092
+        y: 7286
+        width: 27
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65862cf86f44d3da0800000000000000
+      internalID: -5963534505804142506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_32
+      rect:
+        serializedVersion: 2
+        x: 15230
+        y: 7297
+        width: 35
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1e7824287c629f620800000000000000
+      internalID: 2808318480967960545
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_33
+      rect:
+        serializedVersion: 2
+        x: 10972
+        y: 7257
+        width: 18
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 08d92de1079e32a20800000000000000
+      internalID: 3036527241540574592
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_34
+      rect:
+        serializedVersion: 2
+        x: 9184
+        y: 7211
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a88e069c964c4c7d0800000000000000
+      internalID: -2898976301490575222
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_35
+      rect:
+        serializedVersion: 2
+        x: 1033
+        y: 7159
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f418950dfcab67340800000000000000
+      internalID: 4861278249509552463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_36
+      rect:
+        serializedVersion: 2
+        x: 3504
+        y: 6756
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff69ce4d8bd4bf0e0800000000000000
+      internalID: -2235107333817723137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_37
+      rect:
+        serializedVersion: 2
+        x: 5036
+        y: 6685
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 42d6adc95e0562410800000000000000
+      internalID: 1451936876982856996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_38
+      rect:
+        serializedVersion: 2
+        x: 14438
+        y: 6698
+        width: 18
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e292657d9d005beb0800000000000000
+      internalID: -4704853300097963730
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_39
+      rect:
+        serializedVersion: 2
+        x: 15373
+        y: 6485
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9623ea4aaffea7c40800000000000000
+      internalID: 5510980953824965225
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: TERRSA_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 16000
+        height: 6383
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d53a0412d41654590800000000000000
+      internalID: -7690633804766993571
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      TERRSA_0: -8984068857421117836
+      TERRSA_1: 6812871592578393130
+      TERRSA_10: 7842882597681731001
+      TERRSA_11: -6044060881282903186
+      TERRSA_12: 5645335649224452809
+      TERRSA_13: -289240794832638337
+      TERRSA_14: -5573214560780704490
+      TERRSA_15: 3787378505985023869
+      TERRSA_16: 251879662335265237
+      TERRSA_17: 6297997673308119180
+      TERRSA_18: -5597431889206022980
+      TERRSA_19: 6702491354758391900
+      TERRSA_2: -5001585131064647165
+      TERRSA_20: 654104517251888978
+      TERRSA_21: -5164807595131117157
+      TERRSA_22: -4389550386783453095
+      TERRSA_23: 3435980235613944001
+      TERRSA_24: -6382063977181954551
+      TERRSA_25: -6476666111128421901
+      TERRSA_26: -6643212827860642910
+      TERRSA_27: 1025318749045754280
+      TERRSA_28: 8743439976569914596
+      TERRSA_29: -1261985794532029072
+      TERRSA_3: -4640226104831502985
+      TERRSA_30: -6729162470579207250
+      TERRSA_31: -5963534505804142506
+      TERRSA_32: 2808318480967960545
+      TERRSA_33: 3036527241540574592
+      TERRSA_34: -2898976301490575222
+      TERRSA_35: 4861278249509552463
+      TERRSA_36: -2235107333817723137
+      TERRSA_37: 1451936876982856996
+      TERRSA_38: -4704853300097963730
+      TERRSA_39: 5510980953824965225
+      TERRSA_4: 2412733875101905419
+      TERRSA_40: -7690633804766993571
+      TERRSA_5: -1753596091045279823
+      TERRSA_6: 7012393536399849464
+      TERRSA_7: -2812830351406185806
+      TERRSA_8: -703634509003488853
+      TERRSA_9: -8321363857928656767
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

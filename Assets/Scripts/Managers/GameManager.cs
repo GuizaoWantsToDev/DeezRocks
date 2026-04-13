@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -14,11 +15,16 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private BoxCollider2D mapLimit;
 
-    [SerializeField]
-    public List<GameObject> players = new List<GameObject>();
+    public GameObject[] spawnablePlayers;
+
+    public List<GameObject> playersList = new List<GameObject>();
+    private int maxPlayers = 2;
 
     [SerializeField]
     private PlayerController playerController;
+
+    [SerializeField]
+    private CinemachineTargetGroup targetGroup;
 
     private void Awake()
     {
@@ -32,31 +38,34 @@ public class GameManager : MonoBehaviour
         }  
     }
 
-    private void Update()
-    {
-        if(players.Count <= 1)
-        {
-            StartCoroutine(ReloadGame());
-        }
-    }
-
     public void OnRestart(InputAction.CallbackContext context)
     {
-        SceneManager.LoadScene("Prototype");
+        SceneManager.LoadScene("Prototype 2");
     }
     IEnumerator ReloadGame()
     {
         yield return new WaitForSeconds(5f);
-        SceneManager.LoadScene("Prototype");
+        SceneManager.LoadScene("Prototype 2");
     }
 
     public void AddPlayer(GameObject player)
     {
-        players.Add(player);
+        if(playersList.Count <= maxPlayers)
+        {
+            playersList.Add(player);
+            targetGroup.AddMember(player.transform,1,1);
+        }
+        else
+            Destroy(player);
     }
     public void RemovePlayer(GameObject player)
     {
-        players.Remove(player);
+        playersList.Remove(player);
+
+        if (playersList.Count <= 1)
+        {
+            StartCoroutine(ReloadGame());
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)

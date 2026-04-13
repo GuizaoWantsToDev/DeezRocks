@@ -322,13 +322,11 @@ public class PlayerController : MonoBehaviour
     {
         if (rockThrow.inThrowState)
         {
-            float mousePosX = MouseDirection.Instance.direction.x;
-
-            if (mousePosX > 0)
+            if (rockThrow.aimDirection.x > 0 && myTransform.right.x < 0)
             {
                 myTransform.right = Vector3.right;
             }
-            else if (mousePosX < 0)
+            else if (rockThrow.aimDirection.x < 0 && myTransform.right.x > 0)
             {
                 myTransform.right = Vector3.left;
             }

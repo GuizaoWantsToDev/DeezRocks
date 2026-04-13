@@ -5011,7 +5011,7 @@ MonoBehaviour:
   chargeParticles: {fileID: 3160811677563996089}
   baseEnergyCost: 10
   baseDamage: 20
-  baseSpeed: 15
+  baseSpeed: 35
   baseGravity: 1
   extraCostPerLevel: 10
   extraDamagePerLevel: 10
