@@ -282,7 +282,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: 6224616169070396960, guid: b34ba1fe0bdacc64a88df998a713e17a, type: 3}
-  m_Color: {r: 0.9622642, g: 0.18609825, b: 0.18609825, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.7128959, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -469,7 +469,7 @@ MonoBehaviour:
   throwPoint: {fileID: 4617561057449866335}
   throwDirection: {fileID: 6357770209277465539}
   knockBackForce: 36
-  throwCooldown: 0.7
+  throwCooldown: 0.467
 --- !u!114 &3889094862592903537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,18 +487,18 @@ MonoBehaviour:
   myTransform: {fileID: 8074640560719393181}
   myTrailRenderer: {fileID: 2428556048383867178}
   playerAnimator: {fileID: 1601332104848600743}
-  mSpeed: 20
-  maxVerticalSpeed: 40
+  mSpeed: 34
+  maxVerticalSpeed: 55
   fastFallImpulse: 10
   playerGravity: 3.4
-  jumpPower: 26
+  jumpPower: 38
   maxJumps: 2
   dashTime: 0.2
   dashCoolDown: 0.25
-  dashingPower: 42
-  wallSlidingSpeed: 0.6
+  dashingPower: 72
+  wallSlidingSpeed: 0.8
   wallJumpTime: 0.25
-  wallJumpPower: {x: 25, y: 30}
+  wallJumpPower: {x: 28, y: 33}
   wallDetachBufferTime: 0.1
   maxSlopeAngle: 45
   slopeCheckDistance: 0.5

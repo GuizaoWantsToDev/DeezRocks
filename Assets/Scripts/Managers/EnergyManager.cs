@@ -17,17 +17,17 @@ public class EnergyManager : MonoBehaviour
     [SerializeField] private RockThrow rockThrow;
 
     private Coroutine passiveEnergyCoroutine;
-    //private void Awake()
-    //{
-    //    if (Instance == null)
-    //    {
-    //        Instance = this;
-    //    }
-    //    else
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //}
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     private void Start()
     {
         StartPassiveRegen();

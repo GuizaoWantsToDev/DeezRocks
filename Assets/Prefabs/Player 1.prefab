@@ -314,7 +314,7 @@ MonoBehaviour:
   throwPoint: {fileID: 2624950820790541910}
   throwDirection: {fileID: 8234642984496089213}
   knockBackForce: 36
-  throwCooldown: 0.7
+  throwCooldown: 0.467
 --- !u!114 &6417777160993392958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,18 +332,18 @@ MonoBehaviour:
   myTransform: {fileID: 8066380642624679743}
   myTrailRenderer: {fileID: 2114564201716080316}
   playerAnimator: {fileID: 9184078447384148441}
-  mSpeed: 20
-  maxVerticalSpeed: 40
+  mSpeed: 34
+  maxVerticalSpeed: 55
   fastFallImpulse: 10
   playerGravity: 3.4
-  jumpPower: 26
+  jumpPower: 38
   maxJumps: 2
   dashTime: 0.2
   dashCoolDown: 0.25
-  dashingPower: 42
-  wallSlidingSpeed: 0.6
+  dashingPower: 72
+  wallSlidingSpeed: 0.8
   wallJumpTime: 0.25
-  wallJumpPower: {x: 25, y: 30}
+  wallJumpPower: {x: 28, y: 33}
   wallDetachBufferTime: 0.1
   maxSlopeAngle: 45
   slopeCheckDistance: 0.5

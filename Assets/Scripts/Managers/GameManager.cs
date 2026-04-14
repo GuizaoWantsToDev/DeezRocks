@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator ReloadGame()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Prototype 2");
     }
 

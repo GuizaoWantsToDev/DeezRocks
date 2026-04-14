@@ -4949,7 +4949,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 2305
+    m_Bits: 2049
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -5010,12 +5010,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   chargeParticles: {fileID: 3160811677563996089}
   baseEnergyCost: 10
-  baseDamage: 20
-  baseSpeed: 35
+  baseDamage: 100
+  baseSpeed: 50
   baseGravity: 1
   extraCostPerLevel: 10
   extraDamagePerLevel: 10
-  rockTimer: 2
+  rockTimer: 0.1
   rockStage:
   - {fileID: -1894573627690008434, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
   - {fileID: 5272243715567677623, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
@@ -5024,7 +5024,7 @@ MonoBehaviour:
   - {fileID: 81909648652747967, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
   whatDestroysRock:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 832
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
   shockWaveManager: {fileID: 7947344431761379559, guid: 23f5c58ae1641674caf9b17349710ae9, type: 3}
 --- !u!114 &-1718670401079746667

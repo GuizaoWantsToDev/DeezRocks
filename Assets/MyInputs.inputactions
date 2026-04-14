@@ -218,19 +218,8 @@
                 },
                 {
                     "name": "",
-                    "id": "ee697b9e-f1db-4718-89aa-876a82f986aa",
-                    "path": "<Mouse>/{Point}",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": ";Keyboard",
-                    "action": "Aim",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "13a4eb11-cf49-4628-95fb-f5390af7a532",
-                    "path": "<Gamepad>/rightStick",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Controller",
