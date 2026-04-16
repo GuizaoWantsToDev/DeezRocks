@@ -134,8 +134,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70069cbfbb2939347b959072f41c5aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debris
-  debrisSpawnBoost: 3
-  energyAmount: 2
+  debrisSpawnBoost: 5
+  energyAmount: 7
 --- !u!60 &4978723808830559721
 PolygonCollider2D:
   m_ObjectHideFlags: 0

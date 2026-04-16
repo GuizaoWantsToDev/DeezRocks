@@ -27,7 +27,7 @@ public class PieceCleanUp : MonoBehaviour
         {
             Destroy(polygonCollider);
 
-            float searchRadius = 0.5f; 
+            float searchRadius = 0.5f;
             Collider2D[] nearbyPieces = Physics2D.OverlapCircleAll(transform.position, searchRadius);
 
             foreach (Collider2D neighbor in nearbyPieces)

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Timers;
 using UnityEngine;
 
 public class ShockWaveManager : MonoBehaviour
@@ -34,8 +33,8 @@ public class ShockWaveManager : MonoBehaviour
         while (elapsedTime < shockWaveTime)
         {
             elapsedTime += Time.deltaTime;
-            
-            lerpedAmount= Mathf.Lerp(startPosition, endPosition, (elapsedTime/shockWaveTime));
+
+            lerpedAmount = Mathf.Lerp(startPosition, endPosition, (elapsedTime / shockWaveTime));
             material.SetFloat(waveDistanceFromCenter, lerpedAmount);
 
             yield return null;

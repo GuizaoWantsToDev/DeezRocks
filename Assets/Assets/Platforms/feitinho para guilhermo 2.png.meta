@@ -1,0 +1,481 @@
+fileFormatVersion: 2
+guid: fd510d1f07a7ada40bcacb9b6840e677
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 9203866906000079942
+    second: feitinho para guilhermo 2_0
+  - first:
+      213: 8169459914010064993
+    second: feitinho para guilhermo 2_1
+  - first:
+      213: -8183288064219814599
+    second: feitinho para guilhermo 2_2
+  - first:
+      213: 5060942052391920551
+    second: feitinho para guilhermo 2_3
+  - first:
+      213: 385354875275196347
+    second: feitinho para guilhermo 2_4
+  - first:
+      213: -6572985146265121024
+    second: feitinho para guilhermo 2_5
+  - first:
+      213: -1482918924178789869
+    second: feitinho para guilhermo 2_6
+  - first:
+      213: -1744506584543797269
+    second: feitinho para guilhermo 2_7
+  - first:
+      213: -270335574525858923
+    second: feitinho para guilhermo 2_8
+  - first:
+      213: 2744459157371520376
+    second: feitinho para guilhermo 2_9
+  - first:
+      213: -3350506393144247242
+    second: feitinho para guilhermo 2_10
+  - first:
+      213: -7058163691255821332
+    second: feitinho para guilhermo 2_11
+  - first:
+      213: -7027454738560021154
+    second: feitinho para guilhermo 2_12
+  - first:
+      213: -3428395528671442276
+    second: feitinho para guilhermo 2_13
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 1
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_0
+      rect:
+        serializedVersion: 2
+        x: 3566
+        y: 6495
+        width: 1977
+        height: 971
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64cbb14df24babf70800000000000000
+      internalID: 9203866906000079942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_1
+      rect:
+        serializedVersion: 2
+        x: 6311
+        y: 4998
+        width: 670
+        height: 3187
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 168fc551280cf5170800000000000000
+      internalID: 8169459914010064993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_2
+      rect:
+        serializedVersion: 2
+        x: 7766
+        y: 6484
+        width: 1977
+        height: 971
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 935eb7dccde1f6e80800000000000000
+      internalID: -8183288064219814599
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_3
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 5341
+        width: 1910
+        height: 1000
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a328ad8bf31c3640800000000000000
+      internalID: 5060942052391920551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_4
+      rect:
+        serializedVersion: 2
+        x: 3399
+        y: 5050
+        width: 2358
+        height: 613
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb73e35a73e095500800000000000000
+      internalID: 385354875275196347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_5
+      rect:
+        serializedVersion: 2
+        x: 7635
+        y: 5083
+        width: 2358
+        height: 613
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 00fc2faa5d018c4a0800000000000000
+      internalID: -6572985146265121024
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_6
+      rect:
+        serializedVersion: 2
+        x: 10810
+        y: 5355
+        width: 1910
+        height: 1000
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 31a6e95681d9b6be0800000000000000
+      internalID: -1482918924178789869
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_7
+      rect:
+        serializedVersion: 2
+        x: 2443
+        y: 2516
+        width: 643
+        height: 2239
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: befdfef01844ac7e0800000000000000
+      internalID: -1744506584543797269
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_8
+      rect:
+        serializedVersion: 2
+        x: 5620
+        y: 2404
+        width: 2323
+        height: 716
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 59b2c3e2a339f3cf0800000000000000
+      internalID: -270335574525858923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_9
+      rect:
+        serializedVersion: 2
+        x: 10345
+        y: 2491
+        width: 643
+        height: 2239
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87582b71017461620800000000000000
+      internalID: 2744459157371520376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_10
+      rect:
+        serializedVersion: 2
+        x: 213
+        y: 712
+        width: 1852
+        height: 1083
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 63c36faef2c9081d0800000000000000
+      internalID: -3350506393144247242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_11
+      rect:
+        serializedVersion: 2
+        x: 3859
+        y: 384
+        width: 1901
+        height: 1517
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ceb0320c48d5c0e90800000000000000
+      internalID: -7058163691255821332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_12
+      rect:
+        serializedVersion: 2
+        x: 7794
+        y: 362
+        width: 1901
+        height: 1532
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5d8ef8f527797e90800000000000000
+      internalID: -7027454738560021154
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: feitinho para guilhermo 2_13
+      rect:
+        serializedVersion: 2
+        x: 11502
+        y: 681
+        width: 1852
+        height: 1083
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9a400c5e64eb60d0800000000000000
+      internalID: -3428395528671442276
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      feitinho para guilhermo 2_0: 9203866906000079942
+      feitinho para guilhermo 2_1: 8169459914010064993
+      feitinho para guilhermo 2_10: -3350506393144247242
+      feitinho para guilhermo 2_11: -7058163691255821332
+      feitinho para guilhermo 2_12: -7027454738560021154
+      feitinho para guilhermo 2_13: -3428395528671442276
+      feitinho para guilhermo 2_2: -8183288064219814599
+      feitinho para guilhermo 2_3: 5060942052391920551
+      feitinho para guilhermo 2_4: 385354875275196347
+      feitinho para guilhermo 2_5: -6572985146265121024
+      feitinho para guilhermo 2_6: -1482918924178789869
+      feitinho para guilhermo 2_7: -1744506584543797269
+      feitinho para guilhermo 2_8: -270335574525858923
+      feitinho para guilhermo 2_9: 2744459157371520376
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

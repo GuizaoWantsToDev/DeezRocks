@@ -1,7 +1,7 @@
-﻿using UnityEditor;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
+using UnityEditor;
+using UnityEngine;
 
 public class PlatformPrefabMaker
 {
@@ -158,9 +158,9 @@ public class PlatformPrefabMaker
             PolygonCollider2D groundPoly = pObj.AddComponent<PolygonCollider2D>();
             groundPoly.compositeOperation = Collider2D.CompositeOperation.Merge;
 
-            PolygonCollider2D targetPoly = pObj.AddComponent<PolygonCollider2D>();
-            targetPoly.compositeOperation = Collider2D.CompositeOperation.None;
-            targetPoly.isTrigger = true;
+            CapsuleCollider2D targetCapsule = pObj.AddComponent<CapsuleCollider2D>();
+            targetCapsule.size = new Vector2(pW / ppu, pH / ppu);
+            targetCapsule.direction = pW >= pH ? CapsuleDirection2D.Horizontal : CapsuleDirection2D.Vertical;
         }
 
         Rigidbody2D rb = finalRoot.AddComponent<Rigidbody2D>();

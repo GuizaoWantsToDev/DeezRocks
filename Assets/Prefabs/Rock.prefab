@@ -4850,6 +4850,7 @@ GameObject:
   - component: {fileID: 7185504644259293361}
   - component: {fileID: 6583019903933359413}
   - component: {fileID: -1718670401079746667}
+  - component: {fileID: 2593939931407083072}
   m_Layer: 10
   m_Name: Rock
   m_TagString: Untagged
@@ -4921,7 +4922,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5326963493308201217, guid: e072e069021c5924580d3f0892547d51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5009,11 +5010,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   chargeParticles: {fileID: 3160811677563996089}
-  baseEnergyCost: 10
-  baseDamage: 100
+  baseEnergyCost: 50
+  baseDamage: 25
   baseSpeed: 50
   baseGravity: 1
-  extraCostPerLevel: 10
+  extraCostPerLevel: 25
   extraDamagePerLevel: 10
   rockTimer: 0.1
   rockStage:
@@ -5025,6 +5026,15 @@ MonoBehaviour:
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 832
+  orbitSmoothTime: 0.05
+  maxPreviewRange: 27
+  previewGrowSpeed: 20
+  previewStepCount: 70
+  previewTimeStep: 0.01
+  previewBlockLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  trajectoryLine: {fileID: 2593939931407083072}
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
   shockWaveManager: {fileID: 7947344431761379559, guid: 23f5c58ae1641674caf9b17349710ae9, type: 3}
 --- !u!114 &-1718670401079746667
@@ -5080,6 +5090,125 @@ MonoBehaviour:
     - rid: 6066598367645139027
       type: {class: ShadowShape2DProvider_Collider2D, ns: UnityEngine.Rendering.Universal, asm: Unity.RenderPipelines.Universal.2D.Runtime}
       data: 
+--- !u!120 &2593939931407083072
+LineRenderer:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6424646774010446869}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 0
+  m_LightProbeUsage: 0
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_Positions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  m_Parameters:
+    serializedVersion: 3
+    widthMultiplier: 1
+    widthCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: -0.6999802
+        outSlope: -0.6999802
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.28176796
+      - serializedVersion: 3
+        time: 0.989624
+        value: 0.121385515
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    colorGradient:
+      serializedVersion: 2
+      key0: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 1}
+      key2: {r: 1, g: 1, b: 1, a: 1}
+      key3: {r: 0, g: 0, b: 0, a: 0}
+      key4: {r: 0, g: 0, b: 0, a: 0}
+      key5: {r: 0, g: 0, b: 0, a: 0}
+      key6: {r: 0, g: 0, b: 0, a: 0}
+      key7: {r: 0, g: 0, b: 0, a: 0}
+      ctime0: 0
+      ctime1: 65535
+      ctime2: 65535
+      ctime3: 0
+      ctime4: 0
+      ctime5: 0
+      ctime6: 0
+      ctime7: 0
+      atime0: 0
+      atime1: 65535
+      atime2: 65535
+      atime3: 0
+      atime4: 0
+      atime5: 0
+      atime6: 0
+      atime7: 0
+      m_Mode: 0
+      m_ColorSpace: 0
+      m_NumColorKeys: 2
+      m_NumAlphaKeys: 2
+    numCornerVertices: 0
+    numCapVertices: 0
+    alignment: 0
+    textureMode: 0
+    textureScale: {x: 1, y: 1}
+    shadowBias: 0.5
+    generateLightingData: 0
+  m_UseWorldSpace: 1
+  m_Loop: 0
+  m_ApplyActiveColorSpace: 1
 --- !u!1 &7991337448032162234
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,12 +1,11 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class RockThrow : MonoBehaviour
 {
-    [Header("=== COMPONENTS ===")]
     private PlayerController player;
     private PlayerInput playerInput;
+    private PlayerEnergy playerEnergy;
 
     [Header("=== STATE & AIMING ===")]
     public bool inThrowState;
@@ -31,20 +30,25 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private float throwCooldown = 1f;
     private float nextThrowTime;
 
+    [Header("=== SPAWN VALIDATION ===")]
+    [SerializeField] private LayerMask platformLayer;
+    [SerializeField] private float spawnCheckRadius = 0.3f;
+
     private void Start()
     {
         player = GetComponent<PlayerController>();
         playerInput = GetComponent<PlayerInput>();
+        playerEnergy = GetComponent<PlayerEnergy>();
     }
 
     private void Update()
     {
         HandleAimDirection();
-        player.playerAnimator.SetBool("ThrowState", inThrowState);
+        player.myAnimator.SetBool("ThrowState", inThrowState);
 
         if (inThrowState && rockInst != null)
         {
-            rockInst.transform.position = throwDirection.position;
+            // Apagámos o transform.position daqui! A pedra agora move-se sozinha pelo SmoothDamp
             rockInst.transform.rotation = throwPoint.transform.rotation;
         }
     }
@@ -65,8 +69,8 @@ public class RockThrow : MonoBehaviour
             }
         }
         else
-        {
-            if (rawAimInput.sqrMagnitude > 0.01f)
+        { 
+            if (rawAimInput.magnitude > 0.5f)
             {
                 aimDirection = rawAimInput.normalized;
             }
@@ -86,20 +90,32 @@ public class RockThrow : MonoBehaviour
 
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (context.performed && !inThrowState && Time.time >= nextThrowTime && !player.fastFall)
+        if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
-            if (EnergyManager.Instance.currentEnergy >= rock.baseEnergyCost && !player.isWalled)
+            if (playerEnergy.HasEnough(rock.baseEnergyCost) && !player.isWalled)
             {
+                Vector2 spawnPosition = throwDirection.position;
+                bool spawnInsidePlatform = Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null;
+
+                if (spawnInsidePlatform) return;
+
+                player.fastFall = false;
                 inThrowState = true;
                 player.ResetGravity();
-                EnergyManager.Instance.StopPassiveRegen();
+                playerEnergy.StopPassiveRegen();
 
-                rockInst = Instantiate(rockPrefab, throwDirection.position, throwPoint.transform.rotation);
+                rockInst = Instantiate(rockPrefab, spawnPosition, throwPoint.transform.rotation);
 
                 if (rockInst != null)
                 {
                     Rock newRockScript = rockInst.GetComponent<Rock>();
-                    if (newRockScript != null) newRockScript.SetThrowReference(this);
+                    playerEnergy.UseEnergy(newRockScript.baseEnergyCost);
+
+                    if (newRockScript != null)
+                    {
+                        // ATENÇÃO: Agora passamos o throwDirection (a mão) para a pedra seguir!
+                        newRockScript.SetOwner(this, playerEnergy, throwDirection);
+                    }
                     armRender.enabled = true;
                 }
             }
@@ -128,7 +144,7 @@ public class RockThrow : MonoBehaviour
         nextThrowTime = Time.time + throwCooldown;
 
         ResetThrowState();
-        EnergyManager.Instance.StartPassiveRegen();
+        playerEnergy.StartPassiveRegen();
     }
 
     public void ResetThrowState()
@@ -136,7 +152,7 @@ public class RockThrow : MonoBehaviour
         inThrowState = false;
         armRender.enabled = false;
         rockInst = null;
-        player.playerAnimator.SetBool("ThrowState", false);
+        player.myAnimator.SetBool("ThrowState", false);
     }
 
     public void ForceRelease()

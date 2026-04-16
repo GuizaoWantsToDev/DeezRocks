@@ -1,10 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Cinemachine;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -21,9 +18,6 @@ public class GameManager : MonoBehaviour
     private int maxPlayers = 2;
 
     [SerializeField]
-    private PlayerController playerController;
-
-    [SerializeField]
     private CinemachineTargetGroup targetGroup;
 
     private void Awake()
@@ -35,14 +29,10 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }  
+        }
     }
 
-    public void OnRestart(InputAction.CallbackContext context)
-    {
-        SceneManager.LoadScene("Prototype 2");
-    }
-    IEnumerator ReloadGame()
+    private IEnumerator ReloadGame()
     {
         yield return new WaitForSeconds(1f);
         SceneManager.LoadScene("Prototype 2");
@@ -50,19 +40,20 @@ public class GameManager : MonoBehaviour
 
     public void AddPlayer(GameObject player)
     {
-        if(playersList.Count <= maxPlayers)
+        if (playersList.Count < maxPlayers)
         {
             playersList.Add(player);
-            targetGroup.AddMember(player.transform,1,1);
+            targetGroup.AddMember(player.transform, 1, 1);
         }
         else
             Destroy(player);
     }
+
     public void RemovePlayer(GameObject player)
     {
         playersList.Remove(player);
 
-        if (playersList.Count <= 1)
+        if (playersList.Count <= 1 && gameObject.activeInHierarchy)
         {
             StartCoroutine(ReloadGame());
         }
@@ -70,10 +61,12 @@ public class GameManager : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
+        if (!gameObject.activeInHierarchy) return;
+
         if (other.CompareTag("Player"))
         {
-            //playerController.Die();
+            other.GetComponent<PlayerHealth>().Die();
         }
         Destroy(other.gameObject);
-    }  
+    }
 }

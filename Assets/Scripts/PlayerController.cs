@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private SpriteRenderer mySpriteRenderer;
     [SerializeField] private Transform myTransform;
     [SerializeField] private TrailRenderer myTrailRenderer;
-    [SerializeField] public Animator playerAnimator;
+    [SerializeField] public Animator myAnimator;
 
     [Header("=== MOVEMENT & PHYSICS ===")]
     [SerializeField] private float mSpeed;
@@ -77,6 +77,9 @@ public class PlayerController : MonoBehaviour
     private bool canCancel;
     private bool isTouchingWallAnim;
 
+    private bool isHoldingFall;
+    private Coroutine dashCoroutine;
+
     private void Start()
     {
         if (GameManager.Instance != null)
@@ -97,31 +100,49 @@ public class PlayerController : MonoBehaviour
     {
         if (context.performed && !isDashing && !rockThrow.inThrowState)
         {
-            if (jumpsRemaining > 0 && !isWalled)
-                Jump();
-            else if (canWallJump && isWalled)
+            if (canWallJump)
+            {
                 WallJump();
+            }
+            else if (jumpsRemaining > 0 && !isWalled)
+            {
+                Jump();
+            }
         }
     }
 
     public void OnFall(InputAction.CallbackContext context)
     {
-        if (context.performed && !isWalled && !rockThrow.inThrowState && !isDashing)
+        if (context.performed)
         {
-            fastFall = true;
-            currentGravity = playerGravity * 4f;
-            myRigidBody2D.AddForce(Vector2.down * fastFallImpulse, ForceMode2D.Impulse);
+            isHoldingFall = true;
+
+            if (!isWalled && !rockThrow.inThrowState && !isDashing)
+            {
+                ExecuteFastFall();
+            }
         }
         else if (context.canceled)
         {
+            isHoldingFall = false;
             ResetGravity();
         }
     }
 
+    private void ExecuteFastFall()
+    {
+        fastFall = true;
+        currentGravity = playerGravity * 4f;
+        myRigidBody2D.AddForce(Vector2.down * fastFallImpulse, ForceMode2D.Impulse);
+    }
+
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !isWalled && !rockThrow.inThrowState)
-            StartCoroutine(Dash());
+        if (context.performed && canDash && !isWalled && !rockThrow.inThrowState && !isWallJumping)
+        {
+            if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+            dashCoroutine = StartCoroutine(Dash());
+        }
     }
 
     private void Jump()
@@ -137,6 +158,7 @@ public class PlayerController : MonoBehaviour
 
     private void WallJump()
     {
+        canWallJump = false;
         isWallJumping = true;
         isJumping = true;
         ResetGravity();
@@ -152,7 +174,6 @@ public class PlayerController : MonoBehaviour
         }
 
         wallJumpDirection = new Vector2(jumpDirX, 1f).normalized;
-
         myTransform.right = new Vector3(jumpDirX, 0f, 0f);
 
         myRigidBody2D.linearVelocity = Vector2.zero;
@@ -185,9 +206,19 @@ public class PlayerController : MonoBehaviour
 
         myTrailRenderer.emitting = false;
         isDashing = false;
-        dashOnCooldown = true;
 
+        if (isHoldingFall && !isWalled && !rockThrow.inThrowState && !isGrounded)
+        {
+            ExecuteFastFall();
+        }
+
+        dashOnCooldown = true;
         yield return new WaitForSeconds(dashCoolDown);
+        dashOnCooldown = false;
+    }
+
+    private void ResetDashCooldown()
+    {
         dashOnCooldown = false;
     }
 
@@ -195,7 +226,7 @@ public class PlayerController : MonoBehaviour
     {
         bool rawGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer) != null;
 
-        isGrounded = rawGrounded && !(isTouchingWallAnim && myRigidBody2D.linearVelocityY < -0.1f);
+        isGrounded = rawGrounded && !(isTouchingWallAnim && myRigidBody2D.linearVelocityY < -0.5f);
 
         if (myRigidBody2D.linearVelocityY <= 0.1f) isJumping = false;
 
@@ -252,23 +283,34 @@ public class PlayerController : MonoBehaviour
     {
         isTouchingWallAnim = IsWallSliding();
 
-        if (isTouchingWallAnim && inputValue != 0)
+        if (isTouchingWallAnim)
         {
-            isWalled = true;
-            jumpsRemaining = 1;
-            canWallJump = true;
-            currentWallDetachTimer = wallDetachBufferTime;
+            bool isPushingWall = (inputValue > 0 && myTransform.right.x > 0) || (inputValue < 0 && myTransform.right.x < 0);
+            bool isPullingAway = (inputValue > 0 && myTransform.right.x < 0) || (inputValue < 0 && myTransform.right.x > 0);
+
+            if (isPushingWall)
+            {
+                isWalled = true;
+                jumpsRemaining = 1;
+                canWallJump = true;
+                currentWallDetachTimer = wallDetachBufferTime;
+            }
+            else if (isPullingAway)
+            {
+                isWalled = false;
+            }
         }
-        else if (!isTouchingWallAnim)
+        else
         {
+            isWalled = false;
+
             if (currentWallDetachTimer > 0)
             {
                 currentWallDetachTimer -= Time.deltaTime;
-                isWalled = true;
+                canWallJump = true;
             }
             else
             {
-                isWalled = false;
                 canWallJump = false;
             }
         }
@@ -278,19 +320,7 @@ public class PlayerController : MonoBehaviour
     {
         if (isWalled)
         {
-            bool pushingWall = isTouchingWallAnim && ((inputValue > 0 && myTransform.right.x > 0) || (inputValue < 0 && myTransform.right.x < 0));
-
-            float xVel;
-            if (pushingWall)
-            {
-                xVel = 0f;
-            }
-            else
-            {
-                xVel = inputValue * mSpeed;
-            }
-
-            myRigidBody2D.linearVelocity = new Vector2(xVel, Mathf.Max(myRigidBody2D.linearVelocityY, -wallSlidingSpeed));
+            myRigidBody2D.linearVelocity = new Vector2(0f, Mathf.Max(myRigidBody2D.linearVelocityY, -wallSlidingSpeed));
             return;
         }
 
@@ -334,44 +364,61 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
+        if (isWallJumping) return;
+
         if (inputValue * myTransform.right.x < 0f)
             myTransform.right = -myTransform.right;
     }
 
     private void UpdateAnimations()
     {
-        bool isActuallyWallSliding = isTouchingWallAnim && myRigidBody2D.linearVelocityY < -0.1f && !isGrounded;
+        bool isActuallyWallSliding = isTouchingWallAnim && !isGrounded;
         bool isMoving = Mathf.Abs(inputValue) > 0f || Mathf.Abs(myRigidBody2D.linearVelocityX) > 0.5f;
 
-        playerAnimator.SetBool("IsWallSliding", isActuallyWallSliding);
-        playerAnimator.SetBool("IsRunning", isMoving && isGrounded);
-        playerAnimator.SetBool("IsGrounded", isGrounded);
+        myAnimator.SetBool("IsWallSliding", isActuallyWallSliding);
+        myAnimator.SetBool("IsRunning", isMoving && isGrounded);
+        myAnimator.SetBool("IsGrounded", isGrounded);
 
-        bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.1f;
+        bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.5f && !isOnSlope;
         bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.1f;
 
         if (jumping)
         {
-            playerAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
+            myAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
         }
         else
         {
-            playerAnimator.SetFloat("IsJumping", 0f);
+            myAnimator.SetFloat("IsJumping", 0f);
         }
 
         if (falling)
         {
-            playerAnimator.SetFloat("IsFalling", myRigidBody2D.linearVelocityY);
+            myAnimator.SetFloat("IsFalling", myRigidBody2D.linearVelocityY);
         }
         else
         {
-            playerAnimator.SetFloat("IsFalling", 0f);
+            myAnimator.SetFloat("IsFalling", 0f);
         }
     }
 
     private void FixedUpdate()
     {
-        if (isDashing) return;
+        if (isDashing)
+        {
+            if (IsWallSliding())
+            {
+                if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+                isDashing = false;
+                myTrailRenderer.emitting = false;
+                ResetGravity();
+                dashOnCooldown = true;
+                Invoke(nameof(ResetDashCooldown), dashCoolDown);
+            }
+            else
+            {
+                return;
+            }
+        }
 
         HandleWallLogic();
         CheckGround();
@@ -441,12 +488,6 @@ public class PlayerController : MonoBehaviour
     public void CancelKnockBack()
     {
         canCancel = true;
-    }
-
-    public void Die()
-    {
-        if (GameManager.Instance != null) GameManager.Instance.RemovePlayer(gameObject);
-        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()
