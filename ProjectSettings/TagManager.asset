@@ -40,6 +40,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1908974223
+    locked: 0
   - name: Earth
     uniqueID: 4090480187
     locked: 0
@@ -48,6 +51,30 @@ TagManager:
     locked: 0
   - name: CameraSortingLayer
     uniqueID: 4137400617
+    locked: 0
+  - name: Roots
+    uniqueID: 1558680599
+    locked: 0
+  - name: Big Rock
+    uniqueID: 2797448017
+    locked: 0
+  - name: Small Trees
+    uniqueID: 763939697
+    locked: 0
+  - name: Platform
+    uniqueID: 1290107251
+    locked: 0
+  - name: Big Trees
+    uniqueID: 3371328977
+    locked: 0
+  - name: Player
+    uniqueID: 54896173
+    locked: 0
+  - name: Grass
+    uniqueID: 296897953
+    locked: 0
+  - name: Small Rock
+    uniqueID: 2073326695
     locked: 0
   m_RenderingLayers:
   - Default
