@@ -416,6 +416,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
                 return;
             }
         }

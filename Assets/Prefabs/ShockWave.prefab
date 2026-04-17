@@ -104,4 +104,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4681c4ca22f14a74ab59115e9aadfd40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShockWaveManager
-  shockWaveTime: 0.75
+  shockWaveTime: 1

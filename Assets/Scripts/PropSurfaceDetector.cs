@@ -39,7 +39,7 @@ public class PropSurfaceDetector : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
+        Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere((Vector2)transform.position + offset, checkRadius);
     }
 }

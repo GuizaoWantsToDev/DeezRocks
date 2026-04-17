@@ -4922,7 +4922,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5326963493308201217, guid: e072e069021c5924580d3f0892547d51, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -5016,13 +5016,13 @@ MonoBehaviour:
   baseGravity: 1
   extraCostPerLevel: 25
   extraDamagePerLevel: 10
-  rockTimer: 0.1
+  rockTimer: 0.8
   rockStage:
-  - {fileID: -1894573627690008434, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
-  - {fileID: 5272243715567677623, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
-  - {fileID: -2816086624024197602, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
-  - {fileID: -7805504018878560290, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
-  - {fileID: 81909648652747967, guid: c2e7d00648cfa6d40b3bed156907456c, type: 3}
+  - {fileID: -7261529889641869408, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
+  - {fileID: -7485481437134642347, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
+  - {fileID: 2153859789079914199, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
+  - {fileID: 2518183919245192314, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
+  - {fileID: -8879589295415084938, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 832
@@ -5050,7 +5050,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.ShadowCaster2D
   m_ShadowGroup: 0
-  m_Priority: 0
+  m_Priority: 1
   m_ComponentVersion: 5
   m_HasRenderer: 1
   m_UseRendererSilhouette: 1
@@ -5150,7 +5150,7 @@ LineRenderer:
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.77456665
         inSlope: -0.6999802
         outSlope: -0.6999802
         tangentMode: 0
@@ -5158,8 +5158,8 @@ LineRenderer:
         inWeight: 0.33333334
         outWeight: 0.28176796
       - serializedVersion: 3
-        time: 0.989624
-        value: 0.121385515
+        time: 0.994812
+        value: 0.040468156
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -5172,7 +5172,7 @@ LineRenderer:
     colorGradient:
       serializedVersion: 2
       key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key1: {r: 1, g: 1, b: 1, a: 0.52156866}
       key2: {r: 1, g: 1, b: 1, a: 1}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -5188,7 +5188,7 @@ LineRenderer:
       ctime6: 0
       ctime7: 0
       atime0: 0
-      atime1: 65535
+      atime1: 41056
       atime2: 65535
       atime3: 0
       atime4: 0
