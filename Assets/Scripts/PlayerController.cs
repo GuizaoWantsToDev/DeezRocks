@@ -154,6 +154,7 @@ public class PlayerController : MonoBehaviour
         myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         jumpsRemaining--;
         Invoke(nameof(ResetJumpState), 0.15f);
+
     }
 
     private void WallJump()

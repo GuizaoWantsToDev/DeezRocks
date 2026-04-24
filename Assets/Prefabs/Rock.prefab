@@ -4921,7 +4921,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 54896173
-  m_SortingLayer: 3
+  m_SortingLayer: 7
   m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5326963493308201217, guid: e072e069021c5924580d3f0892547d51, type: 3}
@@ -5010,13 +5010,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   chargeParticles: {fileID: 3160811677563996089}
-  baseEnergyCost: 50
+  baseEnergyCost: 70
   baseDamage: 25
   baseSpeed: 50
   baseGravity: 1
-  extraCostPerLevel: 25
+  extraCostPerLevel: 70
   extraDamagePerLevel: 10
-  rockTimer: 0.8
+  rockTimer: 0.1167
   rockStage:
   - {fileID: -7261529889641869408, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
   - {fileID: -7485481437134642347, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
