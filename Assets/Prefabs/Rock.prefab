@@ -5016,7 +5016,8 @@ MonoBehaviour:
   baseGravity: 1
   extraCostPerLevel: 70
   extraDamagePerLevel: 10
-  rockTimer: 0.1167
+  baseRockTimer: 0.5
+  levelTimerGrowthRate: 1.4
   rockStage:
   - {fileID: -7261529889641869408, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
   - {fileID: -7485481437134642347, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
@@ -5026,7 +5027,10 @@ MonoBehaviour:
   whatDestroysRock:
     serializedVersion: 2
     m_Bits: 832
-  orbitSmoothTime: 0.05
+  overchargeDelay: 1
+  overchargeDrainPerSecond: 5
+  baseKnockbackForce: 25
+  knockbackBonusPerLevel: 0
   maxPreviewRange: 27
   previewGrowSpeed: 20
   previewStepCount: 70
@@ -5035,6 +5039,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   trajectoryLine: {fileID: 2593939931407083072}
+  orbitSmoothTime: 0.05
   debris: {fileID: 5518275332850196794, guid: 9d57fac71f6a45444b123dd63b05dc69, type: 3}
   shockWaveManager: {fileID: 7947344431761379559, guid: 23f5c58ae1641674caf9b17349710ae9, type: 3}
 --- !u!114 &-1718670401079746667
@@ -5099,7 +5104,7 @@ LineRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6424646774010446869}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0

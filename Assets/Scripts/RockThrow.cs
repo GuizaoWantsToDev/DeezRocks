@@ -23,8 +23,11 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private Transform throwDirection;
     private GameObject rockInst;
 
-    [Header("=== PHYSICS & COMBAT ===")]
-    [SerializeField] private float knockBackForce;
+    [Header("=== RECOIL (EXPONENTIAL) ===")]
+    // Base recoil for level 1 rock
+    [SerializeField] private float baseRecoilForce = 1f;
+    // Growth multiplier for recoil per rock level
+    [SerializeField] private float recoilGrowthRate = 1.8f;
 
     [Header("=== COOLDOWN SETTINGS ===")]
     [SerializeField] private float throwCooldown = 1f;
@@ -33,6 +36,9 @@ public class RockThrow : MonoBehaviour
     [Header("=== SPAWN VALIDATION ===")]
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float spawnCheckRadius = 0.3f;
+
+    // Tracks how long the button is held for PlayerController slow-fall calculation
+    public float holdTime { get; private set; }
 
     private void Start()
     {
@@ -46,10 +52,17 @@ public class RockThrow : MonoBehaviour
         HandleAimDirection();
         player.myAnimator.SetBool("ThrowState", inThrowState);
 
-        if (inThrowState && rockInst != null)
+        if (inThrowState)
         {
-            // Apagámos o transform.position daqui! A pedra agora move-se sozinha pelo SmoothDamp
-            rockInst.transform.rotation = throwPoint.transform.rotation;
+            // Increase hold timer
+            holdTime += Time.deltaTime;
+
+            if (rockInst != null)
+                rockInst.transform.rotation = throwPoint.transform.rotation;
+        }
+        else
+        {
+            holdTime = 0f;
         }
     }
 
@@ -62,6 +75,7 @@ public class RockThrow : MonoBehaviour
     {
         if (playerInput.currentControlScheme == "Keyboard")
         {
+            // Aim exactly at the mouse pointer
             if (Camera.main != null && Mouse.current != null)
             {
                 Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -69,23 +83,28 @@ public class RockThrow : MonoBehaviour
             }
         }
         else
-        { 
-            if (rawAimInput.magnitude > 0.5f)
+        {
+            // Controller: 25% deadzone to prevent stick snap-back bugs
+            if (rawAimInput.magnitude > 0.25f)
             {
                 aimDirection = rawAimInput.normalized;
+            }
+            else
+            {
+                // If stick is resting, check if current aim is inside a wall.
+                // If inside wall, reset aim to face forward.
+                Vector2 aimCheckPosition = (Vector2)transform.position + aimDirection * spawnCheckRadius;
+                bool aimInsidePlatform = Physics2D.OverlapCircle(aimCheckPosition, 0.1f, platformLayer) != null;
+
+                if (aimInsidePlatform)
+                {
+                    aimDirection = transform.right; // Reset to forward direction
+                }
             }
         }
 
         throwPoint.transform.right = aimDirection;
-
-        if (aimDirection.x < 0)
-        {
-            armRender.flipY = true;
-        }
-        else
-        {
-            armRender.flipY = false;
-        }
+        armRender.flipY = aimDirection.x < 0; // Flip arm sprite if aiming left
     }
 
     public void OnThrow(InputAction.CallbackContext context)
@@ -95,12 +114,14 @@ public class RockThrow : MonoBehaviour
             if (playerEnergy.HasEnough(rock.baseEnergyCost) && !player.isWalled)
             {
                 Vector2 spawnPosition = throwDirection.position;
-                bool spawnInsidePlatform = Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null;
 
+                // Validate if spawn point is inside a wall
+                bool spawnInsidePlatform = Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null;
                 if (spawnInsidePlatform) return;
 
                 player.fastFall = false;
                 inThrowState = true;
+                holdTime = 0f;
                 player.ResetGravity();
                 playerEnergy.StopPassiveRegen();
 
@@ -109,13 +130,13 @@ public class RockThrow : MonoBehaviour
                 if (rockInst != null)
                 {
                     Rock newRockScript = rockInst.GetComponent<Rock>();
-                    playerEnergy.UseEnergy(newRockScript.baseEnergyCost);
 
                     if (newRockScript != null)
                     {
-                        // ATENÇÃO: Agora passamos o throwDirection (a mão) para a pedra seguir!
+                        playerEnergy.UseEnergy(newRockScript.baseEnergyCost);
                         newRockScript.SetOwner(this, playerEnergy, throwDirection);
                     }
+
                     armRender.enabled = true;
                 }
             }
@@ -136,13 +157,16 @@ public class RockThrow : MonoBehaviour
             {
                 newRock.ReleaseRock(aimDirection);
 
+                // Calculate exponential recoil pushback
+                float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, newRock.currentRockStage);
+
                 player.isKnockBacked = true;
-                player.myRigidBody2D.AddForce(-aimDirection * knockBackForce, ForceMode2D.Impulse);
+                player.myRigidBody2D.AddForce(-aimDirection * recoilForce, ForceMode2D.Impulse);
                 player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
             }
         }
-        nextThrowTime = Time.time + throwCooldown;
 
+        nextThrowTime = Time.time + throwCooldown;
         ResetThrowState();
         playerEnergy.StartPassiveRegen();
     }
@@ -150,6 +174,7 @@ public class RockThrow : MonoBehaviour
     public void ResetThrowState()
     {
         inThrowState = false;
+        holdTime = 0f;
         armRender.enabled = false;
         rockInst = null;
         player.myAnimator.SetBool("ThrowState", false);

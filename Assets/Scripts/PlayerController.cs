@@ -33,6 +33,15 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector2 wallJumpPower;
     [SerializeField] private float wallDetachBufferTime = 0.15f;
 
+    [Header("=== HOLD FALL SETTINGS ===")]
+    // Starting gravity when holding the rock — very low so the player floats
+    [SerializeField] private float minHoldFallGravity = 0.05f;
+    // How much the fall gravity grows per second of holding (exponential base)
+    // 1.15 means +15% gravity per second — tune this to feel right
+    [SerializeField] private float holdFallGrowthRate = 1.15f;
+    // Maximum downward speed while holding the rock — keeps it feeling floaty
+    [SerializeField] private float maxHoldFallSpeed = 1.5f;
+
     [Header("=== SLOPES & FRICTION ===")]
     [SerializeField] private float maxSlopeAngle = 45f;
     [SerializeField] private float slopeCheckDistance = 0.5f;
@@ -401,7 +410,7 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetFloat("IsFalling", 0f);
         }
     }
-
+    
     private void FixedUpdate()
     {
         if (isDashing)
@@ -428,14 +437,29 @@ public class PlayerController : MonoBehaviour
 
         float gravToApply = currentGravity;
 
+        // --- ROCK HOLDING SLOW FALL LOGIC ---
         if (rockThrow.inThrowState)
         {
-            if (fastFall)
+            if (fastFall) ResetGravity();
+
+            // FIX: If the player jumps and aims, stop the upward momentum instantly
+            if (myRigidBody2D.linearVelocityY > 0f)
             {
-                ResetGravity();
+                // Force X and Y to 0 immediately so we don't float up or slide
+                myRigidBody2D.linearVelocity = Vector2.zero;
             }
-            myRigidBody2D.linearVelocity = Vector2.zero;
-            gravToApply = 0f;
+
+            // Gravity grows exponentially the longer you hold the rock
+            float holdFallGravity = minHoldFallGravity * Mathf.Pow(holdFallGrowthRate, rockThrow.holdTime);
+
+            // Never exceed normal player gravity
+            gravToApply = Mathf.Min(holdFallGravity, playerGravity);
+
+            // Clamp how fast the player can fall downward while holding the rock
+            float clampedFallSpeed = Mathf.Max(myRigidBody2D.linearVelocityY, -maxHoldFallSpeed);
+
+            // FIX: Force X velocity to 0 EVERY FRAME so the player doesn't drift left/right while aiming
+            myRigidBody2D.linearVelocity = new Vector2(0f, clampedFallSpeed);
         }
         else if (isGrounded && isOnSlope && inputValue == 0f && !isJumping)
         {
