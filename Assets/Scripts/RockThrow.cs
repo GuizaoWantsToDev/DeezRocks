@@ -12,21 +12,28 @@ public class RockThrow : MonoBehaviour
     public Vector2 aimDirection = Vector2.right;
     private Vector2 rawAimInput;
 
+    [Header("=== SHOTGUN UPGRADE ===")]
+    public bool isShotgunActive = false;
+    public Transform[] shotgunShootPoints;
+    public WeaponUIManager weaponUI;
+    [SerializeField] private float shotgunEnergyMultiplier = 3f;
+
     [Header("=== VISUALS & EFFECTS ===")]
     [SerializeField] private SpriteRenderer armRender;
     [SerializeField] private ParticleSystem particleSystems;
+    [SerializeField] private SpriteRenderer shotgunConeIndicator;
 
     [Header("=== ROCK SETUP & PREFABS ===")]
     [SerializeField] private Rock rock;
     [SerializeField] private GameObject rockPrefab;
     [SerializeField] private GameObject throwPoint;
     [SerializeField] private Transform throwDirection;
+    [SerializeField] private LineRenderer trajectoryLine;
+
     private GameObject rockInst;
 
     [Header("=== RECOIL (EXPONENTIAL) ===")]
-    // Base recoil for level 1 rock
     [SerializeField] private float baseRecoilForce = 1f;
-    // Growth multiplier for recoil per rock level
     [SerializeField] private float recoilGrowthRate = 1.8f;
 
     [Header("=== COOLDOWN SETTINGS ===")]
@@ -37,7 +44,6 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float spawnCheckRadius = 0.3f;
 
-    // Tracks how long the button is held for PlayerController slow-fall calculation
     public float holdTime { get; private set; }
 
     private void Start()
@@ -45,6 +51,9 @@ public class RockThrow : MonoBehaviour
         player = GetComponent<PlayerController>();
         playerInput = GetComponent<PlayerInput>();
         playerEnergy = GetComponent<PlayerEnergy>();
+
+        // O Cone reflete a arma selecionada no início
+        if (shotgunConeIndicator != null) shotgunConeIndicator.enabled = isShotgunActive;
     }
 
     private void Update()
@@ -52,13 +61,14 @@ public class RockThrow : MonoBehaviour
         HandleAimDirection();
         player.myAnimator.SetBool("ThrowState", inThrowState);
 
-        if (inThrowState)
+        if (inThrowState && !isShotgunActive)
         {
-            // Increase hold timer
             holdTime += Time.deltaTime;
 
             if (rockInst != null)
+            {
                 rockInst.transform.rotation = throwPoint.transform.rotation;
+            }
         }
         else
         {
@@ -71,11 +81,23 @@ public class RockThrow : MonoBehaviour
         rawAimInput = context.ReadValue<Vector2>();
     }
 
+    public void OnSwapWeapon(InputAction.CallbackContext context)
+    {
+        if (context.performed && !inThrowState)
+        {
+            isShotgunActive = !isShotgunActive;
+            if (weaponUI != null) weaponUI.UpdateWeaponUI(isShotgunActive);
+
+            // LIGA/DESLIGA O CONE VISUAL CONSOANTE A ARMA
+            if (shotgunConeIndicator != null) shotgunConeIndicator.enabled = isShotgunActive;
+            if (trajectoryLine != null) trajectoryLine.enabled = !isShotgunActive && inThrowState;
+        }
+    }
+
     private void HandleAimDirection()
     {
         if (playerInput.currentControlScheme == "Keyboard")
         {
-            // Aim exactly at the mouse pointer
             if (Camera.main != null && Mouse.current != null)
             {
                 Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
@@ -84,65 +106,106 @@ public class RockThrow : MonoBehaviour
         }
         else
         {
-            // Controller: 25% deadzone to prevent stick snap-back bugs
             if (rawAimInput.magnitude > 0.25f)
-            {
                 aimDirection = rawAimInput.normalized;
-            }
-            else
-            {
-                // If stick is resting, check if current aim is inside a wall.
-                // If inside wall, reset aim to face forward.
-                Vector2 aimCheckPosition = (Vector2)transform.position + aimDirection * spawnCheckRadius;
-                bool aimInsidePlatform = Physics2D.OverlapCircle(aimCheckPosition, 0.1f, platformLayer) != null;
-
-                if (aimInsidePlatform)
-                {
-                    aimDirection = transform.right; // Reset to forward direction
-                }
-            }
         }
 
         throwPoint.transform.right = aimDirection;
-        armRender.flipY = aimDirection.x < 0; // Flip arm sprite if aiming left
+        armRender.flipY = aimDirection.x < 0;
+
+        if (shotgunConeIndicator != null) shotgunConeIndicator.flipY = armRender.flipY;
     }
 
     public void OnThrow(InputAction.CallbackContext context)
     {
         if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
-            if (playerEnergy.HasEnough(rock.baseEnergyCost) && !player.isWalled)
+            float baseCost = rock.baseEnergyCost;
+
+            // ==========================================
+            // DISPARO INSTANTÂNEO DA SHOTGUN
+            // ==========================================
+            if (isShotgunActive)
             {
-                Vector2 spawnPosition = throwDirection.position;
+                float totalShotgunCost = baseCost * shotgunEnergyMultiplier;
 
-                // Validate if spawn point is inside a wall
-                bool spawnInsidePlatform = Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null;
-                if (spawnInsidePlatform) return;
-
-                player.fastFall = false;
-                inThrowState = true;
-                holdTime = 0f;
-                player.ResetGravity();
-                playerEnergy.StopPassiveRegen();
-
-                rockInst = Instantiate(rockPrefab, spawnPosition, throwPoint.transform.rotation);
-
-                if (rockInst != null)
+                if (playerEnergy.HasEnough(totalShotgunCost) && !player.isWalled)
                 {
-                    Rock newRockScript = rockInst.GetComponent<Rock>();
-
-                    if (newRockScript != null)
+                    // Verificação de colisão nas paredes ANTES de disparar
+                    bool spawnInsidePlatform = false;
+                    foreach (Transform sPoint in shotgunShootPoints)
                     {
+                        if (sPoint != null && Physics2D.OverlapCircle(sPoint.position, spawnCheckRadius, platformLayer) != null)
+                        {
+                            spawnInsidePlatform = true;
+                            break;
+                        }
+                    }
+                    if (spawnInsidePlatform) return;
+
+                    // Desconta Energia
+                    playerEnergy.UseEnergy(totalShotgunCost);
+
+                    // Mostra o braço rapidamente para feedback visual do disparo
+                    armRender.enabled = true;
+                    Invoke(nameof(HideArm), 0.15f);
+
+                    // Cria e dispara instantaneamente
+                    for (int i = 0; i < shotgunShootPoints.Length; i++)
+                    {
+                        Transform sPoint = shotgunShootPoints[i];
+                        if (sPoint == null) continue;
+
+                        GameObject sgRock = Instantiate(rockPrefab, sPoint.position, sPoint.rotation);
+                        Rock newRockScript = sgRock.GetComponent<Rock>();
+
+                        if (newRockScript != null)
+                        {
+                            newRockScript.isShotgunRock = true;
+                            newRockScript.SetOwner(this, playerEnergy, sPoint);
+                            newRockScript.ReleaseRock(sPoint.right); // Fogo IMEDIATO
+                        }
+                    }
+
+                    // Recoice Instantâneo
+                    player.isKnockBacked = true;
+                    player.myRigidBody2D.AddForce(-aimDirection * (baseRecoilForce * 2f), ForceMode2D.Impulse);
+                    player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
+
+                    nextThrowTime = Time.time + throwCooldown;
+                }
+            }
+            // ==========================================
+            // PREPARAÇÃO DA PEDRA NORMAL (HOLD)
+            // ==========================================
+            else
+            {
+                if (playerEnergy.HasEnough(baseCost) && !player.isWalled)
+                {
+                    Vector2 spawnPosition = throwDirection.position;
+                    if (Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null) return;
+
+                    inThrowState = true;
+                    holdTime = 0f;
+                    player.ResetGravity();
+                    playerEnergy.StopPassiveRegen();
+
+                    if (trajectoryLine != null) trajectoryLine.enabled = true;
+
+                    rockInst = Instantiate(rockPrefab, spawnPosition, throwPoint.transform.rotation);
+                    if (rockInst != null)
+                    {
+                        Rock newRockScript = rockInst.GetComponent<Rock>();
                         playerEnergy.UseEnergy(newRockScript.baseEnergyCost);
                         newRockScript.SetOwner(this, playerEnergy, throwDirection);
                     }
-
                     armRender.enabled = true;
                 }
             }
         }
 
-        if (context.canceled && inThrowState)
+        // LARGAR O BOTÃO (Apenas afeta a pedra normal, a Shotgun já foi disparada)
+        if (context.canceled && inThrowState && !isShotgunActive)
         {
             FireRock();
         }
@@ -152,19 +215,17 @@ public class RockThrow : MonoBehaviour
     {
         if (rockInst != null)
         {
-            Rock newRock = rockInst.GetComponent<Rock>();
-            if (newRock != null)
+            Rock normalRock = rockInst.GetComponent<Rock>();
+            if (normalRock != null)
             {
-                newRock.ReleaseRock(aimDirection);
-
-                // Calculate exponential recoil pushback
-                float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, newRock.currentRockStage);
-
+                normalRock.ReleaseRock(aimDirection);
+                float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, normalRock.currentRockStage);
                 player.isKnockBacked = true;
                 player.myRigidBody2D.AddForce(-aimDirection * recoilForce, ForceMode2D.Impulse);
                 player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
             }
         }
+        rockInst = null;
 
         nextThrowTime = Time.time + throwCooldown;
         ResetThrowState();
@@ -176,13 +237,21 @@ public class RockThrow : MonoBehaviour
         inThrowState = false;
         holdTime = 0f;
         armRender.enabled = false;
-        rockInst = null;
         player.myAnimator.SetBool("ThrowState", false);
+
+        if (trajectoryLine != null) trajectoryLine.enabled = false;
+
+        if (rockInst != null) Destroy(rockInst);
+        rockInst = null;
+    }
+
+    private void HideArm()
+    {
+        if (!inThrowState) armRender.enabled = false;
     }
 
     public void ForceRelease()
     {
-        if (inThrowState)
-            FireRock();
+        if (inThrowState && !isShotgunActive) FireRock();
     }
 }

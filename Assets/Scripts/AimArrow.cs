@@ -9,11 +9,15 @@ public class AimArrow : MonoBehaviour
 
     // Reference to the RockThrow script
     private RockThrow rockThrow;
+    private SpriteRenderer arrowRenderer;
 
     private void Start()
     {
         // Get the rock throw script from the parent (the player)
         rockThrow = GetComponentInParent<RockThrow>();
+
+        // Guarda o SpriteRenderer logo no início para poupar performance
+        arrowRenderer = GetComponent<SpriteRenderer>();
 
         // IMPORTANT TRICK: Detach the arrow from the player.
         // This prevents the arrow from flipping backwards when the player turns around!
@@ -29,8 +33,8 @@ public class AimArrow : MonoBehaviour
             return;
         }
 
-        // Always keep the arrow visible (no hide logic anymore)
-        GetComponent<SpriteRenderer>().enabled = true;
+        // MAGIA NOVA: Liga a seta normal apenas se a Shotgun NÃO estiver ativa!
+        arrowRenderer.enabled = !rockThrow.isShotgunActive;
 
         // 1. Position: Stay around the player based on the aim direction and radius
         transform.position = rockThrow.transform.position + (Vector3)(rockThrow.aimDirection * arrowRadius);
