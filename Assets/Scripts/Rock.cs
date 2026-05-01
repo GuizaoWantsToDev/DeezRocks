@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Controls the behavior, physics, collisions, and leveling of the projectiles
 public class Rock : MonoBehaviour
 {
     [Header("=== ROCK STATS ===")]
@@ -33,11 +34,11 @@ public class Rock : MonoBehaviour
     [SerializeField] private float knockbackBonusPerLevel = 1.5f;
 
     [Header("=== SHOTGUN SPECIFICS ===")]
-    [Tooltip("Tempo (em segundos) que as pedras da shotgun duram no ar para simular curto alcance")]
+    [Tooltip("Time in seconds the shotgun rocks stay alive to simulate short range")]
     [SerializeField] private float shotgunLifespan = 0.25f;
-    [Tooltip("Multiplicador do empurrão para a Shotgun ser um ataque Anti-Rush")]
+    [Tooltip("Knockback multiplier for the anti-rush shotgun attack")]
     [SerializeField] private float shotgunKnockbackMultiplier = 4f;
-    [Tooltip("Quanto dano é retirado a cada bala da Shotgun (Ex: 30 tira 30 de dano)")]
+    [Tooltip("Damage penalty applied to each shotgun rock")]
     [SerializeField] private float shotgunDamagePenalty = 30f;
 
     [Header("=== PREVIEW SETTINGS ===")]
@@ -74,6 +75,7 @@ public class Rock : MonoBehaviour
     private Coroutine levelUpCoroutine;
     private Vector2 orbitVelocity = Vector2.zero;
 
+    // Static list used globally to track all spawned rocks, avoiding expensive FindObjectsOfType calls
     private static List<Rock> allActiveRocks = new List<Rock>();
 
     private void OnEnable()
@@ -94,6 +96,7 @@ public class Rock : MonoBehaviour
 
         currentRockDamage = baseDamage;
 
+        // Starts kinematic to follow the player's arm without falling
         rockRigidBody2D.bodyType = RigidbodyType2D.Kinematic;
         rockRigidBody2D.gravityScale = 0f;
         rockRigidBody2D.linearVelocity = Vector2.zero;
@@ -104,12 +107,14 @@ public class Rock : MonoBehaviour
 
     private void Start()
     {
+        // Only the normal rock charges over time
         if (!isShotgunRock)
         {
             levelUpCoroutine = StartCoroutine(RockLevelUpCoroutine());
         }
     }
 
+    // Initializes the projectile with owner data and handles collision exemptions
     public void SetOwner(RockThrow throwReference, PlayerEnergy energyReference, Transform handPoint)
     {
         rockThrow = throwReference;
@@ -118,11 +123,11 @@ public class Rock : MonoBehaviour
         handTransform = handPoint;
         spawnTime = Time.time;
 
-        // REDUÇÃO DE DANO DA SHOTGUN APLICADA AQUI
+        // Apply pre-defined damage reduction if this is a Shotgun pellet
         if (isShotgunRock)
         {
             currentRockDamage -= shotgunDamagePenalty;
-            if (currentRockDamage < 0) currentRockDamage = 0f; // Garante que o dano não fica negativo
+            if (currentRockDamage < 0) currentRockDamage = 0f; // Prevent negative damage healing enemies
         }
 
         ownerColliders = ownerObject.GetComponentsInChildren<Collider2D>();
@@ -132,6 +137,7 @@ public class Rock : MonoBehaviour
             chargeParticles.Play();
     }
 
+    // Ignores physics collisions with the player and other rocks spawned in the exact same frame (siblings)
     private void IgnoreOwnerAndSiblingCollisions()
     {
         if (ownerColliders != null && rockCollider != null)
@@ -155,6 +161,7 @@ public class Rock : MonoBehaviour
         }
     }
 
+    // Identifies if another rock was spawned by the same owner at the same time
     public bool IsSibling(Rock otherRock)
     {
         if (otherRock == null || this.ownerObject == null || otherRock.ownerObject == null) return false;
@@ -176,6 +183,7 @@ public class Rock : MonoBehaviour
         UpdateOrbitPosition();
     }
 
+    // Prevents the rock from clipping into walls while the player is charging the throw
     private void CheckWallCollisionWhileHeld()
     {
         float checkRadius = rockCollider.radius + 0.1f;
@@ -200,6 +208,7 @@ public class Rock : MonoBehaviour
         }
     }
 
+    // Smoothly follows the player's aiming point
     private void UpdateOrbitPosition()
     {
         Vector2 targetPosition = handTransform.position;
@@ -216,6 +225,7 @@ public class Rock : MonoBehaviour
         rockRigidBody2D.MovePosition(smoothedPosition);
     }
 
+    // Calculates and renders the simulated physics trajectory line
     private void UpdatePreview()
     {
         currentPreviewRange = Mathf.MoveTowards(currentPreviewRange, maxPreviewRange, previewGrowSpeed * Time.deltaTime);
@@ -256,6 +266,7 @@ public class Rock : MonoBehaviour
         trajectoryLine.SetPositions(previewPoints.ToArray());
     }
 
+    // Coroutine to incrementally level up the rock's damage and visual state based on hold time
     private IEnumerator RockLevelUpCoroutine()
     {
         while (rockThrow != null && rockThrow.inThrowState)
@@ -290,6 +301,7 @@ public class Rock : MonoBehaviour
         }
     }
 
+    // Slowly drains the player's energy if they hold the rock at maximum level
     private IEnumerator OverchargeDrainCoroutine()
     {
         yield return new WaitForSeconds(overchargeDelay);
@@ -308,6 +320,7 @@ public class Rock : MonoBehaviour
         IgnoreOwnerAndSiblingCollisions();
     }
 
+    // Detaches the rock from the player, applies physics, and initiates lifespan if it's a shotgun
     public void ReleaseRock(Vector2 shootDirection)
     {
         if (chargeParticles != null) chargeParticles.gameObject.SetActive(false);
@@ -326,6 +339,7 @@ public class Rock : MonoBehaviour
         }
     }
 
+    // Handles impact logic: damages enemies, applies knockback, and triggers environment destruction
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Rock otherRock = collision.gameObject.GetComponent<Rock>();
@@ -372,6 +386,7 @@ public class Rock : MonoBehaviour
         Explode(contact.point);
     }
 
+    // Executes explosion visuals and triggers terrain breaking
     private void Explode(Vector2 hitPoint)
     {
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
@@ -389,6 +404,7 @@ public class Rock : MonoBehaviour
         Destroy(gameObject);
     }
 
+    // Disables platform prefabs overlapping the explosion radius and spawns collectible debris
     private void DestroyPlatformPieces(Vector2 hitPoint)
     {
         int platformPieceMask = LayerMask.GetMask("PlatformPiece");
@@ -403,7 +419,7 @@ public class Rock : MonoBehaviour
 
         foreach (Collider2D piece in hitPieces)
         {
-            piece.gameObject.SetActive(false);
+            piece.gameObject.SetActive(false); // Optimization: Disable instead of Destroy
             if (debris != null)
                 Instantiate(debris, piece.transform.position, transform.rotation);
         }

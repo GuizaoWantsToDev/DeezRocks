@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Handles the combat input, aiming, and instantiation of projectiles
 public class RockThrow : MonoBehaviour
 {
     private PlayerController player;
@@ -52,7 +53,7 @@ public class RockThrow : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         playerEnergy = GetComponent<PlayerEnergy>();
 
-        // O Cone reflete a arma selecionada no início
+        // Ensure the cone visual reflects the starting weapon state
         if (shotgunConeIndicator != null) shotgunConeIndicator.enabled = isShotgunActive;
     }
 
@@ -61,6 +62,7 @@ public class RockThrow : MonoBehaviour
         HandleAimDirection();
         player.myAnimator.SetBool("ThrowState", inThrowState);
 
+        // Keep updating the instantiated rock's rotation while charging the normal attack
         if (inThrowState && !isShotgunActive)
         {
             holdTime += Time.deltaTime;
@@ -76,11 +78,13 @@ public class RockThrow : MonoBehaviour
         }
     }
 
+    // Reads raw aiming vector from the new Input System
     public void OnAim(InputAction.CallbackContext context)
     {
         rawAimInput = context.ReadValue<Vector2>();
     }
 
+    // Toggles between Normal Rock and Shotgun fire modes
     public void OnSwapWeapon(InputAction.CallbackContext context)
     {
         if (context.performed && !inThrowState)
@@ -88,12 +92,13 @@ public class RockThrow : MonoBehaviour
             isShotgunActive = !isShotgunActive;
             if (weaponUI != null) weaponUI.UpdateWeaponUI(isShotgunActive);
 
-            // LIGA/DESLIGA O CONE VISUAL CONSOANTE A ARMA
+            // Toggle visual indicators based on the active weapon
             if (shotgunConeIndicator != null) shotgunConeIndicator.enabled = isShotgunActive;
             if (trajectoryLine != null) trajectoryLine.enabled = !isShotgunActive && inThrowState;
         }
     }
 
+    // Calculates the normalized aiming direction using the mouse or controller analog stick
     private void HandleAimDirection()
     {
         if (playerInput.currentControlScheme == "Keyboard")
@@ -111,27 +116,25 @@ public class RockThrow : MonoBehaviour
         }
 
         throwPoint.transform.right = aimDirection;
-        armRender.flipY = aimDirection.x < 0;
+        armRender.flipY = aimDirection.x < 0; // Flip the arm sprite correctly
 
         if (shotgunConeIndicator != null) shotgunConeIndicator.flipY = armRender.flipY;
     }
 
+    // Handles the primary attack button press. Starts charging a rock or fires the shotgun instantly.
     public void OnThrow(InputAction.CallbackContext context)
     {
         if (context.performed && !inThrowState && Time.time >= nextThrowTime)
         {
             float baseCost = rock.baseEnergyCost;
 
-            // ==========================================
-            // DISPARO INSTANTÂNEO DA SHOTGUN
-            // ==========================================
             if (isShotgunActive)
             {
                 float totalShotgunCost = baseCost * shotgunEnergyMultiplier;
 
                 if (playerEnergy.HasEnough(totalShotgunCost) && !player.isWalled)
                 {
-                    // Verificação de colisão nas paredes ANTES de disparar
+                    // Validation: Prevent spawning rocks inside walls
                     bool spawnInsidePlatform = false;
                     foreach (Transform sPoint in shotgunShootPoints)
                     {
@@ -143,14 +146,12 @@ public class RockThrow : MonoBehaviour
                     }
                     if (spawnInsidePlatform) return;
 
-                    // Desconta Energia
                     playerEnergy.UseEnergy(totalShotgunCost);
 
-                    // Mostra o braço rapidamente para feedback visual do disparo
                     armRender.enabled = true;
-                    Invoke(nameof(HideArm), 0.15f);
+                    Invoke(nameof(HideArm), 0.15f); // Briefly show arm for visual feedback
 
-                    // Cria e dispara instantaneamente
+                    // Instantiate and instantly fire rocks from all defined shotgun spread points
                     for (int i = 0; i < shotgunShootPoints.Length; i++)
                     {
                         Transform sPoint = shotgunShootPoints[i];
@@ -163,22 +164,16 @@ public class RockThrow : MonoBehaviour
                         {
                             newRockScript.isShotgunRock = true;
                             newRockScript.SetOwner(this, playerEnergy, sPoint);
-                            newRockScript.ReleaseRock(sPoint.right); // Fogo IMEDIATO
+                            newRockScript.ReleaseRock(sPoint.right); // Fire immediately
                         }
                     }
 
-                    // Recoice Instantâneo
-                    player.isKnockBacked = true;
-                    player.myRigidBody2D.AddForce(-aimDirection * (baseRecoilForce * 2f), ForceMode2D.Impulse);
-                    player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
-
+                    // Apply recoil force specific to the shotgun burst
+                    ApplyRecoil(baseRecoilForce * 2.5f);
                     nextThrowTime = Time.time + throwCooldown;
                 }
             }
-            // ==========================================
-            // PREPARAÇÃO DA PEDRA NORMAL (HOLD)
-            // ==========================================
-            else
+            else // NORMAL ROCK MODE
             {
                 if (playerEnergy.HasEnough(baseCost) && !player.isWalled)
                 {
@@ -192,6 +187,7 @@ public class RockThrow : MonoBehaviour
 
                     if (trajectoryLine != null) trajectoryLine.enabled = true;
 
+                    // Instantiate the charging rock attached to the player
                     rockInst = Instantiate(rockPrefab, spawnPosition, throwPoint.transform.rotation);
                     if (rockInst != null)
                     {
@@ -204,13 +200,14 @@ public class RockThrow : MonoBehaviour
             }
         }
 
-        // LARGAR O BOTÃO (Apenas afeta a pedra normal, a Shotgun já foi disparada)
+        // Release the standard rock when the input button is released
         if (context.canceled && inThrowState && !isShotgunActive)
         {
             FireRock();
         }
     }
 
+    // Handles the release logic for the standard chargeable rock
     private void FireRock()
     {
         if (rockInst != null)
@@ -220,18 +217,35 @@ public class RockThrow : MonoBehaviour
             {
                 normalRock.ReleaseRock(aimDirection);
                 float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, normalRock.currentRockStage);
-                player.isKnockBacked = true;
-                player.myRigidBody2D.AddForce(-aimDirection * recoilForce, ForceMode2D.Impulse);
-                player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
+
+                // Apply calculated recoil force based on the rock's charge stage
+                ApplyRecoil(recoilForce);
             }
         }
         rockInst = null;
-
         nextThrowTime = Time.time + throwCooldown;
         ResetThrowState();
         playerEnergy.StartPassiveRegen();
     }
 
+    // Centralized function to calculate and apply consistent recoil knockback to the player
+    private void ApplyRecoil(float forceMagnitude)
+    {
+        // Halt current linear momentum to ensure recoil is predictable regardless of movement state
+        player.myRigidBody2D.linearVelocity = Vector2.zero;
+        Vector2 recoilDir = -aimDirection;
+   
+        if (Mathf.Abs(recoilDir.x) > 0.5f && recoilDir.y >= -0.1f && recoilDir.y < 0.2f)
+        {
+            recoilDir.y = 0.2f;
+        }
+
+        player.isKnockBacked = true;
+        player.myRigidBody2D.AddForce(recoilDir.normalized * forceMagnitude, ForceMode2D.Impulse);
+        player.Invoke(nameof(player.CancelKnockBack), player.knockBackTime);
+    }
+
+    // Cleans up the aiming state and resets visuals
     public void ResetThrowState()
     {
         inThrowState = false;
@@ -250,6 +264,7 @@ public class RockThrow : MonoBehaviour
         if (!inThrowState) armRender.enabled = false;
     }
 
+    // Failsafe to force release if energy runs out or player is interrupted
     public void ForceRelease()
     {
         if (inThrowState && !isShotgunActive) FireRock();

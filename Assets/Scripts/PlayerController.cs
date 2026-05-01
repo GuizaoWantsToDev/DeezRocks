@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Central controller managing player physics, mobility abilities, state validation, and animations
 public class PlayerController : MonoBehaviour
 {
     [Header("=== COMPONENTS ===")]
@@ -34,12 +35,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float wallDetachBufferTime = 0.15f;
 
     [Header("=== HOLD FALL SETTINGS ===")]
-    // Starting gravity when holding the rock — very low so the player floats
     [SerializeField] private float minHoldFallGravity = 0.05f;
-    // How much the fall gravity grows per second of holding (exponential base)
-    // 1.15 means +15% gravity per second — tune this to feel right
     [SerializeField] private float holdFallGrowthRate = 1.15f;
-    // Maximum downward speed while holding the rock — keeps it feeling floaty
     [SerializeField] private float maxHoldFallSpeed = 1.5f;
 
     [Header("=== SLOPES & FRICTION ===")]
@@ -61,7 +58,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("=== COMBAT & LIVE STATES ===")]
     [SerializeField] public float knockBackTime;
-
     public bool isWalled;
     public bool fastFall;
     public bool isKnockBacked;
@@ -85,12 +81,12 @@ public class PlayerController : MonoBehaviour
     private RockThrow rockThrow;
     private bool canCancel;
     private bool isTouchingWallAnim;
-
     private bool isHoldingFall;
     private Coroutine dashCoroutine;
 
     private void Start()
     {
+        // Register this player instance with the global GameManager
         if (GameManager.Instance != null)
             GameManager.Instance.AddPlayer(gameObject);
 
@@ -99,12 +95,14 @@ public class PlayerController : MonoBehaviour
         ResetGravity();
     }
 
+    // Handles movement input mapping via the Input System
     public void OnMove(InputAction.CallbackContext context)
     {
         if (context.performed) inputValue = context.ReadValue<float>();
         if (context.canceled) inputValue = 0f;
     }
 
+    // Handles jump input, choosing between normal jumps and wall jumps
     public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed && !isDashing && !rockThrow.inThrowState)
@@ -120,12 +118,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Listens for the downward directional input to trigger the fast fall mechanic
     public void OnFall(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
             isHoldingFall = true;
-
+            // Only trigger fast fall if the player is airborne and not doing other heavy actions
             if (!isWalled && !rockThrow.inThrowState && !isDashing)
             {
                 ExecuteFastFall();
@@ -138,6 +137,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Overrides gravity and applies a downward impulse
     private void ExecuteFastFall()
     {
         fastFall = true;
@@ -145,6 +145,7 @@ public class PlayerController : MonoBehaviour
         myRigidBody2D.AddForce(Vector2.down * fastFallImpulse, ForceMode2D.Impulse);
     }
 
+    // Triggers the dash sequence
     public void OnDash(InputAction.CallbackContext context)
     {
         if (context.performed && canDash && !isWalled && !rockThrow.inThrowState && !isWallJumping)
@@ -154,18 +155,19 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Applies upward force for a standard jump and updates the jump counter
     private void Jump()
     {
         isJumping = true;
         isGrounded = false;
         ResetGravity();
-        myRigidBody2D.linearVelocityY = 0f;
+        myRigidBody2D.linearVelocityY = 0f; // Reset vertical momentum
         myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         jumpsRemaining--;
-        Invoke(nameof(ResetJumpState), 0.15f);
-
+        Invoke(nameof(ResetJumpState), 0.15f); // Buffer to prevent immediate re-grounding
     }
 
+    // Calculates and applies directional force to jump away from a wall surface
     private void WallJump()
     {
         canWallJump = false;
@@ -186,7 +188,7 @@ public class PlayerController : MonoBehaviour
         wallJumpDirection = new Vector2(jumpDirX, 1f).normalized;
         myTransform.right = new Vector3(jumpDirX, 0f, 0f);
 
-        myRigidBody2D.linearVelocity = Vector2.zero;
+        myRigidBody2D.linearVelocity = Vector2.zero; // Clear momentum
         myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
 
         Invoke(nameof(CancelWallJump), wallJumpTime);
@@ -203,12 +205,14 @@ public class PlayerController : MonoBehaviour
         isWallJumping = false;
     }
 
+    // Coroutine managing the dash duration, linear physics override, trail effect, and cooldown
     private IEnumerator Dash()
     {
         canDash = false;
         isDashing = true;
         ResetGravity();
-        myRigidBody2D.gravityScale = 0f;
+
+        myRigidBody2D.gravityScale = 0f; // Disable gravity during dash
         myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
         myTrailRenderer.emitting = true;
 
@@ -217,6 +221,7 @@ public class PlayerController : MonoBehaviour
         myTrailRenderer.emitting = false;
         isDashing = false;
 
+        // Re-apply fast fall if the player is still holding the input
         if (isHoldingFall && !isWalled && !rockThrow.inThrowState && !isGrounded)
         {
             ExecuteFastFall();
@@ -232,14 +237,15 @@ public class PlayerController : MonoBehaviour
         dashOnCooldown = false;
     }
 
+    // Validates if the player is touching the ground layer using an OverlapBox projection
     private void CheckGround()
     {
         bool rawGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer) != null;
-
         isGrounded = rawGrounded && !(isTouchingWallAnim && myRigidBody2D.linearVelocityY < -0.5f);
 
         if (myRigidBody2D.linearVelocityY <= 0.1f) isJumping = false;
 
+        // Reset jumps and states upon safely landing
         if (isGrounded && !isJumping && slopeDownAngle <= maxSlopeAngle)
         {
             jumpsRemaining = maxJumps;
@@ -247,6 +253,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Fires Raycasts downward and forward to map the exact angle of the surface beneath the player
     private void SlopeCheck()
     {
         Vector2 checkPos = transform.position - new Vector3(0.0f, cc.size.y / 2f);
@@ -264,16 +271,19 @@ public class PlayerController : MonoBehaviour
         isOnSlope = slopeHitFront || slopeHitBack;
 
         RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.down, slopeCheckDistance, groundLayer);
+
         if (hit)
         {
             slopeNormalPerp = Vector2.Perpendicular(hit.normal).normalized;
             slopeDownAngle = Vector2.Angle(hit.normal, Vector2.up);
+
             if (slopeDownAngle != lastSlopeAngle) isOnSlope = true;
             lastSlopeAngle = slopeDownAngle;
         }
 
         canWalkOnSlope = slopeDownAngle <= maxSlopeAngle && slopeSideAngle <= maxSlopeAngle;
 
+        // Adjust friction material dynamically to prevent sliding down slopes when standing still
         if (isOnSlope && canWalkOnSlope && inputValue == 0f)
         {
             myRigidBody2D.sharedMaterial = fullFriction;
@@ -284,11 +294,13 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Projects overlap boxes at head and foot levels to confirm a flat vertical wall surface
     public bool IsWallSliding()
     {
         return Physics2D.OverlapBox(wallCheckHead.position, wallCheckSize, 0f, wallLayer) != null && Physics2D.OverlapBox(wallCheckFoot.position, wallCheckSize, 0f, wallLayer) != null;
     }
 
+    // Updates wall-related boolean logic based on player input and physical wall proximity
     private void HandleWallLogic()
     {
         isTouchingWallAnim = IsWallSliding();
@@ -313,7 +325,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             isWalled = false;
-
             if (currentWallDetachTimer > 0)
             {
                 currentWallDetachTimer -= Time.deltaTime;
@@ -326,10 +337,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    // Translates input values into Rigidbody linear velocities depending on the current physical environment
     private void ApplyMovement()
     {
         if (isWalled)
         {
+            // Limit vertical descent speed when sliding against a wall
             myRigidBody2D.linearVelocity = new Vector2(0f, Mathf.Max(myRigidBody2D.linearVelocityY, -wallSlidingSpeed));
             return;
         }
@@ -349,19 +362,23 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
+                // Standard flat ground movement
                 myRigidBody2D.linearVelocity = new Vector2(mSpeed * inputValue, 0.0f);
             }
         }
         else if (!isGrounded)
         {
+            // Air mobility retention
             myRigidBody2D.linearVelocity = new Vector2(mSpeed * inputValue, myRigidBody2D.linearVelocityY);
         }
     }
 
+    // Flips the transform automatically based on input direction or aiming target
     private void CheckFlip()
     {
         if (rockThrow.inThrowState)
         {
+            // Force character to face the crosshair while charging an attack
             if (rockThrow.aimDirection.x > 0 && myTransform.right.x < 0)
             {
                 myTransform.right = Vector3.right;
@@ -370,7 +387,6 @@ public class PlayerController : MonoBehaviour
             {
                 myTransform.right = Vector3.left;
             }
-
             return;
         }
 
@@ -380,6 +396,7 @@ public class PlayerController : MonoBehaviour
             myTransform.right = -myTransform.right;
     }
 
+    // Communicates boolean and float values to the Animator component to trigger correct sprites
     private void UpdateAnimations()
     {
         bool isActuallyWallSliding = isTouchingWallAnim && !isGrounded;
@@ -410,7 +427,8 @@ public class PlayerController : MonoBehaviour
             myAnimator.SetFloat("IsFalling", 0f);
         }
     }
-    
+
+    // Main physics tick execution loop
     private void FixedUpdate()
     {
         if (isDashing)
@@ -438,27 +456,24 @@ public class PlayerController : MonoBehaviour
         float gravToApply = currentGravity;
 
         // --- ROCK HOLDING SLOW FALL LOGIC ---
+        // Dynamically reduces gravity to create a floating effect while aiming mid-air
         if (rockThrow.inThrowState)
         {
             if (fastFall) ResetGravity();
 
-            // FIX: If the player jumps and aims, stop the upward momentum instantly
+            // Cancel any upward momentum instantly when the player starts aiming
             if (myRigidBody2D.linearVelocityY > 0f)
             {
-                // Force X and Y to 0 immediately so we don't float up or slide
                 myRigidBody2D.linearVelocity = Vector2.zero;
             }
 
-            // Gravity grows exponentially the longer you hold the rock
+            // Exponentially increase fall speed over time, clamped to a maximum value
             float holdFallGravity = minHoldFallGravity * Mathf.Pow(holdFallGrowthRate, rockThrow.holdTime);
-
-            // Never exceed normal player gravity
             gravToApply = Mathf.Min(holdFallGravity, playerGravity);
 
-            // Clamp how fast the player can fall downward while holding the rock
             float clampedFallSpeed = Mathf.Max(myRigidBody2D.linearVelocityY, -maxHoldFallSpeed);
 
-            // FIX: Force X velocity to 0 EVERY FRAME so the player doesn't drift left/right while aiming
+            // Force X velocity to 0 to prevent horizontal drifting while aiming
             myRigidBody2D.linearVelocity = new Vector2(0f, clampedFallSpeed);
         }
         else if (isGrounded && isOnSlope && inputValue == 0f && !isJumping)
@@ -498,7 +513,6 @@ public class PlayerController : MonoBehaviour
         }
 
         jumpsRemaining = Mathf.Clamp(jumpsRemaining, 0, maxJumps);
-
         UpdateAnimations();
         CheckFlip();
 
@@ -519,9 +533,7 @@ public class PlayerController : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-
         if (groundCheck != null) Gizmos.DrawWireCube(groundCheck.position, groundCheckSize);
-
         if (wallCheckHead != null && wallCheckFoot != null)
         {
             Gizmos.DrawWireCube(wallCheckHead.position, wallCheckSize);

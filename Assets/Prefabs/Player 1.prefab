@@ -755,13 +755,13 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: -0.03640747, y: 0.20188904, z: 0}
-      m_Extent: {x: 0.22558594, y: 0.77848816, z: 0}
+      m_Center: {x: -0.03640747, y: 0.1992569, z: 0}
+      m_Extent: {x: 0.22558594, y: 0.7787552, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0.1
     m_FlipX: 0
     m_FlipY: 0
-    m_InitialTrim: 0.1
+    m_InitialTrim: 0
   m_CastingOption: 2
   m_PreviousTrimEdge: 0.1
   m_PreviousEdgeProcessing: 1

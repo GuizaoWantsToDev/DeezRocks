@@ -5029,11 +5029,11 @@ MonoBehaviour:
     m_Bits: 832
   destructionRadiusMultiplier: 1.5
   overchargeDelay: 1
-  overchargeDrainPerSecond: 5
+  overchargeDrainPerSecond: 15
   baseKnockbackForce: 20
-  knockbackBonusPerLevel: 0
+  knockbackBonusPerLevel: 3
   shotgunLifespan: 0.15
-  shotgunKnockbackMultiplier: 10
+  shotgunKnockbackMultiplier: 3
   shotgunDamagePenalty: 30
   maxPreviewRange: 27
   previewGrowSpeed: 20
@@ -5067,7 +5067,7 @@ MonoBehaviour:
   m_CastsShadows: 1
   m_SelfShadows: 0
   m_AlphaCutoff: 0.1
-  m_ApplyToSortingLayers: 000000008fa2c8713bc6cff329b99bf67379e54c
+  m_ApplyToSortingLayers: 8fa2c8713bc6cff30000000029b99bf61794e75c51abbda671cb882d7379e54cd165f2c82da64503a14db2116774947b
   m_ShapePath:
   - {x: -0.35000038, y: -0.36499977, z: 0}
   - {x: -0.35000038, y: 0.36499977, z: 0}

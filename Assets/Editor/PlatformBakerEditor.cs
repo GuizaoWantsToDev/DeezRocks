@@ -3,11 +3,14 @@ using System.IO;
 using UnityEditor;
 using UnityEngine;
 
+// Custom Unity Editor script to bake destructible platforms via a Voronoi fracturing algorithm
 public class PlatformPrefabMaker
 {
+    // Creates a custom button in the Unity top menu bar
     [MenuItem("Prefabs/Prefab The Selected Platform")]
     public static void BakeSelectedPlatform()
     {
+        // Validates if the selected object in the Hierarchy is a valid platform generator
         GameObject selectedPlatform = Selection.activeGameObject;
 
         if (selectedPlatform == null)
@@ -30,11 +33,11 @@ public class PlatformPrefabMaker
         MakePlatformPrefab(platform);
     }
 
+    // Executes the core baking logic: slices pixels, generates colliders, and saves prefabs
     private static void MakePlatformPrefab(PlatformGridGenerator platform)
     {
         string platformName = platform.gameObject.name;
         string baseRootPath = "Assets/Prefabs/Platforms";
-
         string basePiecesPath = $"{baseRootPath}/Pieces";
 
         Texture2D sourceTexture = platform.platformSpriterenderer.sprite.texture;
@@ -49,6 +52,8 @@ public class PlatformPrefabMaker
 
         Vector2Int[,] seedPoints = new Vector2Int[platform.gridColumns, platform.gridRows];
         float halfW = cellW / 2f; float halfH = cellH / 2f;
+
+        // Generates random Voronoi seed points based on the defined grid size
         for (int c = 0; c < platform.gridColumns; c++)
         {
             float offY = (c % 2 != 0) ? halfH : 0f;
@@ -64,7 +69,8 @@ public class PlatformPrefabMaker
         var pixelsByPiece = new Dictionary<Vector2Int, List<Vector2Int>>();
         Vector2 pivot = platform.platformSpriterenderer.sprite.pivot;
 
-        EditorUtility.DisplayProgressBar("Baking Plataforma", "A cortar píxeis...", 0.1f);
+        // Iterate through all pixels and group them into Voronoi cells using shortest distance mapping
+        EditorUtility.DisplayProgressBar("Baking Platform", "Slicing pixels...", 0.1f);
 
         for (int x = 0; x < imageWidth; x++)
         {
@@ -72,6 +78,8 @@ public class PlatformPrefabMaker
             {
                 Vector3 localPos = new Vector3((x - pivot.x) / ppu, (y - pivot.y) / ppu, 0);
                 Vector3 worldPos = platform.transform.TransformPoint(localPos);
+
+                // Ignore empty space by validating against the original PolygonCollider
                 if (!platform.platformCollider.OverlapPoint(worldPos)) continue;
 
                 int gridX = Mathf.Clamp(x / cellW, 0, platform.gridColumns - 1);
@@ -88,6 +96,7 @@ public class PlatformPrefabMaker
                         if (dist < shortestDist) { shortestDist = dist; closestSeed = seedPoints[nX, nY]; }
                     }
                 }
+
                 if (!pixelsByPiece.ContainsKey(closestSeed)) pixelsByPiece[closestSeed] = new List<Vector2Int>();
                 pixelsByPiece[closestSeed].Add(new Vector2Int(x, y));
             }
@@ -97,14 +106,16 @@ public class PlatformPrefabMaker
         GameObject finalRoot = new GameObject($"{platformName}_Baked");
         int totalPieces = pixelsByPiece.Count; int currentPiece = 0;
 
+        // Iterate over each grouped cell to generate physical GameObjects and Image files
         foreach (var piece in pixelsByPiece)
         {
             currentPiece++;
-            EditorUtility.DisplayProgressBar("Baking Plataforma", $"A processar peça {currentPiece}/{totalPieces}...", 0.3f + ((float)currentPiece / totalPieces * 0.6f));
+            EditorUtility.DisplayProgressBar("Baking Platform", $"Processing piece {currentPiece}/{totalPieces}...", 0.3f + ((float)currentPiece / totalPieces * 0.6f));
 
             List<Vector2Int> pixels = piece.Value;
-            if (pixels.Count < 20) continue;
+            if (pixels.Count < 20) continue; // Discard tiny noise fragments
 
+            // Calculate precise bounding box for the current piece
             int minX = imageWidth, maxX = 0, minY = imageHeight, maxY = 0;
             foreach (Vector2Int p in pixels)
             {
@@ -113,10 +124,15 @@ public class PlatformPrefabMaker
             }
             int pW = maxX - minX + 1; int pH = maxY - minY + 1;
 
+            // Create a transparent texture and inject the extracted pixels
             Texture2D pTex = new Texture2D(pW, pH, TextureFormat.RGBA32, false);
             pTex.filterMode = FilterMode.Bilinear;
             Color transparent = new Color(0, 0, 0, 0);
-            for (int i = 0; i < pTex.width; i++) for (int j = 0; j < pTex.height; j++) pTex.SetPixel(i, j, transparent);
+
+            for (int i = 0; i < pTex.width; i++)
+                for (int j = 0; j < pTex.height; j++)
+                    pTex.SetPixel(i, j, transparent);
+
             foreach (Vector2Int p in pixels)
             {
                 int sX = Mathf.RoundToInt(sheetX) + p.x; int sY = Mathf.RoundToInt(sheetY) + p.y;
@@ -124,12 +140,14 @@ public class PlatformPrefabMaker
             }
             pTex.Apply();
 
+            // Write the generated texture physically to disk as a PNG file
             string pieceName = $"{platformName}_P_{piece.Key.x}_{piece.Key.y}";
             string relativePath = $"{basePiecesPath}/{pieceName}.png";
             byte[] bytes = pTex.EncodeToPNG();
             File.WriteAllBytes(Application.dataPath + relativePath.Substring(6), bytes);
             AssetDatabase.ImportAsset(relativePath);
 
+            // Configure the Texture Importer programmatically to match Sprite 2D settings
             TextureImporter importer = AssetImporter.GetAtPath(relativePath) as TextureImporter;
             importer.textureType = TextureImporterType.Sprite;
             importer.spriteImportMode = SpriteImportMode.Single;
@@ -140,8 +158,8 @@ public class PlatformPrefabMaker
             importer.textureCompression = TextureImporterCompression.Uncompressed;
             importer.SaveAndReimport();
 
+            // Create the individual GameObject for the piece and attach Physics 2D components
             Sprite finalSprite = AssetDatabase.LoadAssetAtPath<Sprite>(relativePath);
-
             GameObject pObj = new GameObject(pieceName);
             pObj.transform.SetParent(finalRoot.transform);
             pObj.layer = targetLayer;
@@ -155,6 +173,7 @@ public class PlatformPrefabMaker
             renderer.sortingLayerID = platform.platformSpriterenderer.sortingLayerID;
             renderer.sortingOrder = platform.platformSpriterenderer.sortingOrder;
 
+            // Generates an exact pixel-perfect polygon outline for collision detection
             PolygonCollider2D groundPoly = pObj.AddComponent<PolygonCollider2D>();
             groundPoly.compositeOperation = Collider2D.CompositeOperation.Merge;
 
@@ -163,6 +182,7 @@ public class PlatformPrefabMaker
             targetCapsule.direction = pW >= pH ? CapsuleDirection2D.Horizontal : CapsuleDirection2D.Vertical;
         }
 
+        // Finalize the root object structure by merging colliders for performance optimization
         Rigidbody2D rb = finalRoot.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
 
@@ -170,17 +190,17 @@ public class PlatformPrefabMaker
         comp.geometryType = CompositeCollider2D.GeometryType.Outlines;
         comp.generationType = CompositeCollider2D.GenerationType.Synchronous;
 
-        EditorUtility.DisplayProgressBar("Baking Plataforma", "A criar Prefab final...", 0.9f);
-
+        // Save the complete hierarchy structure as a reusable Prefab in the Asset Database
+        EditorUtility.DisplayProgressBar("Baking Platform", "Creating final Prefab...", 0.9f);
         string prefabPath = $"{baseRootPath}/{platformName}_Prefab.prefab";
         PrefabUtility.SaveAsPrefabAssetAndConnect(finalRoot, prefabPath, InteractionMode.AutomatedAction);
 
+        // Cleanup temporary processing objects and refresh the editor interface
         EditorUtility.ClearProgressBar();
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-
         Object.DestroyImmediate(finalRoot);
 
-        Debug.Log($"<color=green>✅ Platform prefab '{platformName}' was a sucess</color> Stored in: {prefabPath}");
+        Debug.Log($"<color=green>✅ Platform prefab '{platformName}' was a success</color> Stored in: {prefabPath}");
     }
 }
