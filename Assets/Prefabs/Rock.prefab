@@ -5017,7 +5017,7 @@ MonoBehaviour:
   extraCostPerLevel: 70
   extraDamagePerLevel: 10
   baseRockTimer: 0.5
-  levelTimerGrowthRate: 1.4
+  levelTimerGrowthRate: 0.6
   rockStage:
   - {fileID: -7261529889641869408, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
   - {fileID: -7485481437134642347, guid: 7f901b8c2971d4a439aae652b35de4e4, type: 3}
@@ -5082,18 +5082,18 @@ MonoBehaviour:
   m_ShadowMesh:
     m_Mesh: {fileID: 0}
     m_LocalBounds:
-      m_Center: {x: 0, y: 0, z: 0}
-      m_Extent: {x: 0.81303406, y: 0.81303406, z: 0}
+      m_Center: {x: 0.0049972534, y: 0, z: 0}
+      m_Extent: {x: 0.7399826, y: 0.8149872, z: 0}
     m_EdgeProcessing: 1
     m_TrimEdge: 0.1
     m_FlipX: 0
     m_FlipY: 0
-    m_InitialTrim: 0
+    m_InitialTrim: 0.08
   m_CastingOption: 2
   m_PreviousTrimEdge: 0.1
   m_PreviousEdgeProcessing: 1
   m_PreviousShadowCastingSource: 2
-  m_PreviousShadowShape2DSource: {fileID: 4937167246935274422}
+  m_PreviousShadowShape2DSource: {fileID: 4041625304682653686}
   references:
     version: 2
     RefIds:

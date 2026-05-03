@@ -1173,7 +1173,7 @@ MonoBehaviour:
   throwPoint: {fileID: 4617561057449866335}
   throwDirection: {fileID: 6357770209277465539}
   trajectoryLine: {fileID: 0}
-  baseRecoilForce: 5
+  baseRecoilForce: 0.6
   recoilGrowthRate: 3
   throwCooldown: 0.467
   platformLayer:
