@@ -63,10 +63,10 @@ public class GameManager : MonoBehaviour
     {
         if (!gameObject.activeInHierarchy) return;
 
-        if (other.CompareTag("Player"))
-        {
-            other.GetComponent<PlayerHealth>().Die();
-        }
-        Destroy(other.gameObject);
+        // Only process players — ignore everything else that exits bounds
+        // (child colliders like ShotgunColliderAttack also fire this when disabled)
+        if (!other.CompareTag("Player")) return;
+
+        other.GetComponent<PlayerHealth>().Die();
     }
 }

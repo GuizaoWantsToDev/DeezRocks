@@ -62,7 +62,7 @@ public class Rock : MonoBehaviour
     private Transform handTransform;
     private Collider2D[] ownerColliders;
 
-    private Rigidbody2D rockRigidBody2D;
+    public Rigidbody2D rockRigidBody2D;
     private CircleCollider2D rockCollider;
     private SpriteRenderer rockSpriteRenderer;
     private Coroutine levelUpCoroutine;
@@ -271,12 +271,21 @@ public class Rock : MonoBehaviour
         {
             bool thisIsMaxLevel = currentRockStage >= rockStage.Length - 1;
             bool otherIsMinLevel = otherRock.currentRockStage == 0;
+            bool thisIsHigherLevel = currentRockStage > otherRock.currentRockStage;
 
             if (thisIsMaxLevel && otherIsMinLevel)
             {
+                // Level 5 destroys level 1
                 Destroy(otherRock.gameObject);
                 Explode(transform.position);
             }
+            else if (thisIsHigherLevel)
+            {
+                // Higher level stops the lower rock — physics mass handles the push
+                otherRock.rockRigidBody2D.linearVelocity = Vector2.zero;
+            }
+            // Same level or lower: Unity physics handles the bounce with mass values
+
             return;
         }
 
@@ -284,10 +293,8 @@ public class Rock : MonoBehaviour
         bool hitDestructibleLayer = (whatDestroysRock.value & (1 << collision.gameObject.layer)) > 0;
         bool hitOwner = collision.gameObject == ownerObject;
 
-        // If we hit ourselves before the self-damage delay is over, ignore it.
         if (hitOwner && !canHurtOwner) return;
 
-        // Only process hits on destructible layers or players
         PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
         if (!hitDestructibleLayer && hitPlayer == null) return;
 
@@ -309,7 +316,6 @@ public class Rock : MonoBehaviour
         Explode(contact.point);
     }
 
-    // Executes explosion visuals and triggers terrain breaking
     private void Explode(Vector2 hitPoint)
     {
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
@@ -318,11 +324,9 @@ public class Rock : MonoBehaviour
 
         DestroyPlatformPieces(hitPoint);
 
-
         Destroy(gameObject);
     }
 
-    // Disables platform prefabs overlapping the explosion radius and spawns collectible debris
     private void DestroyPlatformPieces(Vector2 hitPoint)
     {
         int platformPieceMask = LayerMask.GetMask("PlatformPiece");
