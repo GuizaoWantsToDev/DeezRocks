@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     [Header("=== SOUND CLIPS ===")]
     // The sound file for rock impacts
     [SerializeField] private AudioClip rockHitSound;
+    [SerializeField] private AudioClip playerHitSound;
 
     // The AudioSource component attached to this GameObject
     private AudioSource globalAudioSource;
@@ -38,5 +39,9 @@ public class SoundManager : MonoBehaviour
     public void PlayRockHit()
     {
         PlaySound(rockHitSound);
+    }
+    public void PlayPlayerHit()
+    {
+        PlaySound(playerHitSound);
     }
 }

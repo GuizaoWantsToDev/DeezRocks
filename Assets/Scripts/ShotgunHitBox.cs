@@ -8,7 +8,7 @@ public class ShotgunHitbox : MonoBehaviour
     [SerializeField] private float knockbackForce = 12f;
 
     private GameObject ownerRoot;
-    private BoxCollider2D attackCollider;
+    public BoxCollider2D attackCollider;
 
     // Objects already hit this swing — cleared every new activation
     private List<GameObject> alreadyHitThisSwing = new List<GameObject>();

@@ -17,7 +17,7 @@ public class Debris : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Player") && collision is CapsuleCollider2D)
         {
             PlayerEnergy playerEnergy = collision.GetComponent<PlayerEnergy>();
 

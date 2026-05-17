@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4416957782079918744}
   - component: {fileID: -6700501363817824533}
   - component: {fileID: 4978723808830559721}
-  - component: {fileID: 6804903589687153379}
+  - component: {fileID: -9036719883351670443}
   m_Layer: 11
   m_Name: Debris
   m_TagString: Untagged
@@ -217,7 +217,7 @@ PolygonCollider2D:
       - {x: -0.015406398, y: -0.81938815}
       - {x: 0.1445259, y: -0.7957403}
   m_UseDelaunayMesh: 1
---- !u!58 &6804903589687153379
+--- !u!58 &-9036719883351670443
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -252,4 +252,4 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 1.2377235
+  m_Radius: 0.8750001

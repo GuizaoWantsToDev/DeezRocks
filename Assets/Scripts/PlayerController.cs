@@ -62,6 +62,12 @@ public class PlayerController : MonoBehaviour
     public bool fastFall;
     public bool isKnockBacked;
 
+    [Header("=== KNOCKBACK SLIDE ===")]
+    // How fast the player decelerates on the ground after being knocked back
+    [SerializeField] private float groundKnockbackDeceleration = 10f;
+
+    // Lets RockThrow check if the player is on the ground before applying recoil
+    public bool IsGrounded => isGrounded;
     private float inputValue;
     private int jumpsRemaining;
     private bool isJumping;
@@ -207,7 +213,7 @@ public class PlayerController : MonoBehaviour
 
     // Coroutine managing the dash duration, linear physics override, trail effect, and cooldown
     private IEnumerator Dash()
-    {
+    {     
         canDash = false;
         isDashing = true;
         ResetGravity();
@@ -426,13 +432,16 @@ public class PlayerController : MonoBehaviour
         {
             myAnimator.SetFloat("IsFalling", 0f);
         }
+
     }
 
     // Main physics tick execution loop
     private void FixedUpdate()
     {
+        myAnimator.SetBool("IsDashing", isDashing);
+
         if (isDashing)
-        {
+        {  
             if (IsWallSliding())
             {
                 if (dashCoroutine != null) StopCoroutine(dashCoroutine);
@@ -487,7 +496,26 @@ public class PlayerController : MonoBehaviour
         {
             if (isKnockBacked)
             {
-                if (isWalled || IsWallSliding() || isGrounded)
+                if (isGrounded)
+                {
+                    // Slide on the ground with deceleration instead of stopping immediately
+                    float slidingVelocityX = Mathf.MoveTowards(
+                        myRigidBody2D.linearVelocityX,
+                        0f,
+                        groundKnockbackDeceleration * Time.fixedDeltaTime
+                    );
+                    myRigidBody2D.linearVelocity = new Vector2(slidingVelocityX, myRigidBody2D.linearVelocityY);
+
+                    // Auto-cancel once fully stopped AND the knockback timer has ended
+                    if (Mathf.Abs(slidingVelocityX) < 0.05f && canCancel)
+                    {
+                        isKnockBacked = false;
+                        canCancel = false;
+                    }
+                }
+
+                // Stop immediately only when hitting a wall
+                if (isWalled || IsWallSliding())
                 {
                     myRigidBody2D.linearVelocity = new Vector2(0f, myRigidBody2D.linearVelocityY);
                     isKnockBacked = false;
@@ -500,6 +528,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // Player cancels knockback early by pressing a direction after the timer ends
         if (inputValue != 0 && canCancel && isKnockBacked)
         {
             isKnockBacked = false;

@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Manages both weapons: the chargeable rock and the shotgun melee attack
 public class RockThrow : MonoBehaviour
 {
     private PlayerController player;
@@ -29,8 +28,15 @@ public class RockThrow : MonoBehaviour
     [SerializeField] private GameObject throwPoint;
     [SerializeField] private Transform throwDirection;
     [SerializeField] private LineRenderer trajectoryLine;
+
+    [Header("=== RECOIL (LEVELS 3-5 ONLY, AIRBORNE ONLY) ===")]
+    // Stage index 2 = level 3, 3 = level 4, 4 = level 5
     [SerializeField] private float baseRecoilForce = 1f;
     [SerializeField] private float recoilGrowthRate = 1.8f;
+    // Minimum rock stage that causes recoil (0-indexed: 2 = level 3)
+    private const int minimumStageForRecoil = 2;
+
+    [Header("=== SPAWN VALIDATION ===")]
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float spawnCheckRadius = 0.3f;
 
@@ -62,7 +68,6 @@ public class RockThrow : MonoBehaviour
         HandleAimDirection();
         player.myAnimator.SetBool("ThrowState", inThrowState);
 
-        // Track how long the player has been holding the rock
         if (inThrowState && !isShotgunActive)
         {
             holdTime += Time.deltaTime;
@@ -138,7 +143,6 @@ public class RockThrow : MonoBehaviour
         if (shotgunHitbox != null)
             shotgunHitbox.ActivateHitbox();
 
-        // Deactivate the hitbox after the attack window ends
         Invoke(nameof(DeactivateShotgun), shotgunActiveDuration);
 
         armRenderer.enabled = true;
@@ -157,7 +161,6 @@ public class RockThrow : MonoBehaviour
     {
         if (!playerEnergy.HasEnough(rock.baseEnergyCost) || player.isWalled) return;
 
-        // Don't allow spawning inside a platform
         Vector2 spawnPosition = throwDirection.position;
         if (Physics2D.OverlapCircle(spawnPosition, spawnCheckRadius, platformLayer) != null) return;
 
@@ -188,9 +191,16 @@ public class RockThrow : MonoBehaviour
             {
                 rockScript.ReleaseRock(aimDirection);
 
-                // Recoil grows exponentially with rock level — level 1 is soft, level 5 is strong
-                float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, rockScript.currentRockStage);
-                ApplyRecoil(recoilForce);
+                // Recoil only at levels 3, 4, 5 (stage indices 2, 3, 4)
+                // AND only when the player is airborne — no recoil when planted on the ground
+                bool isHighEnoughLevelForRecoil = rockScript.currentRockStage >= minimumStageForRecoil;
+                bool isPlayerAirborne = !player.IsGrounded;
+
+                if (isHighEnoughLevelForRecoil && isPlayerAirborne)
+                {
+                    float recoilForce = baseRecoilForce * Mathf.Pow(recoilGrowthRate, rockScript.currentRockStage);
+                    ApplyRecoil(recoilForce);
+                }
             }
         }
 
