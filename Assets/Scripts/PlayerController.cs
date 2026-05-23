@@ -89,6 +89,8 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingWallAnim;
     private bool isHoldingFall;
     private Coroutine dashCoroutine;
+    private bool knocked;
+    private float knockedTimer; 
 
     private void Start()
     {
@@ -440,9 +442,30 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    #region 
+    public void StartKnockedStage()
+    {
+        StartCoroutine(KnockedStage());
+    }
+
+    private IEnumerator KnockedStage()
+    {
+        knocked = true;
+        myRigidBody2D.sharedMaterial.bounciness = 1f;
+
+        yield return new WaitForSeconds(knockedTimer);
+
+        knocked = false;
+        myRigidBody2D.sharedMaterial.bounciness = 0f;
+    }
+    #endregion 
+
     // Main physics tick execution loop
     private void FixedUpdate()
     {
+        if (knocked)
+            return;
+
         myAnimator.SetBool("IsDashing", isDashing && !isKnockBacked);
 
         if (isDashing)

@@ -55,6 +55,7 @@ public class ShotgunHitbox : MonoBehaviour
         PlayerController hitPlayer = hitRoot.GetComponent<PlayerController>();
         if (hitPlayer != null)
         {
+            hitPlayer.StartKnockedStage();
             hitPlayer.transform.rotation = Quaternion.Euler(0, 0, 90);
             Rigidbody2D playerRigidBody = hitPlayer.myRigidBody2D;
             playerRigidBody.linearVelocityX = 0f;
@@ -63,6 +64,7 @@ public class ShotgunHitbox : MonoBehaviour
             hitPlayer.isKnockBacked = true;
             hitPlayer.Invoke(nameof(hitPlayer.CancelKnockBack), hitPlayer.knockBackTime);
             return;
+
         }
 
         Rigidbody2D otherRigidbody = hitRoot.GetComponent<Rigidbody2D>();
