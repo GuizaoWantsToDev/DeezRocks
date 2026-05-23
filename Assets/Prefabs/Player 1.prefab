@@ -2680,7 +2680,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShotgunHitbox
   damage: 5
-  knockbackForce: 54
+  knockbackForce: 80
   attackCollider: {fileID: 0}
 --- !u!61 &3209688645143694856
 BoxCollider2D:

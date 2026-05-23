@@ -55,7 +55,11 @@ public class ShotgunHitbox : MonoBehaviour
         PlayerController hitPlayer = hitRoot.GetComponent<PlayerController>();
         if (hitPlayer != null)
         {
-            hitPlayer.myRigidBody2D.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+            hitPlayer.transform.rotation = Quaternion.Euler(0, 0, 90);
+            Rigidbody2D playerRigidBody = hitPlayer.myRigidBody2D;
+            playerRigidBody.linearVelocityX = 0f;
+            playerRigidBody.linearVelocityY = 0f;
+            hitPlayer.myRigidBody2D.AddForce(knockbackDirection * (knockbackForce + 20), ForceMode2D.Impulse);
             hitPlayer.isKnockBacked = true;
             hitPlayer.Invoke(nameof(hitPlayer.CancelKnockBack), hitPlayer.knockBackTime);
             return;
@@ -68,7 +72,8 @@ public class ShotgunHitbox : MonoBehaviour
             if (dummie != null)
                 dummie.ReceiveKnockback();
 
-            otherRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
+            otherRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Force);
+
         }
     }
 }

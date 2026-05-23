@@ -104,7 +104,10 @@ public class PlayerController : MonoBehaviour
     // Handles movement input mapping via the Input System
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed) inputValue = context.ReadValue<float>();
+        if (context.performed)
+        {
+            inputValue = context.ReadValue<float>();
+        }
         if (context.canceled) inputValue = 0f;
     }
 
@@ -408,37 +411,39 @@ public class PlayerController : MonoBehaviour
         bool isActuallyWallSliding = isTouchingWallAnim && !isGrounded;
         bool isMoving = Mathf.Abs(inputValue) > 0f || Mathf.Abs(myRigidBody2D.linearVelocityX) > 0.5f;
 
-        myAnimator.SetBool("IsWallSliding", isActuallyWallSliding);
-        myAnimator.SetBool("IsRunning", isMoving && isGrounded);
-        myAnimator.SetBool("IsGrounded", isGrounded);
+        myAnimator.SetBool("IsWallSliding", isActuallyWallSliding && !isKnockBacked);
+        myAnimator.SetBool("IsRunning", isMoving && isGrounded && !isKnockBacked);
+        myAnimator.SetBool("IsGrounded", isGrounded && !isKnockBacked);
 
         bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.5f && !isOnSlope;
         bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.1f;
 
-        if (jumping)
+        if(!isKnockBacked)
         {
-            myAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
-        }
-        else
-        {
-            myAnimator.SetFloat("IsJumping", 0f);
-        }
+            if (jumping)
+            {
+                myAnimator.SetFloat("IsJumping", myRigidBody2D.linearVelocityY);
+            }
+            else
+            {
+                myAnimator.SetFloat("IsJumping", 0f);
+            }
 
-        if (falling)
-        {
-            myAnimator.SetFloat("IsFalling", myRigidBody2D.linearVelocityY);
+            if (falling)
+            {
+                myAnimator.SetFloat("IsFalling", myRigidBody2D.linearVelocityY);
+            }
+            else
+            {
+                myAnimator.SetFloat("IsFalling", 0f);
+            }
         }
-        else
-        {
-            myAnimator.SetFloat("IsFalling", 0f);
-        }
-
     }
 
     // Main physics tick execution loop
     private void FixedUpdate()
     {
-        myAnimator.SetBool("IsDashing", isDashing);
+        myAnimator.SetBool("IsDashing", isDashing && !isKnockBacked);
 
         if (isDashing)
         {  
@@ -509,6 +514,7 @@ public class PlayerController : MonoBehaviour
                     // Auto-cancel once fully stopped AND the knockback timer has ended
                     if (Mathf.Abs(slidingVelocityX) < 0.05f && canCancel)
                     {
+                        transform.rotation = Quaternion.Euler(0, 0, 0);
                         isKnockBacked = false;
                         canCancel = false;
                     }
