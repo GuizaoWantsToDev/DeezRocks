@@ -5,7 +5,7 @@ using System.Collections;
 namespace TMPro.Examples
 {
 
-    public class Benchmark01 : MonoBehaviour
+    public class Benchmark01 : UnityEngine.MonoBehaviour
     {
 
         public int BenchmarkType = 0;

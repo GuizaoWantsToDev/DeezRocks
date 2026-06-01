@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ShockWaveManager : MonoBehaviour
+public class ShockWaveManager : UnityEngine.MonoBehaviour
 {
     [SerializeField] private float shockWaveTime = 0.75f;
 

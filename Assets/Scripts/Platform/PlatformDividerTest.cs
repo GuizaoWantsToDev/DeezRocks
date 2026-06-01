@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-public class PlatformDividerTest : MonoBehaviour
+public class PlatformDividerTest : UnityEngine.MonoBehaviour
 {
     private void Start()
     {

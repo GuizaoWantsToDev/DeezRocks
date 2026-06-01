@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlatformGridGenerator : MonoBehaviour
+public class PlatformGridGenerator : UnityEngine.MonoBehaviour
 {
     [Header("Grid Configuration")]
     public int gridColumns;

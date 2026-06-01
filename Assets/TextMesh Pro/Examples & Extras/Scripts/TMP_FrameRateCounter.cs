@@ -5,7 +5,7 @@ using System.Collections;
 namespace TMPro.Examples
 {
 
-    public class TMP_FrameRateCounter : MonoBehaviour
+    public class TMP_FrameRateCounter : UnityEngine.MonoBehaviour
     {
         public float UpdateInterval = 5.0f;
         private float m_LastInterval = 0;

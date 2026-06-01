@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseDirection : MonoBehaviour
+public class MouseDirection : UnityEngine.MonoBehaviour
 {
     public static MouseDirection Instance { get; private set; } = null;
 

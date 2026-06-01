@@ -31,7 +31,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -18.05293, y: -7.50503, z: 0}
-  m_LocalScale: {x: 0.38, y: 0.38, z: 0.38}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -110,7 +110,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2.4
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -120,7 +120,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!114 &-6700501363817824533
 MonoBehaviour:
@@ -134,8 +134,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70069cbfbb2939347b959072f41c5aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Debris
-  debrisSpawnBoost: 14
-  energyAmount: 7
+  debrisSpawnBoost: 30
+  maxDebrisSize: 1.1
+  minDebrisSize: 0.5
+  baseEnergyAmount: 14
 --- !u!60 &4978723808830559721
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -149,7 +151,7 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 1280
@@ -182,40 +184,45 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.27912188, y: -0.7275642}
-      - {x: 0.40715784, y: -0.6230359}
-      - {x: 0.545404, y: -0.65391403}
-      - {x: 0.6299299, y: -0.58026624}
-      - {x: 0.72351, y: -0.41938815}
-      - {x: 0.8038721, y: -0.2696166}
-      - {x: 0.78641987, y: -0.16432974}
-      - {x: 0.6877241, y: -0.09613371}
-      - {x: 0.7457409, y: -0.033424854}
-      - {x: 0.7899299, y: -0.03675621}
-      - {x: 0.7889841, y: 0.15014943}
-      - {x: 0.75067025, y: 0.34081733}
-      - {x: 0.69330454, y: 0.4880476}
-      - {x: 0.63344234, y: 0.5021602}
-      - {x: 0.5608449, y: 0.56766176}
-      - {x: 0.48602915, y: 0.58320665}
-      - {x: 0.45522785, y: 0.690681}
-      - {x: 0.21021938, y: 0.7950964}
-      - {x: -0.040256947, y: 0.83913356}
-      - {x: -0.26526624, y: 0.62479216}
-      - {x: -0.38891166, y: 0.65121204}
-      - {x: -0.64960766, y: 0.47160673}
-      - {x: -0.6880383, y: 0.069250375}
-      - {x: -0.8007379, y: -0.11317609}
-      - {x: -0.8135124, y: -0.24851003}
-      - {x: -0.7160066, y: -0.43790746}
-      - {x: -0.60066783, y: -0.51581043}
-      - {x: -0.6089164, y: -0.6049323}
-      - {x: -0.5289164, y: -0.73499995}
-      - {x: -0.31120512, y: -0.836894}
-      - {x: -0.17709014, y: -0.81844234}
-      - {x: -0.08067025, y: -0.7792504}
-      - {x: -0.015406398, y: -0.81938815}
-      - {x: 0.1445259, y: -0.7957403}
+    - - {x: 0.26999998, y: -0.775}
+      - {x: 0.44, y: -0.66499996}
+      - {x: 0.56, y: -0.705}
+      - {x: 0.65, y: -0.635}
+      - {x: 0.76, y: -0.465}
+      - {x: 0.84, y: -0.295}
+      - {x: 0.84, y: -0.155}
+      - {x: 0.77, y: -0.095}
+      - {x: 0.81, y: -0.055}
+      - {x: 0.82, y: -0.024999999}
+      - {x: 0.82, y: 0.235}
+      - {x: 0.78999996, y: 0.39499998}
+      - {x: 0.69, y: 0.53499997}
+      - {x: 0.57, y: 0.59499997}
+      - {x: 0.42999998, y: 0.73499995}
+      - {x: 0.24, y: 0.815}
+      - {x: 0.14999999, y: 0.85499996}
+      - {x: 0.06, y: 0.865}
+      - {x: -0.099999994, y: 0.865}
+      - {x: -0.22999999, y: 0.695}
+      - {x: -0.32, y: 0.685}
+      - {x: -0.44, y: 0.695}
+      - {x: -0.5, y: 0.66499996}
+      - {x: -0.7, y: 0.515}
+      - {x: -0.72999996, y: 0.155}
+      - {x: -0.84999996, y: -0.114999995}
+      - {x: -0.84999996, y: -0.285}
+      - {x: -0.82, y: -0.385}
+      - {x: -0.66999996, y: -0.545}
+      - {x: -0.65999997, y: -0.625}
+      - {x: -0.58, y: -0.73499995}
+      - {x: -0.48999998, y: -0.815}
+      - {x: -0.32999998, y: -0.865}
+      - {x: -0.29999998, y: -0.875}
+      - {x: -0.22999999, y: -0.875}
+      - {x: -0.14999999, y: -0.865}
+      - {x: -0.099999994, y: -0.815}
+      - {x: -0.03, y: -0.865}
+      - {x: 0.14999999, y: -0.84499997}
   m_UseDelaunayMesh: 1
 --- !u!58 &-9036719883351670443
 CircleCollider2D:
@@ -230,7 +237,7 @@ CircleCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 4294967295
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0

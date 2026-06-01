@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI; // Necessário para mexer em componentes de Imagem
 
-public class WeaponUIManager : MonoBehaviour
+public class WeaponUIManager : UnityEngine.MonoBehaviour
 {
     [Header("=== WEAPON ICONS ===")]
     [Tooltip("Arrasta para aqui a imagem do ícone da Pedra Normal no teu Canvas")]

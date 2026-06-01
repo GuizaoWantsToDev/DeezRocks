@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PieceCleanUp : MonoBehaviour
+public class PieceCleanUp : UnityEngine.MonoBehaviour
 {
     private SpriteRenderer spriteRenderer;
     private PolygonCollider2D polygonCollider;

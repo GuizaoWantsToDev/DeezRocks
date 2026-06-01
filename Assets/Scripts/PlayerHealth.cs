@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealth : MonoBehaviour, IDamageable
+public class PlayerHealth : UnityEngine.MonoBehaviour, IDamageable
 {
     [Header("=== UI BARS ===")]
     [SerializeField] private Image screenSpaceHealthBar;
@@ -17,8 +17,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         currentHealth -= damageAmount;
         UpdateBar();
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlayPlayerHit();
+
+        //if (SoundManager.Instance != null)
+       //     SoundManager.Instance.PlayPlayerHit();
 
         if (currentHealth <= 0)
         {
@@ -38,6 +39,6 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (GameManager.Instance != null) 
             GameManager.Instance.RemovePlayer(gameObject);
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

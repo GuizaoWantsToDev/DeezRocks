@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public class InputManager : UnityEngine.MonoBehaviour
 {
     private bool keyboardJoined;
     private List<Gamepad> controllersJoined = new();

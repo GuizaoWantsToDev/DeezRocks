@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlatformDivider_old : MonoBehaviour
+public class PlatformDivider_old : UnityEngine.MonoBehaviour
 {
     [Header("Configuração da Grelha")]
     public int gridColumns = 10;

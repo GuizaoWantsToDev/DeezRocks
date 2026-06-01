@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HealthManager : MonoBehaviour
+public class HealthManager : UnityEngine.MonoBehaviour
 {
     public static HealthManager Instance { get; private set; }
 

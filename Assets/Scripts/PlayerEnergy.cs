@@ -2,15 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class PlayerEnergy : MonoBehaviour
+public class PlayerEnergy : UnityEngine.MonoBehaviour
 {
-    [Header("=== UI BARS ===")]
-    [SerializeField] private Image screenSpaceEnergyBar;
-    [SerializeField] private Image worldSpaceEnergyBar;
-
+    [Header("--- UI ----")]
+    [SerializeField] private Image energyBar;
+    [SerializeField] GameObject energyWarning;
     public float currentEnergy;
 
+    private float lowEnough = 0.30f;
+
     private Coroutine passiveRegenCoroutine;
+    private Coroutine warningCoroutine;
+    private float blinkDelay = 0.6f;
 
     private void Start()
     {
@@ -19,11 +22,37 @@ public class PlayerEnergy : MonoBehaviour
         StartPassiveRegen();
     }
 
+    private void Update()
+    {
+        if (currentEnergy == 0f)
+            energyWarning.SetActive(true);
+    }
+    private bool LowOnEnergy()
+    {
+        if(currentEnergy/EnergyManager.Instance.maxEnergy < lowEnough)
+            return true;
+        else
+            return false;
+    }
+
+    private IEnumerator Warning()
+    { 
+        while (true && currentEnergy != 0)
+        {
+            energyWarning.SetActive(true);
+            yield return new WaitForSeconds(blinkDelay);
+            energyWarning.SetActive(false);
+            yield return new WaitForSeconds(blinkDelay);
+        }
+    }
     public void UseEnergy(float amount)
     {
         currentEnergy -= amount;
         currentEnergy = Mathf.Max(currentEnergy, 0f);
         UpdateBars();
+
+        if (LowOnEnergy() && warningCoroutine == null)
+            warningCoroutine = StartCoroutine(Warning());
     }
 
     public void RefillEnergy(float amount)
@@ -31,6 +60,13 @@ public class PlayerEnergy : MonoBehaviour
         currentEnergy += amount;
         currentEnergy = Mathf.Min(currentEnergy, EnergyManager.Instance.maxEnergy);
         UpdateBars();
+
+        if (warningCoroutine != null && currentEnergy/EnergyManager.Instance.maxEnergy > lowEnough)
+        {
+            energyWarning.SetActive(false);
+            StopCoroutine(warningCoroutine);
+            warningCoroutine = null;
+        }
     }
 
     public bool HasEnough(float amount)
@@ -68,10 +104,7 @@ public class PlayerEnergy : MonoBehaviour
     {
         float fillAmount = currentEnergy / EnergyManager.Instance.maxEnergy;
 
-        if (screenSpaceEnergyBar != null)
-            screenSpaceEnergyBar.fillAmount = fillAmount;
-
-        if (worldSpaceEnergyBar != null)
-            worldSpaceEnergyBar.fillAmount = fillAmount;
+        if (energyBar != null)
+            energyBar.fillAmount = fillAmount;
     }
 }

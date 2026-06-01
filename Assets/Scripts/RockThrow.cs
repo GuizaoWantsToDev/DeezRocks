@@ -19,7 +19,6 @@ public class RockThrow : MonoBehaviour
     [Header("=== SHOTGUN ===")]
     [SerializeField] private ShotgunHitbox shotgunHitbox;
     [SerializeField] private float shotgunActiveDuration = 0.3f;
-    [SerializeField] private float shotgunEnergyCost = 20f;
     [SerializeField] private SpriteRenderer shotgunConeIndicator;
 
     [Header("=== ROCK ===")]
@@ -50,17 +49,21 @@ public class RockThrow : MonoBehaviour
     private GameObject spawnedRock;
     public float holdTime { get; private set; }
 
+    private float shotgunEnergyCost;
+
     private void Start()
     {
         player = GetComponent<PlayerController>();
         playerInput = GetComponent<PlayerInput>();
         playerEnergy = GetComponent<PlayerEnergy>();
 
-        if (shotgunHitbox != null)
-            shotgunHitbox.Initialize(gameObject);
+        //if (shotgunHitbox != null)
+        //    shotgunHitbox.Initialize(gameObject);
 
         if (shotgunConeIndicator != null)
             shotgunConeIndicator.enabled = false;
+
+        shotgunEnergyCost = MobilityAndCombatStats.Instance.shotgunEnergyCost;
     }
 
     private void Update()
@@ -121,16 +124,19 @@ public class RockThrow : MonoBehaviour
 
     public void OnThrow(InputAction.CallbackContext context)
     {
-        if (context.performed && !inThrowState && Time.time >= nextAttackTime)
+        if (!player.isKnocked)
         {
-            if (isShotgunActive)
-                FireShotgun();
-            else
-                StartChargingRock();
-        }
+            if (context.performed && !inThrowState && Time.time >= nextAttackTime)
+            {
+                if (isShotgunActive)
+                    FireShotgun();
+                else
+                    StartChargingRock();
+            }
 
-        if (context.canceled && inThrowState && !isShotgunActive)
-            ReleaseRock();
+            if (context.canceled && inThrowState && !isShotgunActive)
+                ReleaseRock();
+        }
     }
 
     private void FireShotgun()
@@ -140,21 +146,10 @@ public class RockThrow : MonoBehaviour
         playerEnergy.UseEnergy(shotgunEnergyCost);
         player.myAnimator.SetTrigger("ShotgunAttack");
 
-        if (shotgunHitbox != null)
-            shotgunHitbox.ActivateHitbox();
-
-        Invoke(nameof(DeactivateShotgun), shotgunActiveDuration);
-
         armRenderer.enabled = true;
         Invoke(nameof(HideArm), 0.15f);
 
         nextAttackTime = Time.time + attackCooldown;
-    }
-
-    private void DeactivateShotgun()
-    {
-        if (shotgunHitbox != null)
-            shotgunHitbox.DeactivateHitbox();
     }
 
     private void StartChargingRock()

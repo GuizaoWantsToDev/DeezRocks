@@ -3,7 +3,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
 
 // Manages the pause state, UI navigation, and input detection
-public class PauseMenu : MonoBehaviour
+public class PauseMenu : UnityEngine.MonoBehaviour
 {
     public static bool gameIsPaused = false;
 

@@ -8,17 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; } = null;
 
-    [Header("Player OutOffBounds")]
-    [SerializeField]
-    private BoxCollider2D mapLimit;
-
+    [Header("--- PLAYERS ---")]
     public GameObject[] spawnablePlayers;
-
-    public List<GameObject> playersList = new List<GameObject>();
+    public List<GameObject> playersList = new();
     private int maxPlayers = 2;
 
-    [SerializeField]
-    private CinemachineTargetGroup targetGroup;
+    [SerializeField] private CinemachineTargetGroup targetGroup;
 
     private void Awake()
     {
@@ -30,12 +25,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-
-    private IEnumerator ReloadGame()
-    {
-        yield return new WaitForSeconds(1f);
-        SceneManager.LoadScene("Prototype 2");
     }
 
     public void AddPlayer(GameObject player)
@@ -53,20 +42,22 @@ public class GameManager : MonoBehaviour
     {
         playersList.Remove(player);
 
-        if (playersList.Count <= 1 && gameObject.activeInHierarchy)
+        if (playersList.Count <= 1)
         {
             StartCoroutine(ReloadGame());
         }
     }
-
-    private void OnTriggerExit2D(Collider2D other)
+    private IEnumerator ReloadGame()
     {
-        if (!gameObject.activeInHierarchy) return;
+        yield return new WaitForSeconds(1f);
+        SceneManager.LoadScene("Prototype 2");
+    }
 
-        // Only process players — ignore everything else that exits bounds
-        // (child colliders like ShotgunColliderAttack also fire this when disabled)
-        if (!other.CompareTag("Player")) return;
-
-        other.GetComponent<PlayerHealth>().Die();
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+      if(other.TryGetComponent<PlayerHealth>(out PlayerHealth player))
+            player.Die();
+      
+      other.gameObject.SetActive(false);
     }
 }

@@ -1,5 +1,5 @@
-using System;
 using PhotoshopFile;
+using System;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -28,6 +28,7 @@ namespace UnityEditor.U2D.PSD
     }
 
 #if USE_NEW_EDITOR_ANALYTICS
+
     [AnalyticInfo(eventName: PSDApplyEvent.name,
         vendorKey: Analytics.vendorKey,
         version: Analytics.version,
@@ -35,7 +36,7 @@ namespace UnityEditor.U2D.PSD
         maxNumberOfElements: Analytics.maxNumberOfElements)]
     internal class PSDApplyEventAnalytic : IAnalytic
     {
-        PSDApplyEvent m_EvtData;
+        private PSDApplyEvent m_EvtData;
 
         public PSDApplyEventAnalytic(PSDApplyEvent evtData)
         {
@@ -49,6 +50,7 @@ namespace UnityEditor.U2D.PSD
             return true;
         }
     }
+
 #endif
 
     internal interface IAnalytics
@@ -58,7 +60,7 @@ namespace UnityEditor.U2D.PSD
 
     internal static class AnalyticFactory
     {
-        static IAnalytics s_Analytics;
+        private static IAnalytics s_Analytics;
 
         public static IAnalytics analytics
         {

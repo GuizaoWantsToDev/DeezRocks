@@ -1,7 +1,7 @@
 using UnityEngine;
 
 // Controls the visual arrow that orbits the player while aiming
-public class AimArrow : MonoBehaviour
+public class AimArrow : UnityEngine.MonoBehaviour
 {
     [Header("=== ARROW SETTINGS ===")]
     // Distance from the player's center

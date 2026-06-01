@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace TMPro.Examples
 {
 
-    public class VertexZoom : MonoBehaviour
+    public class VertexZoom : UnityEngine.MonoBehaviour
     {
         public float AngleMultiplier = 1.0f;
         public float SpeedMultiplier = 1.0f;

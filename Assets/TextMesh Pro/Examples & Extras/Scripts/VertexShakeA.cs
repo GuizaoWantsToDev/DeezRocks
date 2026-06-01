@@ -5,7 +5,7 @@ using System.Collections;
 namespace TMPro.Examples
 {
 
-    public class VertexShakeA : MonoBehaviour
+    public class VertexShakeA : UnityEngine.MonoBehaviour
     {
 
         public float AngleMultiplier = 1.0f;

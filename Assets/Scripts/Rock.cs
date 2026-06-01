@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rock : MonoBehaviour
+public class Rock : UnityEngine.MonoBehaviour
 {
     [Header("=== ROCK STATS ===")]
     [SerializeField] private ParticleSystem chargeParticles;
@@ -68,6 +68,8 @@ public class Rock : MonoBehaviour
     private Coroutine levelUpCoroutine;
     private Vector2 orbitVelocity = Vector2.zero;
 
+    private PoolManager poolManager;
+
     private void Awake()
     {
         rockRigidBody2D = GetComponent<Rigidbody2D>();
@@ -86,6 +88,7 @@ public class Rock : MonoBehaviour
 
     private void Start()
     {
+        poolManager = PoolManager.Instance;
         levelUpCoroutine = StartCoroutine(RockLevelUpCoroutine());
     }
 
@@ -309,7 +312,7 @@ public class Rock : MonoBehaviour
                 if (hitRigidbody != null)
                 {
                     Dummie dummie = collision.gameObject.GetComponent<Dummie>();
-                    if (dummie != null) dummie.ReceiveKnockback();
+                  //  if (dummie != null) dummie.ReceiveKnockback();
 
                     hitRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
                 }
@@ -329,6 +332,8 @@ public class Rock : MonoBehaviour
         Destroy(gameObject);
     }
 
+
+    #region Destruction
     private void DestroyPlatformPieces(Vector2 hitPoint)
     {
         int platformPieceMask = LayerMask.GetMask("PlatformPiece");
@@ -343,10 +348,10 @@ public class Rock : MonoBehaviour
         foreach (Collider2D piece in hitPieces)
         {
             piece.gameObject.SetActive(false);
-            if (debris != null)
-                Instantiate(debris, piece.transform.position, transform.rotation);
+            poolManager.SpawnPoolObject("Debris", piece.transform.position, Quaternion.identity);
         }
     }
+    #endregion
 
     private void OnDestroy()
     {
@@ -355,7 +360,7 @@ public class Rock : MonoBehaviour
             rockThrow.ResetThrowState();
             if (ownerEnergy != null) ownerEnergy.StartPassiveRegen();
         }
-        if (SoundManager.Instance != null)
-            SoundManager.Instance.PlayRockHit();
+       // if (SoundManager.Instance != null)
+        //    SoundManager.Instance.PlayRockHit();
     }
 }

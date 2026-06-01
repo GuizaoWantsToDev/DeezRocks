@@ -1,75 +1,78 @@
+using System.Collections;
 using UnityEngine;
 
 public class Dummie : MonoBehaviour, IDamageable
 {
-    private Rigidbody2D rb;
+    public Rigidbody2D myRigidBody2D;
     private Vector2 startPosition;
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer mySpriteRenderer;
     private Color originalColor;
+    private Coroutine knockedCoroutine;
 
-    [Header("=== DUMMY SETTINGS ===")]
+    public bool isKnocked;
+    private float knockedTimer;
+
+    [Header("--- SETTINGS ---")]
     [SerializeField] private float returnSpeed = 3f;
+    [SerializeField] private float damageBlinkTime = 1f;
     [SerializeField] private Color hitColor = Color.red;
-    [SerializeField] private float knockbackRecoveryTime = 0.5f;
+    
 
-    private bool isKnockedBack = false;
-
-    private void Awake()
+    private void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        myRigidBody2D = GetComponent<Rigidbody2D>();
+        mySpriteRenderer = GetComponent<SpriteRenderer>();
 
-        if (spriteRenderer != null)
-            originalColor = spriteRenderer.color;
-
-        rb.bodyType = RigidbodyType2D.Dynamic;
-        rb.gravityScale = 0f;
-        rb.freezeRotation = true;
-
+        originalColor = mySpriteRenderer.color;
         startPosition = transform.position;
+        knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
     }
 
     private void FixedUpdate()
     {
-        if (isKnockedBack) return;
+        if (isKnocked) 
+            return;
 
         // MoveTowards never overshoots — stops exactly at the target
-        Vector2 nextPosition = Vector2.MoveTowards(rb.position, startPosition, returnSpeed * Time.fixedDeltaTime);
-        rb.MovePosition(nextPosition);
+        Vector2 nextPosition = Vector2.MoveTowards(myRigidBody2D.position, startPosition, returnSpeed * Time.fixedDeltaTime);
+        myRigidBody2D.MovePosition(nextPosition);
 
-        // Kill all velocity so physics doesn't fight the movement
-        rb.linearVelocity = Vector2.zero;
+        myRigidBody2D.linearVelocity = Vector2.zero;
     }
 
-    public void ReceiveKnockback()
+    #region KNOCKED_STAGE
+    public void StartKnockedStage()
     {
-        isKnockedBack = true;
-        CancelInvoke(nameof(ResetKnockback));
-        Invoke(nameof(ResetKnockback), knockbackRecoveryTime);
+        if (knockedCoroutine == null)
+            knockedCoroutine = StartCoroutine(KnockedStage());
     }
 
-    private void ResetKnockback()
+    private IEnumerator KnockedStage()
     {
-        isKnockedBack = false;
-        // Kill leftover velocity so it doesn't keep drifting after recovery
-        rb.linearVelocity = Vector2.zero;
+        isKnocked = true;
+        transform.rotation = Quaternion.Euler(0, 0, 90);
+        myRigidBody2D.sharedMaterial.bounciness = 1f;
+
+        yield return new WaitForSeconds(knockedTimer);
+
+        isKnocked = false;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+        myRigidBody2D.sharedMaterial.bounciness = 0f;
+        knockedCoroutine = null;
     }
+    #endregion
 
     public void Damage(float amount)
     {
         Debug.Log($"<color=orange>DUMMY TOOK {amount} DAMAGE!</color>");
 
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.color = hitColor;
-            CancelInvoke(nameof(ResetColor));
-            Invoke(nameof(ResetColor), 0.15f);
-        }
+        mySpriteRenderer.color = hitColor;
+        StartCoroutine(ResetColor());    
     }
 
-    private void ResetColor()
+    private IEnumerator ResetColor()
     {
-        if (spriteRenderer != null)
-            spriteRenderer.color = originalColor;
+        yield return new WaitForSeconds(damageBlinkTime);   
+        mySpriteRenderer.color = originalColor;
     }
 }

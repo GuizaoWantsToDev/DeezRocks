@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ScrollingBackGround : MonoBehaviour
+public class ScrollingBackGround : UnityEngine.MonoBehaviour
 {
     [SerializeField]
     private float speed;

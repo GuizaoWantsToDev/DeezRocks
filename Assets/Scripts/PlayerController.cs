@@ -1,8 +1,9 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-// Central controller managing player physics, mobility abilities, state validation, and animations
+//Central controller managing player physics, mobility abilities, state validation, and animations
 public class PlayerController : MonoBehaviour
 {
     [Header("=== COMPONENTS ===")]
@@ -89,8 +90,10 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingWallAnim;
     private bool isHoldingFall;
     private Coroutine dashCoroutine;
-    private bool knocked;
-    private float knockedTimer; 
+
+    public bool isKnocked = false;
+    private float knockedTimer;
+    private Coroutine knockedCoroutine;
 
     private void Start()
     {
@@ -101,50 +104,63 @@ public class PlayerController : MonoBehaviour
         rockThrow = GetComponent<RockThrow>();
         cc = GetComponent<CapsuleCollider2D>();
         ResetGravity();
+
+        knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
     }
 
-    // Handles movement input mapping via the Input System
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.performed)
+     if (!isKnocked)
         {
-            inputValue = context.ReadValue<float>();
+            if (context.performed)
+            {
+                inputValue = context.ReadValue<float>();
+            }
+            if (context.canceled)
+            {
+                inputValue = 0f;
+            }                      
         }
-        if (context.canceled) inputValue = 0f;
     }
 
     // Handles jump input, choosing between normal jumps and wall jumps
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.performed && !isDashing && !rockThrow.inThrowState)
+        if (!isKnocked)
         {
-            if (canWallJump)
+            if (context.performed && !isDashing && !rockThrow.inThrowState)
             {
-                WallJump();
-            }
-            else if (jumpsRemaining > 0 && !isWalled)
-            {
-                Jump();
+                if (canWallJump)
+                {
+                    WallJump();
+                }
+                else if (jumpsRemaining > 0 && !isWalled)
+                {
+                    Jump();
+                }
             }
         }
     }
 
-    // Listens for the downward directional input to trigger the fast fall mechanic
+    #region FAST_FALL
     public void OnFall(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (!isKnocked)
         {
-            isHoldingFall = true;
-            // Only trigger fast fall if the player is airborne and not doing other heavy actions
-            if (!isWalled && !rockThrow.inThrowState && !isDashing)
+            if (context.performed)
             {
-                ExecuteFastFall();
+                isHoldingFall = true;
+                // Only trigger fast fall if the player is airborne and not doing other heavy actions
+                if (!isWalled && !rockThrow.inThrowState && !isDashing)
+                {
+                    ExecuteFastFall();
+                }
             }
-        }
-        else if (context.canceled)
-        {
-            isHoldingFall = false;
-            ResetGravity();
+            else if (context.canceled)
+            {
+                isHoldingFall = false;
+                ResetGravity();
+            }
         }
     }
 
@@ -156,15 +172,47 @@ public class PlayerController : MonoBehaviour
         myRigidBody2D.AddForce(Vector2.down * fastFallImpulse, ForceMode2D.Impulse);
     }
 
-    // Triggers the dash sequence
+    #endregion
+
+    #region DASH
     public void OnDash(InputAction.CallbackContext context)
     {
-        if (context.performed && canDash && !isWalled && !rockThrow.inThrowState && !isWallJumping)
+        if (!isKnocked)
         {
-            if (dashCoroutine != null) StopCoroutine(dashCoroutine);
-            dashCoroutine = StartCoroutine(Dash());
+            if (context.performed && canDash && !isWalled && !rockThrow.inThrowState && !isWallJumping)
+            {
+                if (dashCoroutine != null) StopCoroutine(dashCoroutine);
+                dashCoroutine = StartCoroutine(Dash());
+            }
         }
     }
+    private IEnumerator Dash()
+    {
+        canDash = false;
+        isDashing = true;
+        ResetGravity();
+
+        myRigidBody2D.gravityScale = 0f; // Disable gravity during dash
+        myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
+        myTrailRenderer.emitting = true;
+
+        yield return new WaitForSeconds(dashTime);
+
+        myTrailRenderer.emitting = false;
+        isDashing = false;
+
+        // Re-apply fast fall if the player is still holding the input
+        if (isHoldingFall && !isWalled && !rockThrow.inThrowState && !isGrounded)
+        {
+            ExecuteFastFall();
+        }
+
+        dashOnCooldown = true;
+        yield return new WaitForSeconds(dashCoolDown);
+        dashOnCooldown = false;
+    }
+
+    #endregion
 
     // Applies upward force for a standard jump and updates the jump counter
     private void Jump()
@@ -217,31 +265,6 @@ public class PlayerController : MonoBehaviour
     }
 
     // Coroutine managing the dash duration, linear physics override, trail effect, and cooldown
-    private IEnumerator Dash()
-    {     
-        canDash = false;
-        isDashing = true;
-        ResetGravity();
-
-        myRigidBody2D.gravityScale = 0f; // Disable gravity during dash
-        myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
-        myTrailRenderer.emitting = true;
-
-        yield return new WaitForSeconds(dashTime);
-
-        myTrailRenderer.emitting = false;
-        isDashing = false;
-
-        // Re-apply fast fall if the player is still holding the input
-        if (isHoldingFall && !isWalled && !rockThrow.inThrowState && !isGrounded)
-        {
-            ExecuteFastFall();
-        }
-
-        dashOnCooldown = true;
-        yield return new WaitForSeconds(dashCoolDown);
-        dashOnCooldown = false;
-    }
 
     private void ResetDashCooldown()
     {
@@ -420,7 +443,7 @@ public class PlayerController : MonoBehaviour
         bool jumping = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY > 0.5f && !isOnSlope;
         bool falling = !isGrounded && !isActuallyWallSliding && myRigidBody2D.linearVelocityY < -0.1f;
 
-        if(!isKnockBacked)
+        if (!isKnockBacked)
         {
             if (jumping)
             {
@@ -442,34 +465,39 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    #region 
+    #region KNOCKED_STAGE
     public void StartKnockedStage()
     {
-        StartCoroutine(KnockedStage());
+        if (knockedCoroutine == null)
+            knockedCoroutine = StartCoroutine(KnockedStage());
     }
 
     private IEnumerator KnockedStage()
     {
-        knocked = true;
-        myRigidBody2D.sharedMaterial.bounciness = 1f;
+        isKnocked = true;
+        transform.rotation = Quaternion.Euler(0, 0, 90);
+        myRigidBody2D.sharedMaterial.bounciness = 1f; 
 
         yield return new WaitForSeconds(knockedTimer);
 
-        knocked = false;
+        isKnocked = false;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
         myRigidBody2D.sharedMaterial.bounciness = 0f;
+        knockedCoroutine = null;
     }
+
     #endregion 
 
     // Main physics tick execution loop
     private void FixedUpdate()
     {
-        if (knocked)
+        if (isKnocked)
             return;
 
         myAnimator.SetBool("IsDashing", isDashing && !isKnockBacked);
 
         if (isDashing)
-        {  
+        {
             if (IsWallSliding())
             {
                 if (dashCoroutine != null) StopCoroutine(dashCoroutine);

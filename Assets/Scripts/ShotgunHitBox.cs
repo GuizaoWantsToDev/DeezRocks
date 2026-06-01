@@ -3,79 +3,46 @@ using UnityEngine;
 
 public class ShotgunHitbox : MonoBehaviour
 {
-    [Header("=== SETTINGS ===")]
-    [SerializeField] private float damage = 15f;
-    [SerializeField] private float knockbackForce = 12f;
+    private PolygonCollider2D shotgunCollider;
+    private PlayerController myPlayer;
 
-    private GameObject ownerRoot;
-    public BoxCollider2D attackCollider;
+    private float shotgunDamage;
+    private float shotgunKnockbackForce;
 
-    // Objects already hit this swing — cleared every new activation
-    private List<GameObject> alreadyHitThisSwing = new List<GameObject>();
 
-    private void Awake()
+    private void Start()
     {
-        attackCollider = GetComponent<BoxCollider2D>();
-        attackCollider.enabled = false;
-    }
+        myPlayer = GetComponentInParent<PlayerController>();
+        shotgunCollider = GetComponent<PolygonCollider2D>();
 
-    public void Initialize(GameObject owner)
-    {
-        ownerRoot = owner;
-    }
+        //Just to make sure the collider is off
+        shotgunCollider.enabled = false;
 
-    public void ActivateHitbox()
-    {
-        alreadyHitThisSwing.Clear();
-        attackCollider.enabled = true;
+        shotgunDamage = MobilityAndCombatStats.Instance.shotgunDamage;
+        shotgunKnockbackForce = MobilityAndCombatStats.Instance.shotgunKnockbackForce;
     }
-
-    public void DeactivateHitbox()
-    {
-        attackCollider.enabled = false;
-    }
-
+  
     private void OnTriggerEnter2D(Collider2D other)
     {
-        GameObject hitRoot = other.transform.root.gameObject;
-
-        if (hitRoot == ownerRoot) return;
-        if (other.gameObject.layer == LayerMask.NameToLayer("PlatformPiece")) return;
-
-        // Only hit each object once per swing
-        if (alreadyHitThisSwing.Contains(hitRoot)) return;
-        alreadyHitThisSwing.Add(hitRoot);
-
-        IDamageable damageable = hitRoot.GetComponent<IDamageable>();
-        if (damageable != null)
-            damageable.Damage(damage);
-
-        Vector2 knockbackDirection = ((Vector2)hitRoot.transform.position - (Vector2)ownerRoot.transform.position).normalized;
-
-        PlayerController hitPlayer = hitRoot.GetComponent<PlayerController>();
-        if (hitPlayer != null)
-        {
-            hitPlayer.StartKnockedStage();
-            hitPlayer.transform.rotation = Quaternion.Euler(0, 0, 90);
-            Rigidbody2D playerRigidBody = hitPlayer.myRigidBody2D;
-            playerRigidBody.linearVelocityX = 0f;
-            playerRigidBody.linearVelocityY = 0f;
-            hitPlayer.myRigidBody2D.AddForce(knockbackDirection * (knockbackForce + 20), ForceMode2D.Impulse);
-            hitPlayer.isKnockBacked = true;
-            hitPlayer.Invoke(nameof(hitPlayer.CancelKnockBack), hitPlayer.knockBackTime);
+        if (other == myPlayer)
             return;
 
-        }
+        if (other.gameObject.layer == LayerMask.NameToLayer("PlatformPiece")) 
+            return;
 
-        Rigidbody2D otherRigidbody = hitRoot.GetComponent<Rigidbody2D>();
-        if (otherRigidbody != null)
+        if (other.TryGetComponent<PlayerController>(out PlayerController playerHit))
         {
-            Dummie dummie = hitRoot.GetComponent<Dummie>();
-            if (dummie != null)
-                dummie.ReceiveKnockback();
-
-            otherRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Force);
-
+            playerHit.StartKnockedStage();
+            playerHit.myRigidBody2D.AddForce(transform.transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
+        }
+        if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
+        {
+            damageable.Damage(shotgunDamage);
+        }
+        if (other.TryGetComponent<Dummie>(out Dummie dummie))
+        {
+            dummie.StartKnockedStage();
+            dummie.myRigidBody2D.AddForce(transform.transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
         }
     }
 }
