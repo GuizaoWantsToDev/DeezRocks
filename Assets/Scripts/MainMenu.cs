@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,7 +12,11 @@ public class MainMenu : UnityEngine.MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("QUIT!!!!!!");
         Application.Quit();
+        Debug.Log("QUIT!!!!!!");
+
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#endif
     }
 }

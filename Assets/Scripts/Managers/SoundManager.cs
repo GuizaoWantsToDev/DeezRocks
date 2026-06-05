@@ -6,6 +6,7 @@ public class SoundManager : UnityEngine.MonoBehaviour
     [Header("=== SOUND CLIPS ===")]
     [SerializeField] private AudioClip buttonHoverSound;
     [SerializeField] private AudioClip buttonSelectSound;
+    [SerializeField] private AudioClip grassToggleSound;
 
     private AudioSource globalAudioSource;
 
@@ -14,7 +15,7 @@ public class SoundManager : UnityEngine.MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
+            DontDestroyOnLoad(gameObject);
         }
         else
             Destroy(gameObject);
@@ -35,5 +36,9 @@ public class SoundManager : UnityEngine.MonoBehaviour
     public void PlayButtonSelect()
     {
         PlaySound(buttonSelectSound);
+    }
+    public void PlayGrassToggle()
+    {
+        PlaySound(grassToggleSound);
     }
 }
