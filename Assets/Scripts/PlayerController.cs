@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
     [Header("=== KNOCKBACK SLIDE ===")]
     // How fast the player decelerates on the ground after being knocked back
     [SerializeField] private float groundKnockbackDeceleration = 10f;
+    [SerializeField] private ParticleSystem myParticleSystem;
+    [SerializeField] private GameObject myOtherParticleSystem;
 
     // Lets RockThrow check if the player is on the ground before applying recoil
     public bool IsGrounded => isGrounded;
@@ -94,7 +96,7 @@ public class PlayerController : MonoBehaviour
     public bool isKnocked = false;
     private float knockedTimer;
     private Coroutine knockedCoroutine;
-
+    
     private void Start()
     {
         // Register this player instance with the global GameManager
@@ -107,11 +109,17 @@ public class PlayerController : MonoBehaviour
 
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
     }
+    private void PlayParticles()
+    {
+        GameObject spawnedParticles = Instantiate(myOtherParticleSystem, transform.position, Quaternion.identity);
 
+        myParticleSystem.Play();
+    }
     public void OnMove(InputAction.CallbackContext context)
     {
      if (!isKnocked)
         {
+            
             if (context.performed)
             {
                 inputValue = context.ReadValue<float>();
@@ -119,10 +127,19 @@ public class PlayerController : MonoBehaviour
             if (context.canceled)
             {
                 inputValue = 0f;
-            }                      
+
+            }
+           
         }
     }
+    public void GetKnockedDown()
+    {
+        isKnocked = true;
+        inputValue = 0f; 
 
+        
+        PlayParticles();
+    }
     // Handles jump input, choosing between normal jumps and wall jumps
     public void OnJump(InputAction.CallbackContext context)
     {
@@ -475,6 +492,8 @@ public class PlayerController : MonoBehaviour
     private IEnumerator KnockedStage()
     {
         isKnocked = true;
+        GetKnockedDown();
+
         transform.rotation = Quaternion.Euler(0, 0, 90);
         myRigidBody2D.sharedMaterial.bounciness = 1f; 
 
