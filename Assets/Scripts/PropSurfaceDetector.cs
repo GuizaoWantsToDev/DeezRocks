@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PropSurfaceDetector : UnityEngine.MonoBehaviour
+public class PropSurfaceDetector : MonoBehaviour
 {
     [SerializeField] private LayerMask platformLayer;
     [SerializeField] private float checkRadius = 0.5f;

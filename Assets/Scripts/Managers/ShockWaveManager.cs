@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ShockWaveManager : UnityEngine.MonoBehaviour
+public class ShockWaveManager : MonoBehaviour
 {
     [SerializeField] private float shockWaveTime = 0.75f;
 
@@ -15,6 +15,7 @@ public class ShockWaveManager : UnityEngine.MonoBehaviour
     {
         material = GetComponent<SpriteRenderer>().material;
         CallShockWave();
+        SoundManager.Instance.PlayShockwave();
     }
 
     public void CallShockWave()

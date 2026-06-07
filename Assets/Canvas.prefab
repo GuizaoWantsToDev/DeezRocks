@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 5712113507565264681}
   - component: {fileID: 1236275306750708521}
   - component: {fileID: 312865481931376843}
-  - component: {fileID: 6482622312306311537}
   m_Layer: 5
   m_Name: GreenHatSelected1
   m_TagString: Untagged
@@ -135,18 +134,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
   sizeMultiplier: 1.1
---- !u!114 &6482622312306311537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 31948463815682208}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29c26c22a2e375e459c9d9fde9a00496, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &102682419014114129
 GameObject:
   m_ObjectHideFlags: 0

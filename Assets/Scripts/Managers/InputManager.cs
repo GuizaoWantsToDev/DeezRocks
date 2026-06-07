@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : UnityEngine.MonoBehaviour
+public class InputManager : MonoBehaviour
 {
     private bool keyboardJoined;
     private List<Gamepad> controllersJoined = new();
@@ -19,9 +19,8 @@ public class InputManager : UnityEngine.MonoBehaviour
 
         if (!keyboardJoined && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Keyboard", pairWithDevice: Keyboard.current);
             keyboardJoined = true;
-
+            SpawnMNK();
             if (inputManager.playerCount >= inputManager.maxPlayerCount) return;
         }
 
@@ -33,6 +32,23 @@ public class InputManager : UnityEngine.MonoBehaviour
                 controllersJoined.Add(controller);
 
                 if (inputManager.playerCount >= inputManager.maxPlayerCount) return;
+            }
+        }
+    }
+
+    public void SpawnMNK()
+    {
+        if(keyboardJoined)
+        PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Keyboard", pairWithDevice: Keyboard.current);  
+    }
+
+    public void SpawnController()
+    {
+        foreach (var controller in controllersJoined)
+        {
+            if (!controllersJoined.Contains(controller))
+            {
+                PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Controller", pairWithDevice: controller);
             }
         }
     }

@@ -13,10 +13,14 @@ public class GameManager : MonoBehaviour
     public List<GameObject> playersList = new();
     private int maxPlayers = 2;
 
+    private static bool alreadyPlayed = false;
+
     [SerializeField] private CinemachineTargetGroup targetGroup;
 
+    [SerializeField] private InputManager inputManager;
+
     private void Awake()
-    {
+    { 
         if (Instance == null)
         {
             Instance = this;
@@ -24,6 +28,12 @@ public class GameManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+
+        if (alreadyPlayed)
+        {
+            inputManager.SpawnMNK();
+            inputManager.SpawnController();
         }
     }
 
@@ -50,8 +60,11 @@ public class GameManager : MonoBehaviour
     private IEnumerator ReloadGame()
     {
         yield return new WaitForSeconds(1f);
+        alreadyPlayed = true;
         SceneManager.LoadScene("Prototype 2");
     }
+
+    
 
     private void OnTriggerEnter2D(Collider2D other)
     {

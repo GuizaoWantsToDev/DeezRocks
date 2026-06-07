@@ -1,5 +1,5 @@
 using UnityEngine;
-public class SoundManager : UnityEngine.MonoBehaviour
+public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance { get; private set; }
 
@@ -7,6 +7,9 @@ public class SoundManager : UnityEngine.MonoBehaviour
     [SerializeField] private AudioClip buttonHoverSound;
     [SerializeField] private AudioClip buttonSelectSound;
     [SerializeField] private AudioClip grassToggleSound;
+    [SerializeField] private AudioClip rockHitSound;
+    [SerializeField] private AudioClip shockwaveSound;
+
 
     private AudioSource globalAudioSource;
 
@@ -41,4 +44,13 @@ public class SoundManager : UnityEngine.MonoBehaviour
     {
         PlaySound(grassToggleSound);
     }
+    public void PlayRockHit()
+    {
+        PlaySound(rockHitSound);
+    }
+    public void PlayShockwave()
+    {
+        PlaySound(shockwaveSound);
+    }
+
 }

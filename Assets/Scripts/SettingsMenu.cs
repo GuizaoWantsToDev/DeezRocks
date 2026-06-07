@@ -81,17 +81,17 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         int currentResolutionIndex = 0;
         for (int i = 0; i < resolutions.Length; i++)
         {
-            if ((float)resolutions[i].refreshRateRatio.value == maxRefreshRate)
-            {
-                string option = resolutions[i].width + "x" + resolutions[i].height;
-                // string option = resolutions[i].width + "x" + resolutions[i].height + "@" + resolutions[i].refreshRateRatio + "Hz";
+         //  if ((float)resolutions[i].refreshRateRatio.value == maxRefreshRate) { 
+            
+                //string option = resolutions[i].width + "x" + resolutions[i].height;
+                string option = resolutions[i].width + "x" + resolutions[i].height + "@" + resolutions[i].refreshRateRatio + "Hz";
                 options.Add(option);
 
                 if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
                 {
                     currentResolutionIndex = i;
                 }
-            }
+           // }
         }
 
         resolutionDropdown.AddOptions(options);
@@ -173,6 +173,6 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         if(Screen.fullScreen) 
             Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
         else
-            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+          Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
 }

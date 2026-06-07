@@ -326,7 +326,10 @@ public class Rock : UnityEngine.MonoBehaviour
     {
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
         if (isHighEnoughLevelForShockwave && shockWaveManager != null)
+        {
             Instantiate(shockWaveManager, hitPoint, transform.rotation);
+            CameraShake.Instance.ShakeCamera(4f, 1f);
+        }
 
         DestroyPlatformPieces(hitPoint);
         Destroy(gameObject);
@@ -360,7 +363,7 @@ public class Rock : UnityEngine.MonoBehaviour
             rockThrow.ResetThrowState();
             if (ownerEnergy != null) ownerEnergy.StartPassiveRegen();
         }
-       // if (SoundManager.Instance != null)
-        //    SoundManager.Instance.PlayRockHit();
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayRockHit();
     }
 }

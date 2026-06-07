@@ -108,13 +108,19 @@ public class PlayerController : MonoBehaviour
         ResetGravity();
 
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
+       
     }
     private void PlayParticles()
     {
-        GameObject spawnedParticles = Instantiate(myOtherParticleSystem, transform.position, Quaternion.identity);
-
-        myParticleSystem.Play();
+        myOtherParticleSystem.SetActive(true);
+      //  myParticleSystem.Play();
     }
+    private void StopParticles()
+    {
+      //  myParticleSystem.Stop();
+        myOtherParticleSystem.SetActive(false);
+    }
+   
     public void OnMove(InputAction.CallbackContext context)
     {
      if (!isKnocked)
@@ -131,14 +137,6 @@ public class PlayerController : MonoBehaviour
             }
            
         }
-    }
-    public void GetKnockedDown()
-    {
-        isKnocked = true;
-        inputValue = 0f; 
-
-        
-        PlayParticles();
     }
     // Handles jump input, choosing between normal jumps and wall jumps
     public void OnJump(InputAction.CallbackContext context)
@@ -492,7 +490,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator KnockedStage()
     {
         isKnocked = true;
-        GetKnockedDown();
+        PlayParticles();
 
         transform.rotation = Quaternion.Euler(0, 0, 90);
         myRigidBody2D.sharedMaterial.bounciness = 1f; 
@@ -500,6 +498,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(knockedTimer);
 
         isKnocked = false;
+        StopParticles();
         transform.rotation = Quaternion.Euler(0, 0, 0);
         myRigidBody2D.sharedMaterial.bounciness = 0f;
         knockedCoroutine = null;
