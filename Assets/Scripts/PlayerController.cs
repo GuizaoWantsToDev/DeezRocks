@@ -108,7 +108,7 @@ public class PlayerController : MonoBehaviour
         ResetGravity();
 
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
-       
+        myRigidBody2D.sharedMaterial.bounciness = 0f;
     }
     private void PlayParticles()
     {
@@ -491,6 +491,7 @@ public class PlayerController : MonoBehaviour
     {
         isKnocked = true;
         PlayParticles();
+        groundCheck.gameObject.SetActive(false);
 
         transform.rotation = Quaternion.Euler(0, 0, 90);
         myRigidBody2D.sharedMaterial.bounciness = 1f; 
@@ -499,6 +500,8 @@ public class PlayerController : MonoBehaviour
 
         isKnocked = false;
         StopParticles();
+        groundCheck.gameObject.SetActive(false);
+
         transform.rotation = Quaternion.Euler(0, 0, 0);
         myRigidBody2D.sharedMaterial.bounciness = 0f;
         knockedCoroutine = null;

@@ -24,7 +24,7 @@ public class PauseMenu : UnityEngine.MonoBehaviour
         {
             Resume();
         }
-        else
+        else if(!gameIsPaused)
         {
             Pause();
         }

@@ -111,7 +111,7 @@ public class RockThrow : MonoBehaviour
         }
         else
         {
-            if (rawAimInput.magnitude > 0.25f)
+            if (rawAimInput.magnitude > 0.60f)
                 aimDirection = rawAimInput.normalized;
         }
 

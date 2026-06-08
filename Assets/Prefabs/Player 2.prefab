@@ -951,8 +951,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5008439356058401635}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.554607, y: -9.848055, z: -0}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 20, y: -9.848055, z: -0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -967,7 +967,7 @@ Transform:
   - {fileID: 6341822918521316243}
   - {fileID: 6949151098533458403}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!212 &5729675740736239178
 SpriteRenderer:
   serializedVersion: 2
@@ -1043,7 +1043,7 @@ Rigidbody2D:
   m_LinearDamping: 0
   m_AngularDamping: 0.05
   m_GravityScale: 3.4
-  m_Material: {fileID: 6200000, guid: 4bd5fc5f012f7774f94b6604345c5dbd, type: 2}
+  m_Material: {fileID: 6200000, guid: 814cb658ab6472349bfcd072f2ea9a56, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -1253,16 +1253,16 @@ MonoBehaviour:
   myTransform: {fileID: 8074640560719393181}
   myTrailRenderer: {fileID: 2428556048383867178}
   myAnimator: {fileID: 1601332104848600743}
-  mSpeed: 32
-  maxVerticalSpeed: 55
-  fastFallImpulse: 8
+  mSpeed: 37
+  maxVerticalSpeed: 65
+  fastFallImpulse: 10
   playerGravity: 3.4
-  jumpPower: 30
+  jumpPower: 32
   maxJumps: 2
   dashTime: 0.2
   dashCoolDown: 0.18
   dashingPower: 72
-  wallSlidingSpeed: 4
+  wallSlidingSpeed: 5
   wallJumpTime: 0.3
   wallJumpPower: {x: 32, y: 45}
   wallDetachBufferTime: 0.3

@@ -327,15 +327,15 @@ public class Rock : UnityEngine.MonoBehaviour
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
         if (isHighEnoughLevelForShockwave && shockWaveManager != null)
         {
-            Instantiate(shockWaveManager, hitPoint, transform.rotation);
             CameraShake.Instance.ShakeCamera(4f, 1f);
+            Instantiate(shockWaveManager, hitPoint, transform.rotation);
         }
 
         DestroyPlatformPieces(hitPoint);
         Destroy(gameObject);
     }
 
-
+ 
     #region Destruction
     private void DestroyPlatformPieces(Vector2 hitPoint)
     {

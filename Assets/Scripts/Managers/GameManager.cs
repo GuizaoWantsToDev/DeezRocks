@@ -30,11 +30,6 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (alreadyPlayed)
-        {
-            inputManager.SpawnMNK();
-            inputManager.SpawnController();
-        }
     }
 
     public void AddPlayer(GameObject player)

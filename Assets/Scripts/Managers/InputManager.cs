@@ -20,7 +20,7 @@ public class InputManager : MonoBehaviour
         if (!keyboardJoined && Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             keyboardJoined = true;
-            SpawnMNK();
+            PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Keyboard", pairWithDevice: Keyboard.current);
             if (inputManager.playerCount >= inputManager.maxPlayerCount) return;
         }
 
@@ -32,23 +32,6 @@ public class InputManager : MonoBehaviour
                 controllersJoined.Add(controller);
 
                 if (inputManager.playerCount >= inputManager.maxPlayerCount) return;
-            }
-        }
-    }
-
-    public void SpawnMNK()
-    {
-        if(keyboardJoined)
-        PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Keyboard", pairWithDevice: Keyboard.current);  
-    }
-
-    public void SpawnController()
-    {
-        foreach (var controller in controllersJoined)
-        {
-            if (!controllersJoined.Contains(controller))
-            {
-                PlayerInput.Instantiate(GameManager.Instance.spawnablePlayers[inputManager.playerCount], controlScheme: "Controller", pairWithDevice: controller);
             }
         }
     }

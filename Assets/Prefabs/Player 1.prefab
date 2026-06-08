@@ -162,7 +162,7 @@ Transform:
   m_GameObject: {fileID: 355290624010186055}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -27.554607, y: -9.848055, z: -0}
+  m_LocalPosition: {x: -20, y: -9.848055, z: -0}
   m_LocalScale: {x: 2.5, y: 2.5, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -463,16 +463,16 @@ MonoBehaviour:
   myTransform: {fileID: 8066380642624679743}
   myTrailRenderer: {fileID: 2114564201716080316}
   myAnimator: {fileID: 9184078447384148441}
-  mSpeed: 32
-  maxVerticalSpeed: 55
-  fastFallImpulse: 8
+  mSpeed: 37
+  maxVerticalSpeed: 65
+  fastFallImpulse: 10
   playerGravity: 3.4
-  jumpPower: 30
+  jumpPower: 32
   maxJumps: 2
   dashTime: 0.2
   dashCoolDown: 0.18
   dashingPower: 72
-  wallSlidingSpeed: 4
+  wallSlidingSpeed: 5
   wallJumpTime: 0.3
   wallJumpPower: {x: 32, y: 45}
   wallDetachBufferTime: 0.3
