@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float groundKnockbackDeceleration = 10f;
     [SerializeField] private ParticleSystem myParticleSystem;
     [SerializeField] private GameObject myOtherParticleSystem;
+    [SerializeField] private GameObject walkParticle;
 
     // Lets RockThrow check if the player is on the ground before applying recoil
     public bool IsGrounded => isGrounded;
@@ -96,6 +97,7 @@ public class PlayerController : MonoBehaviour
     public bool isKnocked = false;
     private float knockedTimer;
     private Coroutine knockedCoroutine;
+
     
     private void Start()
     {
@@ -110,9 +112,10 @@ public class PlayerController : MonoBehaviour
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
         myRigidBody2D.sharedMaterial.bounciness = 0f;
     }
-    private void PlayParticles()
+    
+    private void PlayParticles(GameObject particle)
     {
-        myOtherParticleSystem.SetActive(true);
+       particle.SetActive(true);
       //  myParticleSystem.Play();
     }
     private void StopParticles()
@@ -123,12 +126,15 @@ public class PlayerController : MonoBehaviour
    
     public void OnMove(InputAction.CallbackContext context)
     {
+
      if (!isKnocked)
         {
             
             if (context.performed)
             {
                 inputValue = context.ReadValue<float>();
+                if (isGrounded)
+                PlayParticles(walkParticle);
             }
             if (context.canceled)
             {
@@ -490,7 +496,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator KnockedStage()
     {
         isKnocked = true;
-        PlayParticles();
+        PlayParticles(myOtherParticleSystem);
         groundCheck.gameObject.SetActive(false);
 
         transform.rotation = Quaternion.Euler(0, 0, 90);
