@@ -83,12 +83,15 @@ public class Rock : UnityEngine.MonoBehaviour
 
         ApplyMassForCurrentStage();
 
-        if (trajectoryLine != null) trajectoryLine.enabled = false;
+        if (trajectoryLine != null)
+        {
+            trajectoryLine.enabled = false;
+        }
+        poolManager = PoolManager.Instance;
     }
 
     private void Start()
     {
-        poolManager = PoolManager.Instance;
         levelUpCoroutine = StartCoroutine(RockLevelUpCoroutine());
     }
 
@@ -327,7 +330,10 @@ public class Rock : UnityEngine.MonoBehaviour
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
         if (isHighEnoughLevelForShockwave && shockWaveManager != null)
         {
-            CameraShake.Instance.ShakeCamera(4f, 1f);
+            if(CameraShake.Instance != null)
+            { 
+                CameraShake.Instance.ShakeCamera(4f, 1f);
+            }
             Instantiate(shockWaveManager, hitPoint, transform.rotation);
         }
 

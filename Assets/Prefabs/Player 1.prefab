@@ -410,6 +410,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 023c1fb0-45fe-44fe-a298-0a2d3cc8c0d0
     m_ActionName: 'Gameplay/Cancel[/Keyboard/escape,/DualSenseGamepadHID/buttonEast]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e05fcc73-00d0-41b7-822f-139bc4eda767
+    m_ActionName: 'Gameplay/Options[/Keyboard/escape,/DualSenseGamepadHID/start]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: 
   m_DefaultActionMap: Gameplay
@@ -3142,11 +3146,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4020683326091323004, guid: 651b24ed4f9523b4da3afc0ce4820b48, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.132
+      value: 0.02
       objectReference: {fileID: 0}
     - target: {fileID: 4020683326091323004, guid: 651b24ed4f9523b4da3afc0ce4820b48, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.184
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 4020683326091323004, guid: 651b24ed4f9523b4da3afc0ce4820b48, type: 3}
       propertyPath: m_LocalPosition.z

@@ -1,26 +1,22 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
-// Manages the pause state, UI navigation, and input detection
-public class PauseMenu : UnityEngine.MonoBehaviour
+public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused = false;
 
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject optionsMenuUI;
     [SerializeField] private GameObject quitMenuUI;
+    [SerializeField] private UnityEvent pauseSelect;
+    [SerializeField] private UnityEvent resumeEvent;
 
 
     public void OnPause(InputAction.CallbackContext context)
     {
-        if (optionsMenuUI.activeSelf || quitMenuUI.activeSelf && gameIsPaused)
-        {
-            pauseMenuUI.SetActive(true);
-            optionsMenuUI.SetActive(false);
-            quitMenuUI.SetActive(false);
-        }
-        else if (gameIsPaused)
+        if (gameIsPaused)
         {
             Resume();
         }
@@ -31,6 +27,7 @@ public class PauseMenu : UnityEngine.MonoBehaviour
     }
     public void Resume()
     {
+        ResetInputs();
         pauseMenuUI.SetActive(false);
         optionsMenuUI.SetActive(false);
         quitMenuUI.SetActive(false);
@@ -38,8 +35,13 @@ public class PauseMenu : UnityEngine.MonoBehaviour
         gameIsPaused = false;
     }
 
+    public void ResetInputs()
+    {
+        resumeEvent.Invoke();
+    }
     private void Pause()
     {
+        pauseSelect.Invoke();
         pauseMenuUI.SetActive(true);
         Time.timeScale = 0f;
         gameIsPaused = true;
@@ -51,5 +53,9 @@ public class PauseMenu : UnityEngine.MonoBehaviour
         Time.timeScale = 1f; // Failsafe: Ensures the next scene doesn't start frozen!
         gameIsPaused = false;
         SceneManager.LoadScene("MainMenu");
+    }
+    private void Update()
+    {
+        Debug.Log(gameIsPaused);
     }
 }

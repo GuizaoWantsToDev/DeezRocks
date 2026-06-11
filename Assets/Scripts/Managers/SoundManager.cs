@@ -9,6 +9,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip grassToggleSound;
     [SerializeField] private AudioClip rockHitSound;
     [SerializeField] private AudioClip shockwaveSound;
+    [SerializeField] private AudioClip playerHitSound;
 
 
     private AudioSource globalAudioSource;
@@ -53,4 +54,8 @@ public class SoundManager : MonoBehaviour
         PlaySound(shockwaveSound);
     }
 
+    public void PlayPlayerHit()
+    {
+        PlaySound(playerHitSound);
+    }
 }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -11,9 +12,16 @@ public class CharacterSelection : MonoBehaviour
     [SerializeField] private GameObject purpleHatNormal;
     [SerializeField] private GameObject purpleHatSelected;
     [SerializeField] private GameObject ready;
+
+    [SerializeField] private UnityEvent backInputEnable;
     
 
     public void OnCancel(InputAction.CallbackContext context)
+    {
+        CancelSelection();
+    }
+
+    public void CancelSelection()
     {
         bodyGreen.SetActive(false);
         bodyPurple.SetActive(false);
@@ -26,6 +34,7 @@ public class CharacterSelection : MonoBehaviour
         greenHatNormal.GetComponent<Button>().interactable = true;
         purpleHatNormal.GetComponent<Button>().interactable = true;
         MainMenu.Instance.PlayerReady(false);
-        MainMenu.Instance.GetComponent<PlayerInput>().enabled = true;
+
+        backInputEnable.Invoke();
     }
 }

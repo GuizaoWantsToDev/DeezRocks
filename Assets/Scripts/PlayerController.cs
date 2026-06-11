@@ -118,10 +118,10 @@ public class PlayerController : MonoBehaviour
        particle.SetActive(true);
       //  myParticleSystem.Play();
     }
-    private void StopParticles()
+    private void StopParticles(GameObject particle)
     {
       //  myParticleSystem.Stop();
-        myOtherParticleSystem.SetActive(false);
+       particle.SetActive(false);
     }
    
     public void OnMove(InputAction.CallbackContext context)
@@ -133,8 +133,6 @@ public class PlayerController : MonoBehaviour
             if (context.performed)
             {
                 inputValue = context.ReadValue<float>();
-                if (isGrounded)
-                PlayParticles(walkParticle);
             }
             if (context.canceled)
             {
@@ -303,6 +301,7 @@ public class PlayerController : MonoBehaviour
         // Reset jumps and states upon safely landing
         if (isGrounded && !isJumping && slopeDownAngle <= maxSlopeAngle)
         {
+            PlayParticles(walkParticle);
             jumpsRemaining = maxJumps;
             fastFall = false;
         }
@@ -425,6 +424,7 @@ public class PlayerController : MonoBehaviour
         {
             // Air mobility retention
             myRigidBody2D.linearVelocity = new Vector2(mSpeed * inputValue, myRigidBody2D.linearVelocityY);
+            StopParticles(walkParticle);
         }
     }
 
@@ -505,7 +505,7 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(knockedTimer);
 
         isKnocked = false;
-        StopParticles();
+        StopParticles(myOtherParticleSystem);
         groundCheck.gameObject.SetActive(false);
 
         transform.rotation = Quaternion.Euler(0, 0, 0);

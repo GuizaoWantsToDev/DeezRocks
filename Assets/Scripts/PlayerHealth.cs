@@ -18,8 +18,8 @@ public class PlayerHealth : UnityEngine.MonoBehaviour, IDamageable
         currentHealth -= damageAmount;
         UpdateBar();
 
-        //if (SoundManager.Instance != null)
-       //     SoundManager.Instance.PlayPlayerHit();
+       if (SoundManager.Instance != null)
+           SoundManager.Instance.PlayPlayerHit();
 
         if (currentHealth <= 0)
         {
