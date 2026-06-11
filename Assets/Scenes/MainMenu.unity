@@ -1026,7 +1026,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 264952058}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -3007,7 +3007,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 855832385}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -25704,7 +25704,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: QUIT
+  m_text: MAIN MENU
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7b8bbc05aed8c1b479c8b13e774bbf21, type: 2}
   m_sharedMaterial: {fileID: 7830112866203440326, guid: 7b8bbc05aed8c1b479c8b13e774bbf21, type: 2}
@@ -25731,8 +25731,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.4
-  m_fontSizeBase: 38.4
+  m_fontSize: 35.63
+  m_fontSizeBase: 35.63
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
