@@ -3,7 +3,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//Central controller managing player physics, mobility abilities, state validation, and animations
 public class PlayerController : MonoBehaviour
 {
     [Header("=== COMPONENTS ===")]
@@ -49,10 +48,8 @@ public class PlayerController : MonoBehaviour
     [Header("=== COLLISION SETUP ===")]
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private LayerMask wallLayer;
-    [Space(5)]
     [SerializeField] private Transform groundCheck;
     [SerializeField] private Vector2 groundCheckSize;
-    [Space(5)]
     [SerializeField] private Transform wallCheckHead;
     [SerializeField] private Transform wallCheckFoot;
     [SerializeField] private Vector2 wallCheckSize;
@@ -64,13 +61,14 @@ public class PlayerController : MonoBehaviour
     public bool isKnockBacked;
 
     [Header("=== KNOCKBACK SLIDE ===")]
-    // How fast the player decelerates on the ground after being knocked back
     [SerializeField] private float groundKnockbackDeceleration = 10f;
     [SerializeField] private ParticleSystem myParticleSystem;
     [SerializeField] private GameObject myOtherParticleSystem;
     [SerializeField] private GameObject walkParticle;
 
-    // Lets RockThrow check if the player is on the ground before applying recoil
+    // --- PAUSE CONTROL ---
+    public bool canMove = true;
+
     public bool IsGrounded => isGrounded;
     private float inputValue;
     private int jumpsRemaining;
@@ -93,15 +91,12 @@ public class PlayerController : MonoBehaviour
     private bool isTouchingWallAnim;
     private bool isHoldingFall;
     private Coroutine dashCoroutine;
-
     public bool isKnocked = false;
     private float knockedTimer;
     private Coroutine knockedCoroutine;
 
-    
     private void Start()
     {
-        // Register this player instance with the global GameManager
         if (GameManager.Instance != null)
             GameManager.Instance.AddPlayer(gameObject);
 
@@ -112,7 +107,7 @@ public class PlayerController : MonoBehaviour
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
         myRigidBody2D.sharedMaterial.bounciness = 0f;
     }
-    
+
     private void PlayParticles(GameObject particle)
     {
        particle.SetActive(true);
@@ -518,8 +513,12 @@ public class PlayerController : MonoBehaviour
     // Main physics tick execution loop
     private void FixedUpdate()
     {
-        if (isKnocked)
+        // Trava total de física quando canMove é falso ou está knockado
+        if (!canMove || isKnocked)
+        {
+            if (!canMove) myRigidBody2D.linearVelocity = Vector2.zero;
             return;
+        }
 
         myAnimator.SetBool("IsDashing", isDashing && !isKnockBacked);
 
@@ -547,25 +546,13 @@ public class PlayerController : MonoBehaviour
 
         float gravToApply = currentGravity;
 
-        // --- ROCK HOLDING SLOW FALL LOGIC ---
-        // Dynamically reduces gravity to create a floating effect while aiming mid-air
         if (rockThrow.inThrowState)
         {
             if (fastFall) ResetGravity();
-
-            // Cancel any upward momentum instantly when the player starts aiming
-            if (myRigidBody2D.linearVelocityY > 0f)
-            {
-                myRigidBody2D.linearVelocity = Vector2.zero;
-            }
-
-            // Exponentially increase fall speed over time, clamped to a maximum value
+            if (myRigidBody2D.linearVelocityY > 0f) myRigidBody2D.linearVelocity = Vector2.zero;
             float holdFallGravity = minHoldFallGravity * Mathf.Pow(holdFallGrowthRate, rockThrow.holdTime);
             gravToApply = Mathf.Min(holdFallGravity, playerGravity);
-
             float clampedFallSpeed = Mathf.Max(myRigidBody2D.linearVelocityY, -maxHoldFallSpeed);
-
-            // Force X velocity to 0 to prevent horizontal drifting while aiming
             myRigidBody2D.linearVelocity = new Vector2(0f, clampedFallSpeed);
         }
         else if (isGrounded && isOnSlope && inputValue == 0f && !isJumping)
@@ -581,43 +568,16 @@ public class PlayerController : MonoBehaviour
             {
                 if (isGrounded)
                 {
-                    // Slide on the ground with deceleration instead of stopping immediately
-                    float slidingVelocityX = Mathf.MoveTowards(
-                        myRigidBody2D.linearVelocityX,
-                        0f,
-                        groundKnockbackDeceleration * Time.fixedDeltaTime
-                    );
+                    float slidingVelocityX = Mathf.MoveTowards(myRigidBody2D.linearVelocityX, 0f, groundKnockbackDeceleration * Time.fixedDeltaTime);
                     myRigidBody2D.linearVelocity = new Vector2(slidingVelocityX, myRigidBody2D.linearVelocityY);
-
-                    // Auto-cancel once fully stopped AND the knockback timer has ended
-                    if (Mathf.Abs(slidingVelocityX) < 0.05f && canCancel)
-                    {
-                        transform.rotation = Quaternion.Euler(0, 0, 0);
-                        isKnockBacked = false;
-                        canCancel = false;
-                    }
+                    if (Mathf.Abs(slidingVelocityX) < 0.05f && canCancel) { transform.rotation = Quaternion.Euler(0, 0, 0); isKnockBacked = false; canCancel = false; }
                 }
-
-                // Stop immediately only when hitting a wall
-                if (isWalled || IsWallSliding())
-                {
-                    myRigidBody2D.linearVelocity = new Vector2(0f, myRigidBody2D.linearVelocityY);
-                    isKnockBacked = false;
-                    canCancel = false;
-                }
+                if (isWalled || IsWallSliding()) { myRigidBody2D.linearVelocity = new Vector2(0f, myRigidBody2D.linearVelocityY); isKnockBacked = false; canCancel = false; }
             }
-            else
-            {
-                ApplyMovement();
-            }
+            else { ApplyMovement(); }
         }
 
-        // Player cancels knockback early by pressing a direction after the timer ends
-        if (inputValue != 0 && canCancel && isKnockBacked)
-        {
-            isKnockBacked = false;
-            canCancel = false;
-        }
+        if (inputValue != 0 && canCancel && isKnockBacked) { isKnockBacked = false; canCancel = false; }
 
         if (!isOnSlope)
         {
@@ -626,12 +586,15 @@ public class PlayerController : MonoBehaviour
         }
 
         jumpsRemaining = Mathf.Clamp(jumpsRemaining, 0, maxJumps);
+    }
+    private void Update()
+    {
+        // Se canMove for falso, interrompemos apenas o que é visual/animação/input
+        if (!canMove) return;
+
         UpdateAnimations();
         CheckFlip();
-
-        if (!isDashing && !dashOnCooldown && (isGrounded || isWalled)) canDash = true;
     }
-
     public void ResetGravity()
     {
         currentGravity = playerGravity;

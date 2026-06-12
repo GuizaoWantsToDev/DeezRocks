@@ -33,7 +33,6 @@ public class CharacterSelection : MonoBehaviour
 
         greenHatNormal.GetComponent<Button>().interactable = true;
         purpleHatNormal.GetComponent<Button>().interactable = true;
-        MainMenu.Instance.PlayerReady(false);
 
         backInputEnable.Invoke();
     }

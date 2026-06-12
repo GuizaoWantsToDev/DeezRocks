@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -27,10 +28,9 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject firstQuitMenuIGButton;
 
     private GameObject currentFirstButton;
-    private bool playerOneReady = false;
 
     private enum InputMode { Mouse, KeyboardOrGamepad }
-    private InputMode currentInputMode = InputMode.Mouse;
+    private InputMode currentInputMode = InputMode.KeyboardOrGamepad;
 
     // A nossa trava para impedir o spam do analógico
     private bool requireStickReset = false;
@@ -41,10 +41,18 @@ public class MainMenu : MonoBehaviour
             Instance = this;
         else
             Destroy(gameObject);
-
-        ChangeFirstToMainMenu();
+    }
+    private void Start()
+    {
+        StartCoroutine(StartMenuSafely());
     }
 
+    private IEnumerator StartMenuSafely()
+    {
+        yield return new WaitForEndOfFrame();
+        ChangeFirstToMainMenu();
+        Cursor.visible = false;
+    }
     private void Update()
     {
         // Variáveis para sabermos o estado dos analógicos de forma fácil
@@ -122,7 +130,6 @@ public class MainMenu : MonoBehaviour
         Cursor.visible = false;
     }
 
-    public void PlayerReady(bool isReady) => playerOneReady = isReady;
 
     #region First Button Setters
 

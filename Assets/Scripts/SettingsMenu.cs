@@ -40,6 +40,10 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
     [SerializeField] private RenderPipelineAsset[] qualityLevels;
 
     Resolution[] resolutions;
+
+    private int savedWidth;
+    private int savedHeight;
+
     private float maxRefreshRate;
 
     RefreshRate wantedRefresh;
@@ -72,6 +76,8 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         resolutionDropdownGame.ClearOptions();
 
         Resolution resolution = resolutions[resolutions.Length - 1];
+        savedHeight = resolution.height;
+        savedWidth = resolution.width;
         Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
 
         maxRefreshRate  = (float)resolutions[resolutions.Length - 1].refreshRateRatio.value;
@@ -84,7 +90,7 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
          //  if ((float)resolutions[i].refreshRateRatio.value == maxRefreshRate) { 
             
                 //string option = resolutions[i].width + "x" + resolutions[i].height;
-                string option = resolutions[i].width + "x" + resolutions[i].height + "@" + resolutions[i].refreshRateRatio + "Hz";
+                string option = resolutions[i].width + "x" + resolutions[i].height + "@" + Mathf.RoundToInt((float)resolutions[i].refreshRateRatio.value) + "Hz";
                 options.Add(option);
 
                 if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
@@ -164,14 +170,24 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
     public void SetFullscreen( bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
+        if(isFullscreen == true)
+        {
+            Screen.SetResolution(savedWidth, savedHeight, FullScreenMode.ExclusiveFullScreen);
+        }
     }
 
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
 
-        if(Screen.fullScreen) 
-            Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
+        savedHeight = resolution.height;
+        savedWidth = resolution.width;
+
+        if (Screen.fullScreen)
+        {
+           Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
+        }
+        
         else
           Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
     }
