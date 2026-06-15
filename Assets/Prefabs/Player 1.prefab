@@ -507,6 +507,7 @@ MonoBehaviour:
   myParticleSystem: {fileID: 5511214959971326397}
   myOtherParticleSystem: {fileID: 492155691892073115}
   walkParticle: {fileID: 1786379162483157755}
+  canMove: 1
   isKnocked: 0
 --- !u!96 &2114564201716080316
 TrailRenderer:
@@ -1362,7 +1363,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Type: 0
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0

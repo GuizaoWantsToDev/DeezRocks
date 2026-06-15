@@ -14892,7 +14892,6 @@ GameObject:
   - component: {fileID: 8939480375270202116}
   - component: {fileID: 3861070466556364385}
   - component: {fileID: 984989856315830813}
-  - component: {fileID: 2967297966319130300}
   m_Layer: 5
   m_Name: Ready2
   m_TagString: Untagged
@@ -17581,19 +17580,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &2967297966319130300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1706582595194045726}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa4e2c7318daeeb4cab9ca6d656790ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
-  sizeMultiplier: 1.1
 --- !u!224 &2967957283321203797
 RectTransform:
   m_ObjectHideFlags: 0
@@ -18381,19 +18367,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &3363273510409815473
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7079590236074545876}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa4e2c7318daeeb4cab9ca6d656790ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
-  sizeMultiplier: 1.1
 --- !u!224 &3364119875964773213
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23154,6 +23127,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: rockHitSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 17be0ff71633208419458e519da6a8a8, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: playerHitSound
+      value: 
+      objectReference: {fileID: 8300000, guid: feecdfe2dab25644fb599f69dcc18dc1, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: shockwaveSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 746babaf1de24074da736b70e07a160e, type: 3}
     - target: {fileID: 977703230501075714, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: m_Name
       value: SoundManager
@@ -25151,7 +25136,6 @@ GameObject:
   - component: {fileID: 2775276109096229468}
   - component: {fileID: 3551526585572072714}
   - component: {fileID: 461062204194901778}
-  - component: {fileID: 3363273510409815473}
   m_Layer: 5
   m_Name: Ready1
   m_TagString: Untagged
