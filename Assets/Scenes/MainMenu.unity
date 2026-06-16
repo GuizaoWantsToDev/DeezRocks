@@ -1158,18 +1158,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 7206044808546808996}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
-        m_MethodName: LeaveGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 270232332707032338}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
@@ -1229,6 +1217,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 7206044808546808996}
+        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+        m_MethodName: LeaveGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &264952058
 MonoBehaviour:
@@ -5259,7 +5259,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: GAMER ARTIST - LUIS FERREIRA
+  m_text: GAME ARTIST - LUIS FERREIRA
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7b8bbc05aed8c1b479c8b13e774bbf21, type: 2}
   m_sharedMaterial: {fileID: 7830112866203440326, guid: 7b8bbc05aed8c1b479c8b13e774bbf21, type: 2}
@@ -5901,17 +5901,17 @@ MonoBehaviour:
   onPlay:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 7835553533979216175}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 5725408127974910515}
+        m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
+        m_MethodName: EqualToMainMenu
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 270232332707032338}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -5925,17 +5925,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 5725408127974910515}
-        m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
-        m_MethodName: EqualToMainMenu
-        m_Mode: 1
+      - m_Target: {fileID: 7835553533979216175}
+        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &1172519720
 GameObject:
@@ -7672,7 +7672,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 156, y: 107.99997}
+  m_AnchoredPosition: {x: 156, y: 107.99994}
   m_SizeDelta: {x: 144.88, y: 61.660004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1507333057
@@ -10444,7 +10444,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 156, y: 107.99997}
+  m_AnchoredPosition: {x: 156, y: 107.99994}
   m_SizeDelta: {x: 144.88, y: 61.660004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1921902029
@@ -10672,7 +10672,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -68.99997}
+  m_AnchoredPosition: {x: 0, y: -68.99994}
   m_SizeDelta: {x: 798.52, y: 160.13}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1942208714
@@ -14496,6 +14496,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 701616383}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlayEquipSound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -18528,6 +18540,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 701616383}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlayEquipSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!224 &3397288186576651748
 RectTransform:
   m_ObjectHideFlags: 0
@@ -21621,6 +21645,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
+      - m_Target: {fileID: 701616383}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlayEquipSound
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!224 &5182382571894370513
 RectTransform:
   m_ObjectHideFlags: 0
@@ -23128,6 +23164,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: dashSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 88137878ecb20e94a9cf1a3cdce9d7dd, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: equipSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 1c2e88ba73177bf499174aa83c2d20dd, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: landingSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 6e2be0202c334a14f8a2a255fcad4538, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: rockHitSound
       value: 
       objectReference: {fileID: 8300000, guid: 17be0ff71633208419458e519da6a8a8, type: 3}
@@ -23136,9 +23184,61 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: feecdfe2dab25644fb599f69dcc18dc1, type: 3}
     - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: rockThrowSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 74ffb81ce2ce31f4f9603f21113a82a3, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: shockwaveSound
       value: 
       objectReference: {fileID: 8300000, guid: 746babaf1de24074da736b70e07a160e, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: jumpSound.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpSound.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: b2e2ecdf2f605ea4ab6a3bd438009e52, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpSound.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: eb3750cbdd6ffa04391887841f496b27, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpSound.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 8dec8ae809e20584f834206479675610, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpSound.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 30a493cc1d4ca8e4f9767ef3444c4d72, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpSound.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 09e3694cf4c0f1a48a0b7498d8934ef5, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: jumpScreamSound.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpScreamSound.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: e2a96adb64054c14486940e15fd7749e, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpScreamSound.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 9a274587f464ca549851dd8830cea570, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpScreamSound.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 8dec8ae809e20584f834206479675610, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpScreamSound.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 30a493cc1d4ca8e4f9767ef3444c4d72, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: 'jumpScreamSound.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 09e3694cf4c0f1a48a0b7498d8934ef5, type: 3}
     - target: {fileID: 977703230501075714, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: m_Name
       value: SoundManager
@@ -24246,6 +24346,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 701616383}
+        m_TargetAssemblyTypeName: SoundManager, Assembly-CSharp
+        m_MethodName: PlayEquipSound
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -25462,6 +25574,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenu
   pauseMenuUI: {fileID: 7822209616092375307}
+  pauseMENU: {fileID: 270232332707032338}
   optionsMenuUI: {fileID: 3156363510650431841}
   quitMenuUI: {fileID: 6191687254145468559}
   firstPauseButton: {fileID: 2599808518612822647}

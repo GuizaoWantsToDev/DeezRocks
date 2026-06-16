@@ -824,7 +824,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 3021421678681969749, guid: 7735a017e81efe0458a24a5dbb942def, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.091607094, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1018,8 +1018,8 @@ SpriteRenderer:
   m_SortingLayer: 7
   m_SortingOrder: 3
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -343218696157488087, guid: 7735a017e81efe0458a24a5dbb942def, type: 3}
-  m_Color: {r: 1, g: 0, b: 0.091607094, a: 1}
+  m_Sprite: {fileID: 3384219960293876210, guid: 2fd9a7e28a91fb7429cb8be68432beea, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1276,7 +1276,7 @@ MonoBehaviour:
   maxHoldFallSpeed: 1.5
   maxSlopeAngle: 45
   slopeCheckDistance: 0.5
-  noFriction: {fileID: 6200000, guid: 4bd5fc5f012f7774f94b6604345c5dbd, type: 2}
+  noFriction: {fileID: 6200000, guid: 814cb658ab6472349bfcd072f2ea9a56, type: 2}
   fullFriction: {fileID: 6200000, guid: fb30d9322aaeedb4582b717ae554e66c, type: 2}
   groundLayer:
     serializedVersion: 2
@@ -1297,6 +1297,7 @@ MonoBehaviour:
   myParticleSystem: {fileID: 3626896515642393296}
   myOtherParticleSystem: {fileID: 1286384973961813465}
   walkParticle: {fileID: 4884659593278763419}
+  canMove: 1
   isKnocked: 0
 --- !u!96 &2428556048383867178
 TrailRenderer:
@@ -3163,27 +3164,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.b
-      value: 0
+      value: 0.44313726
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.g
-      value: 0
+      value: 0.16470589
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key0.r
-      value: 0.882353
+      value: 0.57254905
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.b
-      value: 0
+      value: 0.44313726
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.g
-      value: 0
+      value: 0.16470589
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.colorGradient.key1.r
-      value: 0.854902
+      value: 0.57254905
       objectReference: {fileID: 0}
     - target: {fileID: 2060138407462813482, guid: 9f647ff2f0180e24eadb0430a5bc4970, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[1].time

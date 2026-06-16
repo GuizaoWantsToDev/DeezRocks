@@ -8,6 +8,10 @@ using System.Collections;
 
 public class CharacterSelectionManager : MonoBehaviour
 {
+
+    public static CharacterSelectionManager Instance { get; private set;}
+
+
     [Header("=== UI DO TIMER ===")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float countdownStart = 5f;
@@ -43,12 +47,17 @@ public class CharacterSelectionManager : MonoBehaviour
     private float currentTimer;
     private bool canAcceptInput = false;
 
-    [SerializeField] private UnityEvent onPlay;
+    [SerializeField] public UnityEvent onPlay;
 
     private void Awake()
     {
-        // A MAGIA DO RATO: Liga as funções de rato aos botões automaticamente!
-        p1GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 0));
+        if (CharacterSelectionManager.Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+
+            // A MAGIA DO RATO: Liga as funções de rato aos botões automaticamente!
+            p1GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 0));
         p1PurpleHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 1));
         p2GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(2, 0));
         p2PurpleHatButton.onClick.AddListener(() => OnHatClickedFromMouse(2, 1));
@@ -118,7 +127,7 @@ public class CharacterSelectionManager : MonoBehaviour
 
             if (currentTimer <= 0)
             {
-                onPlay.Invoke();
+                //onPlay.Invoke();
                 MainMenu.Instance.PlayGame();
             }
         }

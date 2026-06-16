@@ -66,6 +66,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject myOtherParticleSystem;
     [SerializeField] private GameObject walkParticle;
 
+    [Header("=== RAGDOLL ===")]
+    [SerializeField] public GameObject ragdoll;
     // --- PAUSE CONTROL ---
     public bool canMove = true;
 
@@ -94,6 +96,7 @@ public class PlayerController : MonoBehaviour
     public bool isKnocked = false;
     private float knockedTimer;
     private Coroutine knockedCoroutine;
+    private bool ground;
 
     private void Start()
     {
@@ -207,6 +210,7 @@ public class PlayerController : MonoBehaviour
         ResetGravity();
 
         myRigidBody2D.gravityScale = 0f; // Disable gravity during dash
+        SoundManager.Instance.PlayDashSound();
         myRigidBody2D.linearVelocity = new Vector2(myTransform.right.x * dashingPower, 0f);
         myTrailRenderer.emitting = true;
 
@@ -231,10 +235,14 @@ public class PlayerController : MonoBehaviour
     // Applies upward force for a standard jump and updates the jump counter
     private void Jump()
     {
+        ground = false;
         isJumping = true;
         isGrounded = false;
         ResetGravity();
         myRigidBody2D.linearVelocityY = 0f; // Reset vertical momentum
+
+        SoundManager.Instance.PLayJumpSound();
+
         myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
         jumpsRemaining--;
         Invoke(nameof(ResetJumpState), 0.15f); // Buffer to prevent immediate re-grounding
@@ -262,6 +270,7 @@ public class PlayerController : MonoBehaviour
         myTransform.right = new Vector3(jumpDirX, 0f, 0f);
 
         myRigidBody2D.linearVelocity = Vector2.zero; // Clear momentum
+        SoundManager.Instance.PLayJumpSound();
         myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);
 
         Invoke(nameof(CancelWallJump), wallJumpTime);
@@ -294,8 +303,14 @@ public class PlayerController : MonoBehaviour
         if (myRigidBody2D.linearVelocityY <= 0.1f) isJumping = false;
 
         // Reset jumps and states upon safely landing
-        if (isGrounded && !isJumping && slopeDownAngle <= maxSlopeAngle)
+        if (isGrounded && !isJumping && slopeDownAngle <= maxSlopeAngle && !isKnocked)
         {
+            if (!ground)
+            {
+                SoundManager.Instance.PlayLandingSound();
+                ground = true;
+            }
+            canDash = true;
             PlayParticles(walkParticle);
             jumpsRemaining = maxJumps;
             fastFall = false;
@@ -492,18 +507,25 @@ public class PlayerController : MonoBehaviour
     {
         isKnocked = true;
         PlayParticles(myOtherParticleSystem);
-        groundCheck.gameObject.SetActive(false);
+       
+        if(walkParticle.activeSelf)
+        {
+            StopParticles(walkParticle);
+        }
 
+        groundCheck.gameObject.SetActive(false);
         transform.rotation = Quaternion.Euler(0, 0, 90);
+
         myRigidBody2D.sharedMaterial.bounciness = 1f; 
 
         yield return new WaitForSeconds(knockedTimer);
 
         isKnocked = false;
         StopParticles(myOtherParticleSystem);
+        
         groundCheck.gameObject.SetActive(false);
-
         transform.rotation = Quaternion.Euler(0, 0, 0);
+
         myRigidBody2D.sharedMaterial.bounciness = 0f;
         knockedCoroutine = null;
     }

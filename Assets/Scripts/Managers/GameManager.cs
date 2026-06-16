@@ -91,17 +91,18 @@ public class GameManager : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+
             if(playersList.Contains(collision.gameObject))
             {
+                collision.gameObject.GetComponent<PlayerHealth>().Die();
                 RemovePlayer(collision.gameObject);
                 return;
-            }
+            }   
         }
         else
         {
             collision.gameObject.SetActive(false);
         }
-
     }
 
     private IEnumerator ReloadGame()
@@ -110,6 +111,6 @@ public class GameManager : MonoBehaviour
         alreadyPlayed = true;
         // O Reload da cena vai chamar o Start() de novo, 
         // e eles vão spawnar outra vez nos seus lugares perfeitamente!
-        SceneManager.LoadScene("Prototype 2");
+        Loader.Load(Loader.Scene.Prototype2);
     }
 }

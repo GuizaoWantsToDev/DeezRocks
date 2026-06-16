@@ -145,6 +145,7 @@ public class RockThrow : MonoBehaviour
 
         playerEnergy.UseEnergy(shotgunEnergyCost);
         player.myAnimator.SetTrigger("ShotgunAttack");
+        SoundManager.Instance.PlayRockThrow();
 
         armRenderer.enabled = true;
         Invoke(nameof(HideArm), 0.15f);
@@ -185,7 +186,7 @@ public class RockThrow : MonoBehaviour
             if (rockScript != null)
             {
                 rockScript.ReleaseRock(aimDirection);
-
+                SoundManager.Instance.PlayRockThrow();
                 // Recoil only at levels 3, 4, 5 (stage indices 2, 3, 4)
                 // AND only when the player is airborne — no recoil when planted on the ground
                 bool isHighEnoughLevelForRecoil = rockScript.currentRockStage >= minimumStageForRecoil;

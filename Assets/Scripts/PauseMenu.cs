@@ -10,6 +10,7 @@ public class PauseMenu : MonoBehaviour
 
     [Header("=== MENUS UI ===")]
     [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject pauseMENU;
     [SerializeField] private GameObject optionsMenuUI;
     [SerializeField] private GameObject quitMenuUI;
 
@@ -137,6 +138,7 @@ public class PauseMenu : MonoBehaviour
 
     public void LeaveGame()
     {
+        pauseMENU.SetActive(false);
         Time.timeScale = 1f;
         gameIsPaused = false;
         SceneManager.LoadScene("MainMenu");

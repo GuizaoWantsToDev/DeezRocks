@@ -215,7 +215,11 @@ public class Rock : UnityEngine.MonoBehaviour
                     break;
                 }
             }
-            else break;
+            else
+            {
+                StartCoroutine(OverchargeDrainCoroutine());
+                break;
+            } 
         }
     }
 
@@ -332,9 +336,9 @@ public class Rock : UnityEngine.MonoBehaviour
         {
             if(CameraShake.Instance != null)
             { 
-                CameraShake.Instance.ShakeCamera(4f, 1f);
+                CameraShake.Instance.ShakeCamera(/*4f, 1f*/);
+                Instantiate(shockWaveManager, hitPoint, transform.rotation);
             }
-            Instantiate(shockWaveManager, hitPoint, transform.rotation);
         }
 
         DestroyPlatformPieces(hitPoint);

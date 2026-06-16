@@ -36,10 +36,10 @@ public class ShotgunHitbox : MonoBehaviour
             {
                 playerHit.gameObject.GetComponent<RockThrow>().ForceRelease();
             }
-
+          
             playerHit.StartKnockedStage();
             playerHit.myRigidBody2D.linearVelocity = Vector3.zero;
-            playerHit.myRigidBody2D.AddForce(transform.transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
+            playerHit.myRigidBody2D.AddForce(transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
         }
         if (other.TryGetComponent<IDamageable>(out IDamageable damageable))
         {
@@ -48,7 +48,7 @@ public class ShotgunHitbox : MonoBehaviour
         if (other.TryGetComponent<Dummie>(out Dummie dummie))
         {
             dummie.StartKnockedStage();
-            dummie.myRigidBody2D.AddForce(transform.transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
+            dummie.myRigidBody2D.AddForce(transform.right * shotgunKnockbackForce, ForceMode2D.Impulse);
         }
     }
 }

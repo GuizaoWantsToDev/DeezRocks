@@ -7,9 +7,12 @@ EditorBuildSettings:
   m_Scenes:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
-    guid: 213bb84f56d921648967fec48b7d5434
+    guid: 569a16b3f7ec3194f877a2d12dcfd3bc
   - enabled: 1
-    path: Assets/Scenes/Prototype 2.unity
+    path: Assets/Scenes/Loading.unity
+    guid: 7fb769bcdc9e8df45962f04fe524b2d0
+  - enabled: 1
+    path: Assets/Scenes/Prototype2.unity
     guid: 3f629ad5de2334e448eb099071c34ac4
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 5fdf1132c1cdc5146a9c9ea399ba3cbe, type: 2}
