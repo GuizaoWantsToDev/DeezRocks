@@ -1,15 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class ScrollingBackGround : UnityEngine.MonoBehaviour
+public class ScrollingBackGround : MonoBehaviour
 {
-    [SerializeField]
-    private float speed;
+    [SerializeField] private float speed;
+    [SerializeField] private RawImage myRawImage;
 
-    [SerializeField]
-    private Renderer myRenderer;
-
-    public void Update()
+    private void Update()
     {
-        myRenderer.material.mainTextureOffset += new Vector2(speed * Time.deltaTime, 0f);
+        Rect rect = myRawImage.uvRect;
+        rect.x += speed * Time.deltaTime;
+        myRawImage.uvRect = rect;
     }
 }
