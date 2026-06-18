@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,14 +12,28 @@ public class GameManager : MonoBehaviour
 
     [Header("--- SPAWN POINTS ---")]
     public Transform p1SpawnPoint;
-    public Transform p2SpawnPoint; 
+    public Transform p2SpawnPoint;
+
+    [Header("--- UI PLAYER 1 (ESQUERDA) ---")]
+    public TextMeshProUGUI textNamePlayer1;
+    public Image healthBarPlayer1;
+    public Image energyBarPlayer1;
+    public Animator heartAnimatorPlayer1;
+
+    [Header("--- UI PLAYER 2 (DIREITA) ---")]
+    public TextMeshProUGUI textNamePlayer2;
+    public Image healthBarPlayer2;
+    public Image energyBarPlayer2;
+    public Animator heartAnimatorPlayer2;
 
     [Header("--- PLAYERS ---")]
     public List<GameObject> playersList = new();
+    public GameObject instantiatedPlayer1;
+    public GameObject instantiatedPlayer2;
 
     [SerializeField] private CinemachineTargetGroup targetGroup;
-
     private static bool alreadyPlayed = false;
+    private bool isGameOver = false;
 
     private void Awake()
     {
@@ -28,30 +43,39 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        isGameOver = false;
         playersList.Clear();
         SpawnPlayersAutomatic();
     }
 
     private void SpawnPlayersAutomatic()
     {
-        // SPAWN DO PLAYER 1
         if (CharacterSelectionManager.p1Device != null)
         {
             string scheme1 = CharacterSelectionManager.p1Device is Keyboard ? "Keyboard" : "Controller";
 
-            // O Unity spawna o prefab selecionado e tranca-o ao comando do P1!
             PlayerInput p1Input = PlayerInput.Instantiate(
                 CharacterSelectionManager.p1SelectedPrefab,
                 controlScheme: scheme1,
                 pairWithDevice: CharacterSelectionManager.p1Device
             );
 
-            // Coloca o jogador no lado esquerdo do mapa
-            p1Input.transform.position = p1SpawnPoint.position;
-            AddPlayer(p1Input.gameObject);
+            instantiatedPlayer1 = p1Input.gameObject;
+            instantiatedPlayer1.transform.position = p1SpawnPoint.position;
+
+            // Atribuir Nome e COR ao Player 1
+            textNamePlayer1.text = CharacterSelectionManager.customNamePlayer1;
+            textNamePlayer1.color = CharacterSelectionManager.p1Color;
+
+            PlayerHealth health1 = instantiatedPlayer1.GetComponent<PlayerHealth>();
+            health1.screenSpaceHealthBar = healthBarPlayer1;
+
+            PlayerEnergy energy1 = instantiatedPlayer1.GetComponent<PlayerEnergy>();
+            energy1.energyBar = energyBarPlayer1;
+
+            AddPlayer(instantiatedPlayer1);
         }
 
-        // SPAWN DO PLAYER 2
         if (CharacterSelectionManager.p2Device != null)
         {
             string scheme2 = CharacterSelectionManager.p2Device is Keyboard ? "Keyboard" : "Controller";
@@ -62,42 +86,55 @@ public class GameManager : MonoBehaviour
                 pairWithDevice: CharacterSelectionManager.p2Device
             );
 
-            // Coloca o jogador no lado direito do mapa
-            p2Input.transform.position = p2SpawnPoint.position;
-            AddPlayer(p2Input.gameObject);
+            instantiatedPlayer2 = p2Input.gameObject;
+            instantiatedPlayer2.transform.position = p2SpawnPoint.position;
+
+            // Atribuir Nome e COR ao Player 2
+            textNamePlayer2.text = CharacterSelectionManager.customNamePlayer2;
+            textNamePlayer2.color = CharacterSelectionManager.p2Color;
+
+            PlayerHealth health2 = instantiatedPlayer2.GetComponent<PlayerHealth>();
+            health2.screenSpaceHealthBar = healthBarPlayer2;
+
+            PlayerEnergy energy2 = instantiatedPlayer2.GetComponent<PlayerEnergy>();
+            energy2.energyBar = energyBarPlayer2;
+
+            AddPlayer(instantiatedPlayer2);
         }
     }
-
     public void AddPlayer(GameObject player)
     {
-        if (playersList.Contains(player))
-            return;
+        if (playersList.Contains(player)) return;
 
         playersList.Add(player);
         targetGroup.AddMember(player.transform, 1, 1);
     }
 
-    public void RemovePlayer(GameObject player)
+    public void HandlePlayerDeath(GameObject deadPlayer)
     {
-        playersList.Remove(player);
-        targetGroup.RemoveMember(player.transform);
-        if (playersList.Count <= 1)
+        if (isGameOver) return;
+        isGameOver = true;
+
+        playersList.Remove(deadPlayer);
+        targetGroup.RemoveMember(deadPlayer.transform);
+
+        if (deadPlayer == instantiatedPlayer1)
         {
-            StartCoroutine(ReloadGame());
+            heartAnimatorPlayer1.SetTrigger("BreakHeart");
         }
+        else if (deadPlayer == instantiatedPlayer2)
+        {
+            heartAnimatorPlayer2.SetTrigger("BreakHeart");
+        }
+
+        StartCoroutine(ReloadGameAfterDeath());
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && playersList.Contains(collision.gameObject))
         {
-
-            if(playersList.Contains(collision.gameObject))
-            {
-                collision.gameObject.GetComponent<PlayerHealth>().Die();
-                RemovePlayer(collision.gameObject);
-                return;
-            }   
+            collision.gameObject.GetComponent<PlayerHealth>().Die();
         }
         else
         {
@@ -105,12 +142,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ReloadGame()
+    private IEnumerator ReloadGameAfterDeath()
     {
-        yield return new WaitForSeconds(1f);
+        // Espera tempo suficiente para a animação do coração acabar + 1 segundo extra
+        yield return new WaitForSeconds(2.5f);
         alreadyPlayed = true;
-        // O Reload da cena vai chamar o Start() de novo, 
-        // e eles vão spawnar outra vez nos seus lugares perfeitamente!
         Loader.Load(Loader.Scene.Prototype2);
     }
 }

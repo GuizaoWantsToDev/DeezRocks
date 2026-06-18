@@ -5,8 +5,8 @@ using System.Collections;
 public class PlayerEnergy : UnityEngine.MonoBehaviour
 {
     [Header("--- UI ----")]
-    [SerializeField] private Image energyBar;
-    [SerializeField] GameObject energyWarning;
+    public Image energyBar; // Agora é public
+    public GameObject energyWarning; // Agora é public
     public float currentEnergy;
 
     private float lowEnough = 0.30f;
@@ -24,35 +24,41 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
 
     private void Update()
     {
-        if (currentEnergy == 0f)
+        if (currentEnergy == 0f && energyWarning != null)
             energyWarning.SetActive(true);
     }
+
     private bool LowOnEnergy()
     {
-        if(currentEnergy/EnergyManager.Instance.maxEnergy < lowEnough)
+        if (currentEnergy / EnergyManager.Instance.maxEnergy < lowEnough)
             return true;
         else
             return false;
     }
 
     private IEnumerator Warning()
-    { 
+    {
         while (true && currentEnergy != 0)
         {
-            energyWarning.SetActive(true);
+            if (energyWarning != null) energyWarning.SetActive(true);
             yield return new WaitForSeconds(blinkDelay);
-            energyWarning.SetActive(false);
+            if (energyWarning != null) energyWarning.SetActive(false);
             yield return new WaitForSeconds(blinkDelay);
         }
     }
+
     public void UseEnergy(float amount)
     {
         currentEnergy -= amount;
         currentEnergy = Mathf.Max(currentEnergy, 0f);
         UpdateBars();
 
-        if (LowOnEnergy() && warningCoroutine == null)
+        // Adicionada a verificação: gameObject.activeInHierarchy
+        // Só tenta piscar o aviso se o boneco ainda estiver vivo/ativo na cena!
+        if (gameObject.activeInHierarchy && LowOnEnergy() && warningCoroutine == null)
+        {
             warningCoroutine = StartCoroutine(Warning());
+        }
     }
 
     public void RefillEnergy(float amount)
@@ -61,9 +67,9 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
         currentEnergy = Mathf.Min(currentEnergy, EnergyManager.Instance.maxEnergy);
         UpdateBars();
 
-        if (warningCoroutine != null && currentEnergy/EnergyManager.Instance.maxEnergy > lowEnough)
+        if (warningCoroutine != null && currentEnergy / EnergyManager.Instance.maxEnergy > lowEnough)
         {
-            energyWarning.SetActive(false);
+            if (energyWarning != null) energyWarning.SetActive(false);
             StopCoroutine(warningCoroutine);
             warningCoroutine = null;
         }
@@ -77,7 +83,12 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
     public void StartPassiveRegen()
     {
         StopPassiveRegen();
-        passiveRegenCoroutine = StartCoroutine(PassiveRegenCoroutine());
+
+        // Adicionada a verificação por segurança
+        if (gameObject.activeInHierarchy)
+        {
+            passiveRegenCoroutine = StartCoroutine(PassiveRegenCoroutine());
+        }
     }
 
     public void StopPassiveRegen()

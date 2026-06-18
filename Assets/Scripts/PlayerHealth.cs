@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [Header("=== UI BARS ===")]
-    [SerializeField] private Image screenSpaceHealthBar;
+    public Image screenSpaceHealthBar;
 
     public float currentHealth;
     private Animator playerAnimator;
@@ -15,15 +15,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         UpdateBar();
         playerAnimator = GetComponent<Animator>();
     }
+
     public void Damage(float damageAmount)
     {
         currentHealth -= damageAmount;
         UpdateBar();
 
-       if (SoundManager.Instance != null && playerAnimator != null)
+        if (SoundManager.Instance != null && playerAnimator != null)
         {
-           playerAnimator.SetTrigger("Damaged");
-           SoundManager.Instance.PlayPlayerHit();
+            playerAnimator.SetTrigger("Damaged");
+            SoundManager.Instance.PlayPlayerHit();
         }
 
         if (currentHealth <= 0)
@@ -39,10 +40,22 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         if (screenSpaceHealthBar != null)
             screenSpaceHealthBar.fillAmount = fillAmount;
     }
+
     public void Die()
     {
-        if (GameManager.Instance != null) 
-            GameManager.Instance.RemovePlayer(gameObject);
+        // 1. Força a vida a 0 (útil caso ele morra por cair num buraco com a vida cheia)
+        currentHealth = 0f;
+        UpdateBar();
+
+        // 2. Vai buscar a energia e seca-a completamente
+        if (TryGetComponent<PlayerEnergy>(out PlayerEnergy playerEnergy))
+        {
+            playerEnergy.UseEnergy(playerEnergy.currentEnergy); // Gasta a energia toda que sobra
+            playerEnergy.StopPassiveRegen(); // Impede que a energia volte a subir enquanto ele está morto
+        }
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.HandlePlayerDeath(gameObject);
 
         gameObject.SetActive(false);
     }

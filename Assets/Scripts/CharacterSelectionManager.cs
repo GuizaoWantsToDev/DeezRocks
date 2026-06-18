@@ -8,9 +8,15 @@ using System.Collections;
 
 public class CharacterSelectionManager : MonoBehaviour
 {
+    public static CharacterSelectionManager Instance { get; private set; }
 
-    public static CharacterSelectionManager Instance { get; private set;}
+    [Header("=== CORES DOS NOMES ===")]
+    public Color defaultColor = Color.white;
+    public Color greenColor = new Color(0.2f, 0.8f, 0.2f); // Verde
+    public Color purpleColor = new Color(0.7f, 0.2f, 0.8f); // Roxo
 
+    public static Color p1Color = Color.white;
+    public static Color p2Color = Color.white;
 
     [Header("=== UI DO TIMER ===")]
     [SerializeField] private TextMeshProUGUI timerText;
@@ -20,14 +26,16 @@ public class CharacterSelectionManager : MonoBehaviour
     public GameObject greenPlayerPrefab;
     public GameObject purplePlayerPrefab;
 
-    [Header("=== P1 - BOTOES E CANCELAR ===")]
+    [Header("=== P1 - BOTOES, NOME E CANCELAR ===")]
     public Button p1GreenHatButton;
     public Button p1PurpleHatButton;
+    public TMP_InputField inputNamePlayer1;
     public UnityEvent p1CancelAction;
 
-    [Header("=== P2 - BOTOES E CANCELAR ===")]
+    [Header("=== P2 - BOTOES, NOME E CANCELAR ===")]
     public Button p2GreenHatButton;
     public Button p2PurpleHatButton;
+    public TMP_InputField inputNamePlayer2;
     public UnityEvent p2CancelAction;
 
     [Header("=== BOTAO VOLTAR AO MENU ===")]
@@ -37,6 +45,9 @@ public class CharacterSelectionManager : MonoBehaviour
     public static InputDevice p2Device;
     public static GameObject p1SelectedPrefab;
     public static GameObject p2SelectedPrefab;
+
+    public static string customNamePlayer1 = "";
+    public static string customNamePlayer2 = "";
 
     private bool p1Ready = false;
     private bool p2Ready = false;
@@ -56,11 +67,13 @@ public class CharacterSelectionManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-            // A MAGIA DO RATO: Liga as funções de rato aos botões automaticamente!
-            p1GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 0));
+        p1GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 0));
         p1PurpleHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 1));
         p2GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(2, 0));
         p2PurpleHatButton.onClick.AddListener(() => OnHatClickedFromMouse(2, 1));
+
+        inputNamePlayer1.onEndEdit.AddListener(SavePlayer1Name);
+        inputNamePlayer2.onEndEdit.AddListener(SavePlayer2Name);
     }
 
     private void OnEnable()
@@ -74,6 +87,22 @@ public class CharacterSelectionManager : MonoBehaviour
         p2HatIndex = 0;
         p1SelectedPrefab = greenPlayerPrefab;
         p2SelectedPrefab = greenPlayerPrefab;
+
+        // Reset às cores e nomes na memória
+        p1Color = defaultColor;
+        p2Color = defaultColor;
+        customNamePlayer1 = "";
+        customNamePlayer2 = "";
+
+        // Reset à UI
+        inputNamePlayer1.text = "";
+        inputNamePlayer2.text = "";
+        inputNamePlayer1.interactable = true;
+        inputNamePlayer2.interactable = true;
+
+        // Pinta logo a caixa com a cor default (branco)
+        ChangeInputFieldColor(inputNamePlayer1, p1Color);
+        ChangeInputFieldColor(inputNamePlayer2, p2Color);
 
         if (p1CancelAction != null) p1CancelAction.Invoke();
         if (p2CancelAction != null) p2CancelAction.Invoke();
@@ -92,6 +121,31 @@ public class CharacterSelectionManager : MonoBehaviour
         StartCoroutine(InputCooldown());
     }
 
+    // --- NOVA FUNÇÃO: Muda a cor do texto e do placeholder instantaneamente ---
+    private void ChangeInputFieldColor(TMP_InputField inputField, Color newColor)
+    {
+        if (inputField != null)
+        {
+            // Muda a cor do texto que o jogador escreve
+            if (inputField.textComponent != null)
+                inputField.textComponent.color = newColor;
+
+            // Muda a cor do texto fantasma "Write ur name"
+            if (inputField.placeholder != null)
+                inputField.placeholder.color = newColor;
+        }
+    }
+
+    private void SavePlayer1Name(string input)
+    {
+        customNamePlayer1 = input;
+    }
+
+    private void SavePlayer2Name(string input)
+    {
+        customNamePlayer2 = input;
+    }
+
     private IEnumerator InputCooldown()
     {
         canAcceptInput = false;
@@ -108,6 +162,9 @@ public class CharacterSelectionManager : MonoBehaviour
 
     private void Update()
     {
+        if (inputNamePlayer1.isFocused || inputNamePlayer2.isFocused)
+            return;
+
         if (canAcceptInput)
         {
             CheckInputs();
@@ -120,6 +177,22 @@ public class CharacterSelectionManager : MonoBehaviour
                 timerRunning = true;
                 currentTimer = countdownStart;
                 timerText.gameObject.SetActive(true);
+
+                // BLOQUEAR ESCRITA
+                inputNamePlayer1.interactable = false;
+                inputNamePlayer2.interactable = false;
+
+                // FORÇAR NOMES DEFAULT SE ESTIVEREM VAZIOS
+                if (string.IsNullOrWhiteSpace(inputNamePlayer1.text))
+                {
+                    inputNamePlayer1.text = "PLAYER 1";
+                    customNamePlayer1 = "PLAYER 1";
+                }
+                if (string.IsNullOrWhiteSpace(inputNamePlayer2.text))
+                {
+                    inputNamePlayer2.text = "PLAYER 2";
+                    customNamePlayer2 = "PLAYER 2";
+                }
             }
 
             currentTimer -= Time.deltaTime;
@@ -127,14 +200,20 @@ public class CharacterSelectionManager : MonoBehaviour
 
             if (currentTimer <= 0)
             {
-                //onPlay.Invoke();
                 MainMenu.Instance.PlayGame();
             }
         }
         else
         {
-            timerRunning = false;
-            timerText.gameObject.SetActive(false);
+            if (timerRunning)
+            {
+                timerRunning = false;
+                timerText.gameObject.SetActive(false);
+
+                // VOLTAR A PERMITIR ESCREVER
+                inputNamePlayer1.interactable = true;
+                inputNamePlayer2.interactable = true;
+            }
         }
     }
 
@@ -143,7 +222,6 @@ public class CharacterSelectionManager : MonoBehaviour
         if (UnityEngine.EventSystems.EventSystem.current != null)
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
 
-        // --- GAMEPADS ---
         foreach (Gamepad pad in Gamepad.all)
         {
             if (!canAcceptInput) return;
@@ -169,7 +247,6 @@ public class CharacterSelectionManager : MonoBehaviour
             }
         }
 
-        // --- TECLADO E RATO ---
         if (Keyboard.current != null)
         {
             if (!canAcceptInput) return;
@@ -179,7 +256,6 @@ public class CharacterSelectionManager : MonoBehaviour
                 if (p1Device == null || p1Device == Keyboard.current) HandleP1JoinOrReady(Keyboard.current);
                 else if (p2Device == null || p2Device == Keyboard.current) HandleP2JoinOrReady(Keyboard.current);
             }
-            // Adicionado o CLIQUE DIREITO DO RATO para Cancelar/Sair
             else if (Keyboard.current.backspaceKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame ||
                     (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame))
             {
@@ -198,42 +274,61 @@ public class CharacterSelectionManager : MonoBehaviour
         }
     }
 
-    // ==========================================
-    // FUNÇÃO DEDICADA AO CLIQUE DO RATO
-    // ==========================================
     private void OnHatClickedFromMouse(int player, int hatIndex)
     {
         if (!canAcceptInput) return;
 
         if (player == 1 && !p1Ready)
         {
-            if (p1Device == null) p1Device = Keyboard.current; // Assume teclado!
+            if (p1Device == null) p1Device = Keyboard.current;
             p1HatIndex = hatIndex;
             p1SelectedPrefab = (hatIndex == 0) ? greenPlayerPrefab : purplePlayerPrefab;
+            p1Color = (hatIndex == 0) ? greenColor : purpleColor;
+
+            ChangeInputFieldColor(inputNamePlayer1, p1Color); // Atualiza a cor no menu!
+
             p1Ready = true;
             UpdateInteractableStates();
             StartCoroutine(InputCooldown());
         }
         else if (player == 2 && !p2Ready)
         {
-            if (p2Device == null) p2Device = Keyboard.current; // Assume o mesmo teclado para o P2 poder testar sozinho!
+            if (p2Device == null) p2Device = Keyboard.current;
             p2HatIndex = hatIndex;
             p2SelectedPrefab = (hatIndex == 0) ? greenPlayerPrefab : purplePlayerPrefab;
+            p2Color = (hatIndex == 0) ? greenColor : purpleColor;
+
+            ChangeInputFieldColor(inputNamePlayer2, p2Color); // Atualiza a cor no menu!
+
             p2Ready = true;
             UpdateInteractableStates();
             StartCoroutine(InputCooldown());
         }
     }
 
-    // ==========================================
-    // FUNÇÕES NATIVAS (Teclado/Comando)
-    // ==========================================
     private void HandleUnifiedBack()
     {
+        // Se alguém estiver Ready (ou seja, se o timer já começou ou ia começar)
         if (p1Ready || p2Ready)
         {
             p1Ready = false;
             p2Ready = false;
+
+            // --- A MAGIA ACONTECE AQUI ---
+            // 1. Volta as cores para branco
+            p1Color = defaultColor;
+            p2Color = defaultColor;
+
+            // 2. Apaga o texto para mostrar o "Write ur name"
+            inputNamePlayer1.text = "";
+            inputNamePlayer2.text = "";
+            customNamePlayer1 = "";
+            customNamePlayer2 = "";
+
+            // 3. Pinta logo as caixas com o default (Branco)
+            ChangeInputFieldColor(inputNamePlayer1, p1Color);
+            ChangeInputFieldColor(inputNamePlayer2, p2Color);
+            // -----------------------------
 
             p1CancelAction.Invoke();
             p2CancelAction.Invoke();
@@ -243,10 +338,17 @@ public class CharacterSelectionManager : MonoBehaviour
         }
         else
         {
+            // Se já não houver ninguém Ready e carregarem para voltar ao Main Menu
             p1Device = null;
             p2Device = null;
             p1HatIndex = 0;
             p2HatIndex = 0;
+
+            p1Color = defaultColor;
+            p2Color = defaultColor;
+
+            ChangeInputFieldColor(inputNamePlayer1, p1Color);
+            ChangeInputFieldColor(inputNamePlayer2, p2Color);
 
             p1GreenHatButton.GetComponent<ButtonHover>().ForceDeselect();
             p1PurpleHatButton.GetComponent<ButtonHover>().ForceDeselect();
@@ -257,7 +359,11 @@ public class CharacterSelectionManager : MonoBehaviour
             {
                 mainBackButton.onClick.Invoke();
             }
-            StartCoroutine(InputCooldown());
+
+            if (gameObject.activeInHierarchy)
+            {
+                StartCoroutine(InputCooldown());
+            }
         }
     }
 
@@ -302,8 +408,22 @@ public class CharacterSelectionManager : MonoBehaviour
         if (!p1Ready)
         {
             p1HatIndex = Mathf.Clamp(p1HatIndex + direction, 0, 1);
-            if (p1HatIndex == 0) { p1SelectedPrefab = greenPlayerPrefab; p1GreenHatButton.GetComponent<ButtonHover>().ForceSelect(); p1PurpleHatButton.GetComponent<ButtonHover>().ForceDeselect(); }
-            else { p1SelectedPrefab = purplePlayerPrefab; p1GreenHatButton.GetComponent<ButtonHover>().ForceDeselect(); p1PurpleHatButton.GetComponent<ButtonHover>().ForceSelect(); }
+            if (p1HatIndex == 0)
+            {
+                p1SelectedPrefab = greenPlayerPrefab;
+                p1Color = greenColor;
+                p1GreenHatButton.GetComponent<ButtonHover>().ForceSelect();
+                p1PurpleHatButton.GetComponent<ButtonHover>().ForceDeselect();
+            }
+            else
+            {
+                p1SelectedPrefab = purplePlayerPrefab;
+                p1Color = purpleColor;
+                p1GreenHatButton.GetComponent<ButtonHover>().ForceDeselect();
+                p1PurpleHatButton.GetComponent<ButtonHover>().ForceSelect();
+            }
+
+            ChangeInputFieldColor(inputNamePlayer1, p1Color); // Atualiza a cor
             StartCoroutine(InputCooldown());
         }
     }
@@ -315,8 +435,22 @@ public class CharacterSelectionManager : MonoBehaviour
         if (!p2Ready)
         {
             p2HatIndex = Mathf.Clamp(p2HatIndex + direction, 0, 1);
-            if (p2HatIndex == 0) { p2SelectedPrefab = greenPlayerPrefab; p2GreenHatButton.GetComponent<ButtonHover>().ForceSelect(); p2PurpleHatButton.GetComponent<ButtonHover>().ForceDeselect(); }
-            else { p2SelectedPrefab = purplePlayerPrefab; p2GreenHatButton.GetComponent<ButtonHover>().ForceDeselect(); p2PurpleHatButton.GetComponent<ButtonHover>().ForceSelect(); }
+            if (p2HatIndex == 0)
+            {
+                p2SelectedPrefab = greenPlayerPrefab;
+                p2Color = greenColor;
+                p2GreenHatButton.GetComponent<ButtonHover>().ForceSelect();
+                p2PurpleHatButton.GetComponent<ButtonHover>().ForceDeselect();
+            }
+            else
+            {
+                p2SelectedPrefab = purplePlayerPrefab;
+                p2Color = purpleColor;
+                p2GreenHatButton.GetComponent<ButtonHover>().ForceDeselect();
+                p2PurpleHatButton.GetComponent<ButtonHover>().ForceSelect();
+            }
+
+            ChangeInputFieldColor(inputNamePlayer2, p2Color); // Atualiza a cor
             StartCoroutine(InputCooldown());
         }
     }

@@ -12,34 +12,43 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     private void Awake()
     {
-        thisButton = GetComponent<Button>();
-        rectTransform = GetComponent<RectTransform>();
-        originalSize = rectTransform.localScale;
+        InitIfNeeded();
     }
 
+    // Garante que o RectTransform é carregado mesmo que outro script chame isto antes do Awake
+    private void InitIfNeeded()
+    {
+        if (rectTransform == null)
+        {
+            thisButton = GetComponent<Button>();
+            rectTransform = GetComponent<RectTransform>();
+            originalSize = rectTransform.localScale;
+        }
+    }
 
     public void OnBackInput(InputAction.CallbackContext context)
     {
         ForceButtonAction();
     }
+
     public void ForceButtonAction()
     {
-        thisButton.onClick.Invoke();
-    }
-    // Mouse enters the button
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        rectTransform.localScale = originalSize * sizeMultiplier;
-        SoundManager.Instance.PlayButtonHover();
+        if (thisButton != null) thisButton.onClick.Invoke();
     }
 
-    // Mouse leaves the button
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        InitIfNeeded();
+        rectTransform.localScale = originalSize * sizeMultiplier;
+        if (SoundManager.Instance != null) SoundManager.Instance.PlayButtonHover();
+    }
+
     public void OnPointerExit(PointerEventData eventData)
     {
+        InitIfNeeded();
         rectTransform.localScale = originalSize;
     }
 
-    // Gamepad navigates TO this button
     public void OnSelect(BaseEventData eventData)
     {
         ForceSelect();
@@ -47,11 +56,14 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void ForceSelect()
     {
+        InitIfNeeded(); // <-- Salva-te do erro do OnEnable
         rectTransform.localScale = originalSize * sizeMultiplier;
-        SoundManager.Instance.PlayButtonHover();
+
+        // Garante que não dá erro se o som ainda não carregou
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayButtonHover();
     }
 
-    // Gamepad navigates AWAY from this button
     public void OnDeselect(BaseEventData eventData)
     {
         ForceDeselect();
@@ -59,13 +71,12 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void ForceDeselect()
     {
+        InitIfNeeded();
         rectTransform.localScale = originalSize;
     }
 
     public void OnChangeInteraction()
     {
-        thisButton.interactable = false;
+        if (thisButton != null) thisButton.interactable = false;
     }
-
-    
 }
