@@ -9106,7 +9106,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1212.2971, y: 899.5332}
+  m_AnchoredPosition: {x: -807.2, y: 520}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1568903989
@@ -9121,7 +9121,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ad5d002b85de24da25e4c6a41f9cad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  maxBlendDistance: 21
+  maxBlendDistance: 23
   minBlendDistance: 12
   timeToChange: 1.7
   delayTime: 0.5
@@ -9160,8 +9160,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.Volume
   m_IsGlobal: 0
   priority: 0
-  blendDistance: 21
-  weight: 0.163
+  blendDistance: 23
+  weight: 0.44
   sharedProfile: {fileID: 11400000, guid: a82e3ad4dfbe5d54da8b21857ed4ed5f, type: 2}
 --- !u!1 &1570657655
 GameObject:
