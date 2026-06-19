@@ -13353,7 +13353,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0.0001
+  m_Value: 0.3
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -18198,7 +18198,7 @@ MonoBehaviour:
   m_MinValue: 0.0001
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 1
+  m_Value: 0.7
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
@@ -24356,6 +24356,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 1c2e88ba73177bf499174aa83c2d20dd, type: 3}
     - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: debrisSound
+      value: 
+      objectReference: {fileID: 8300000, guid: c76b54f873cfae340b536ab0d73743c0, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: landingSound
       value: 
       objectReference: {fileID: 8300000, guid: 6e2be0202c334a14f8a2a255fcad4538, type: 3}
@@ -24376,9 +24380,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: 746babaf1de24074da736b70e07a160e, type: 3}
     - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: switchToRockSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5f78fb4d52665b244af3f98f11adbff5, type: 3}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: jumpSound.Array.size
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
+      propertyPath: switchToShotgunSound
+      value: 
+      objectReference: {fileID: 8300000, guid: 5e9ccaf72ad858a428486b6a713303c3, type: 3}
     - target: {fileID: 130437269088886673, guid: c16028aabb9f4aa4a87ff6c668764b43, type: 3}
       propertyPath: 'jumpSound.Array.data[0]'
       value: 

@@ -43,6 +43,12 @@ public class Debris : MonoBehaviour, IPooledObject
         if (other.TryGetComponent<PlayerEnergy>(out PlayerEnergy playerEnergy) && other is CapsuleCollider2D)
         {
             playerEnergy.RefillEnergy(finalEnergy);
+
+            if (SoundManager.Instance != null)
+            {
+                SoundManager.Instance.PlayDebrisSound();
+            }
+
             gameObject.SetActive(false);
         }
     }

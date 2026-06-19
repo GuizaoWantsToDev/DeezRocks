@@ -19,6 +19,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip landingSound;
     [SerializeField] private AudioClip[] jumpSound;
     [SerializeField] private AudioClip[] jumpScreamSound;
+    [SerializeField] private AudioClip debrisSound;
+    [SerializeField] private AudioClip switchToRockSound;
+    [SerializeField] private AudioClip switchToShotgunSound;
 
     private AudioSource globalAudioSource;
 
@@ -97,9 +100,21 @@ public class SoundManager : MonoBehaviour
         PlaySound(landingSound);
     }
 
-    public void PLayJumpSound()
+    public void PlayJumpSound()
     {
         PlaySound(jumpSound[Random.Range(0, jumpSound.Length - 1)]);
         PlaySound(jumpScreamSound[Random.Range(0, jumpScreamSound.Length - 1)]);
+    }
+    public void ShotgunSound()
+    {
+        PlaySound(switchToShotgunSound);
+    }
+    public void RockSound()
+    {
+        PlaySound(switchToRockSound);
+    }
+    public void PlayDebrisSound()
+    {
+        PlaySound(debrisSound);
     }
 }

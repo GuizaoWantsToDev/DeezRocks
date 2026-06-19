@@ -94,6 +94,18 @@ public class RockThrow : MonoBehaviour
         }
 
         isShotgunActive = !isShotgunActive;
+     
+        if (SoundManager.Instance != null)
+        {
+            if (isShotgunActive)
+            {
+                SoundManager.Instance.ShotgunSound();
+            }
+            else
+            {
+                SoundManager.Instance.RockSound();
+            }
+        }
 
         if (shotgunConeIndicator != null)
         {

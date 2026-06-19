@@ -92,6 +92,12 @@ public class PlayerController : MonoBehaviour
     private Coroutine dashCoroutine;
     private Coroutine knockedCoroutine;
 
+    private void Awake()
+    {
+        rockThrow = GetComponent<RockThrow>();
+        cc = GetComponent<CapsuleCollider2D>();
+    }
+
     private void Start()
     {
         if (GameManager.Instance != null)
@@ -99,8 +105,6 @@ public class PlayerController : MonoBehaviour
             GameManager.Instance.AddPlayer(gameObject);
         }
 
-        rockThrow = GetComponent<RockThrow>();
-        cc = GetComponent<CapsuleCollider2D>();
         ResetGravity();
 
         knockedTimer = MobilityAndCombatStats.Instance.knockedTimer;
@@ -135,8 +139,8 @@ public class PlayerController : MonoBehaviour
     }
 
     public void OnJump(InputAction.CallbackContext context)
-    {
-        if (isKnocked || !context.performed || isDashing || rockThrow.inThrowState)
+    {    
+        if (isKnocked || !context.performed || isDashing || (rockThrow != null && rockThrow.inThrowState))
         {
             return;
         }
@@ -243,7 +247,7 @@ public class PlayerController : MonoBehaviour
 
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PLayJumpSound();
+            SoundManager.Instance.PlayJumpSound();
         }
 
         myRigidBody2D.AddForce(Vector2.up * jumpPower, ForceMode2D.Impulse);
@@ -276,7 +280,7 @@ public class PlayerController : MonoBehaviour
 
         if (SoundManager.Instance != null)
         {
-            SoundManager.Instance.PLayJumpSound();
+            SoundManager.Instance.PlayJumpSound();
         }
 
         myRigidBody2D.AddForce(wallJumpDirection * wallJumpPower, ForceMode2D.Impulse);

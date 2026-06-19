@@ -137,7 +137,7 @@ MonoBehaviour:
   debrisSpawnBoost: 30
   maxDebrisSize: 1.1
   minDebrisSize: 0.5
-  baseEnergyAmount: 14
+  baseEnergyAmount: 30
 --- !u!60 &4978723808830559721
 PolygonCollider2D:
   m_ObjectHideFlags: 0
