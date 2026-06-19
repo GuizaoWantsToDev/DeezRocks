@@ -2,20 +2,20 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-// Isto obriga o Unity a adicionar um Volume caso te esqueças!
 [RequireComponent(typeof(Volume))]
 public class BloomEffect : MonoBehaviour
 {
     private Volume volume;
+
     [SerializeField] private float maxBlendDistance;
     [SerializeField] private float minBlendDistance;
     [SerializeField] private float timeToChange;
     [SerializeField] private float delayTime;
+
     private float timer;
 
     private void Awake()
     {
-        // Awake corre MUITO antes do Start ou de qualquer clique na UI
         volume = GetComponent<Volume>();
     }
 
@@ -26,7 +26,6 @@ public class BloomEffect : MonoBehaviour
 
     public void StartTheBloom()
     {
-        // Prevenção: só começa a coroutine se o volume realmente existir
         if (volume != null)
         {
             StartCoroutine(BlendDistanceChange());
@@ -39,9 +38,10 @@ public class BloomEffect : MonoBehaviour
 
     private IEnumerator BlendDistanceChange()
     {
-        while (true) // (true) é o mesmo que 1 + 1 == 2, mas mais bonito em código!
+        while (true)
         {
             timer = 0f;
+
             while (timer < timeToChange)
             {
                 timer += Time.deltaTime;
@@ -52,6 +52,7 @@ public class BloomEffect : MonoBehaviour
             yield return new WaitForSeconds(delayTime);
 
             timer = 0f;
+
             while (timer < timeToChange)
             {
                 timer += Time.deltaTime;

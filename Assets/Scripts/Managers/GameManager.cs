@@ -8,37 +8,42 @@ using TMPro;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager Instance { get; private set; } = null;
+    public static GameManager Instance { get; private set; }
 
-    [Header("--- SPAWN POINTS ---")]
+    [Header("Spawn Points")]
     public Transform p1SpawnPoint;
     public Transform p2SpawnPoint;
 
-    [Header("--- UI PLAYER 1 (ESQUERDA) ---")]
+    [Header("UI Player 1")]
     public TextMeshProUGUI textNamePlayer1;
     public Image healthBarPlayer1;
     public Image energyBarPlayer1;
     public Animator heartAnimatorPlayer1;
 
-    [Header("--- UI PLAYER 2 (DIREITA) ---")]
+    [Header("UI Player 2")]
     public TextMeshProUGUI textNamePlayer2;
     public Image healthBarPlayer2;
     public Image energyBarPlayer2;
     public Animator heartAnimatorPlayer2;
 
-    [Header("--- PLAYERS ---")]
+    [Header("Players")]
     public List<GameObject> playersList = new();
     public GameObject instantiatedPlayer1;
     public GameObject instantiatedPlayer2;
 
     [SerializeField] private CinemachineTargetGroup targetGroup;
-    private static bool alreadyPlayed = false;
     private bool isGameOver = false;
 
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Start()
@@ -52,7 +57,12 @@ public class GameManager : MonoBehaviour
     {
         if (CharacterSelectionManager.p1Device != null)
         {
-            string scheme1 = CharacterSelectionManager.p1Device is Keyboard ? "Keyboard" : "Controller";
+            string scheme1 = "Controller";
+
+            if (CharacterSelectionManager.p1Device is Keyboard)
+            {
+                scheme1 = "Keyboard";
+            }
 
             PlayerInput p1Input = PlayerInput.Instantiate(
                 CharacterSelectionManager.p1SelectedPrefab,
@@ -63,7 +73,6 @@ public class GameManager : MonoBehaviour
             instantiatedPlayer1 = p1Input.gameObject;
             instantiatedPlayer1.transform.position = p1SpawnPoint.position;
 
-            // Atribuir Nome e COR ao Player 1
             textNamePlayer1.text = CharacterSelectionManager.customNamePlayer1;
             textNamePlayer1.color = CharacterSelectionManager.p1Color;
 
@@ -78,7 +87,12 @@ public class GameManager : MonoBehaviour
 
         if (CharacterSelectionManager.p2Device != null)
         {
-            string scheme2 = CharacterSelectionManager.p2Device is Keyboard ? "Keyboard" : "Controller";
+            string scheme2 = "Controller";
+
+            if (CharacterSelectionManager.p2Device is Keyboard)
+            {
+                scheme2 = "Keyboard";
+            }
 
             PlayerInput p2Input = PlayerInput.Instantiate(
                 CharacterSelectionManager.p2SelectedPrefab,
@@ -89,7 +103,6 @@ public class GameManager : MonoBehaviour
             instantiatedPlayer2 = p2Input.gameObject;
             instantiatedPlayer2.transform.position = p2SpawnPoint.position;
 
-            // Atribuir Nome e COR ao Player 2
             textNamePlayer2.text = CharacterSelectionManager.customNamePlayer2;
             textNamePlayer2.color = CharacterSelectionManager.p2Color;
 
@@ -102,9 +115,13 @@ public class GameManager : MonoBehaviour
             AddPlayer(instantiatedPlayer2);
         }
     }
+
     public void AddPlayer(GameObject player)
     {
-        if (playersList.Contains(player)) return;
+        if (playersList.Contains(player))
+        {
+            return;
+        }
 
         playersList.Add(player);
         targetGroup.AddMember(player.transform, 1, 1);
@@ -112,7 +129,11 @@ public class GameManager : MonoBehaviour
 
     public void HandlePlayerDeath(GameObject deadPlayer)
     {
-        if (isGameOver) return;
+        if (isGameOver)
+        {
+            return;
+        }
+
         isGameOver = true;
 
         playersList.Remove(deadPlayer);
@@ -144,9 +165,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator ReloadGameAfterDeath()
     {
-        // Espera tempo suficiente para a animação do coração acabar + 1 segundo extra
         yield return new WaitForSeconds(2.5f);
-        alreadyPlayed = true;
         Loader.Load(Loader.Scene.Prototype2);
     }
 }

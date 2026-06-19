@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PoolManager : MonoBehaviour
@@ -12,28 +11,30 @@ public class PoolManager : MonoBehaviour
         public int amount;
     }
 
-    #region Singleton 
-    public static PoolManager Instance {get; private set;}
+    public static PoolManager Instance { get; private set; }
+
+    public List<Pool> pools = new List<Pool>();
+    public Dictionary<string, Queue<GameObject>> poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
     private void Awake()
     {
-        if(Instance == null)
-            Instance = this;
-        else
-            Destroy(gameObject);
-    }
-   
-    #endregion
-
-    public List<Pool> pools = new();
-    public Dictionary<string, Queue<GameObject>> poolDictionary = new();
-    void Start()
-    {
-        foreach ( Pool pool in pools)
+        if (Instance == null)
         {
-            Queue<GameObject> objectPool = new();
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-            for(int i = 0; i < pool.amount; i++)
+    private void Start()
+    {
+        foreach (Pool pool in pools)
+        {
+            Queue<GameObject> objectPool = new Queue<GameObject>();
+
+            for (int i = 0; i < pool.amount; i++)
             {
                 GameObject obj = Instantiate(pool.prefab);
                 obj.SetActive(false);
@@ -46,10 +47,9 @@ public class PoolManager : MonoBehaviour
 
     public GameObject SpawnPoolObject(string tag, Vector3 position, Quaternion rotation)
     {
-
         if (!poolDictionary.ContainsKey(tag))
         {
-            Debug.LogWarning("A pool with the tag:" + tag + " Doesn't exist");
+            Debug.LogWarning("A pool with the tag: " + tag + " doesn't exist");
             return null;
         }
 
@@ -60,7 +60,9 @@ public class PoolManager : MonoBehaviour
         spawnObject.transform.rotation = rotation;
 
         if (spawnObject.TryGetComponent<IPooledObject>(out IPooledObject pooledObj))
+        {
             pooledObj.OnObjectSpawn();
+        }
 
         poolDictionary[tag].Enqueue(spawnObject);
 

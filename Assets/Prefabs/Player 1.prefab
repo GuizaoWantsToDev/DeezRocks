@@ -433,9 +433,7 @@ MonoBehaviour:
   aimDirection: {x: 1, y: 0}
   inThrowState: 0
   isShotgunActive: 0
-  weaponUI: {fileID: 0}
   shotgunHitbox: {fileID: 6215929712163779048}
-  shotgunActiveDuration: 0.3
   shotgunConeIndicator: {fileID: 4314195793118030486}
   rock: {fileID: 6583019903933359413, guid: 491efaa5225175f4bb64f457bbffedab, type: 3}
   rockPrefab: {fileID: 6424646774010446869, guid: 491efaa5225175f4bb64f457bbffedab, type: 3}
@@ -467,12 +465,19 @@ MonoBehaviour:
   myTransform: {fileID: 8066380642624679743}
   myTrailRenderer: {fileID: 2114564201716080316}
   myAnimator: {fileID: 9184078447384148441}
+  ragdoll: {fileID: 9011430859770085466, guid: bd5893067686dc24a8f23449da1dd689, type: 3}
+  myParticleSystem: {fileID: 5511214959971326397}
+  myOtherParticleSystem: {fileID: 492155691892073115}
+  walkParticle: {fileID: 1786379162483157755}
   mSpeed: 37
   maxVerticalSpeed: 65
-  fastFallImpulse: 10
-  playerGravity: 3.4
+  canMove: 1
   jumpPower: 32
   maxJumps: 2
+  fastFallImpulse: 10
+  minHoldFallGravity: 0.05
+  holdFallGrowthRate: 0.5
+  maxHoldFallSpeed: 1.5
   dashTime: 0.2
   dashCoolDown: 0.18
   dashingPower: 72
@@ -480,9 +485,7 @@ MonoBehaviour:
   wallJumpTime: 0.3
   wallJumpPower: {x: 32, y: 45}
   wallDetachBufferTime: 0.3
-  minHoldFallGravity: 0.05
-  holdFallGrowthRate: 0.5
-  maxHoldFallSpeed: 1.5
+  playerGravity: 3.4
   maxSlopeAngle: 45
   slopeCheckDistance: 0.5
   noFriction: {fileID: 6200000, guid: 4bd5fc5f012f7774f94b6604345c5dbd, type: 2}
@@ -499,15 +502,10 @@ MonoBehaviour:
   wallCheckFoot: {fileID: 1992075484772057710}
   wallCheckSize: {x: 0.3, y: 0.7}
   knockBackTime: 0.2
+  groundKnockbackDeceleration: 10
   isWalled: 0
   fastFall: 0
   isKnockBacked: 0
-  groundKnockbackDeceleration: 10
-  myParticleSystem: {fileID: 5511214959971326397}
-  myOtherParticleSystem: {fileID: 492155691892073115}
-  walkParticle: {fileID: 1786379162483157755}
-  ragdoll: {fileID: 9011430859770085466, guid: bd5893067686dc24a8f23449da1dd689, type: 3}
-  canMove: 1
   isKnocked: 0
 --- !u!96 &2114564201716080316
 TrailRenderer:
@@ -2153,7 +2151,7 @@ PrefabInstance:
     - target: {fileID: 6745173280741721919, guid: 651b24ed4f9523b4da3afc0ce4820b48, type: 3}
       propertyPath: UVModule.sprites.Array.data[0].sprite
       value: 
-      objectReference: {fileID: 21300000, guid: 22fa9bb4e78e7844b8de9251be8ab726, type: 3}
+      objectReference: {fileID: 21300000, guid: 6227ffd577de3964cb2b5b79ad06907b, type: 3}
     - target: {fileID: 6745173280741721919, guid: 651b24ed4f9523b4da3afc0ce4820b48, type: 3}
       propertyPath: EmissionModule.rateOverDistance.scalar
       value: 0.44

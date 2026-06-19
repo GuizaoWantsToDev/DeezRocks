@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Rock : UnityEngine.MonoBehaviour
+public class Rock : MonoBehaviour
 {
-    [Header("=== ROCK STATS ===")]
+    [Header("Rock Stats")]
     [SerializeField] private ParticleSystem chargeParticles;
     [SerializeField] public float baseEnergyCost;
     [SerializeField] public float baseDamage;
@@ -13,33 +13,34 @@ public class Rock : UnityEngine.MonoBehaviour
     [SerializeField] private float extraCostPerLevel;
     [SerializeField] private float extraDamagePerLevel;
 
-    [Header("=== LEVEL TIMING (EXPONENTIAL) ===")]
+    [Header("Level Timing")]
     [SerializeField] private float baseRockTimer = 0.5f;
     [SerializeField] private float levelTimerGrowthRate = 2f;
 
-    [Header("=== LEVEL VISUALS ===")]
+    [Header("Level Visuals")]
     [SerializeField] private Sprite[] rockStage;
     [SerializeField] private LayerMask whatDestroysRock;
 
-    [Header("=== MASS PER LEVEL ===")]
+    [Header("Mass Per Level")]
     [SerializeField] private float[] massPerStage = { 1f, 2f, 4f, 7f, 12f };
 
-    [Header("=== DESTRUCTION SETTINGS ===")]
+    [Header("Destruction Settings")]
     [SerializeField] private float destructionRadiusMultiplier = 1.5f;
 
-    [Header("=== OVERCHARGE ===")]
+    [Header("Overcharge")]
     [SerializeField] private float overchargeDelay = 1f;
     [SerializeField] private float overchargeDrainPerSecond = 5f;
 
-    [Header("=== KNOCKBACK (LEVEL 5 ONLY) ===")]
+    [Header("Knockback")]
     [SerializeField] private float baseKnockbackForce = 5f;
     [SerializeField] private float knockbackBonusPerLevel = 1.5f;
 
-    [Header("=== SELF DAMAGE ===")]
+    [Header("Self Damage")]
     [SerializeField] private float selfDamageDelay = 0.15f;
+
     private bool canHurtOwner = false;
 
-    [Header("=== PREVIEW & FOLLOW ===")]
+    [Header("Preview & Follow")]
     [SerializeField] private float maxPreviewRange = 8f;
     [SerializeField] private float previewGrowSpeed = 6f;
     [SerializeField] private int previewStepCount = 30;
@@ -48,7 +49,7 @@ public class Rock : UnityEngine.MonoBehaviour
     [SerializeField] private LineRenderer trajectoryLine;
     [SerializeField] private float orbitSmoothTime = 0.08f;
 
-    [Header("=== OTHER ===")]
+    [Header("Other")]
     [SerializeField] private GameObject debris;
     [SerializeField] private GameObject shockWaveManager;
 
@@ -87,6 +88,7 @@ public class Rock : UnityEngine.MonoBehaviour
         {
             trajectoryLine.enabled = false;
         }
+
         poolManager = PoolManager.Instance;
     }
 
@@ -106,54 +108,74 @@ public class Rock : UnityEngine.MonoBehaviour
         ownerColliders = ownerObject.GetComponentsInChildren<Collider2D>();
         ToggleOwnerCollisions(true);
 
-        if (chargeParticles != null) chargeParticles.Play();
+        if (chargeParticles != null)
+        {
+            chargeParticles.Play();
+        }
     }
 
     private void ToggleOwnerCollisions(bool ignore)
     {
-        if (ownerColliders == null || rockCollider == null) return;
+        if (ownerColliders == null || rockCollider == null)
+        {
+            return;
+        }
 
         foreach (Collider2D ownerCollider in ownerColliders)
         {
             if (ownerCollider != null)
+            {
                 Physics2D.IgnoreCollision(rockCollider, ownerCollider, ignore);
+            }
         }
     }
 
     private void ApplyMassForCurrentStage()
     {
-        if (massPerStage == null || massPerStage.Length == 0) return;
+        if (massPerStage == null || massPerStage.Length == 0)
+        {
+            return;
+        }
+
         int stageIndex = Mathf.Clamp(currentRockStage, 0, massPerStage.Length - 1);
         rockRigidBody2D.mass = massPerStage[stageIndex];
     }
 
     private void Update()
     {
-        if (rockThrow == null || !rockThrow.inThrowState) return;
+        if (rockThrow == null || !rockThrow.inThrowState)
+        {
+            return;
+        }
+
         UpdatePreview();
     }
 
     private void FixedUpdate()
     {
-        if (rockThrow == null || !rockThrow.inThrowState || handTransform == null) return;
+        if (rockThrow == null || !rockThrow.inThrowState || handTransform == null)
+        {
+            return;
+        }
+
         UpdateOrbitPosition();
     }
 
     private void UpdateOrbitPosition()
     {
         Vector2 targetPosition = handTransform.position;
-        Vector2 smoothedPosition = Vector2.SmoothDamp(
-            transform.position, targetPosition,
-            ref orbitVelocity, orbitSmoothTime,
-            Mathf.Infinity, Time.fixedDeltaTime
-        );
+        Vector2 smoothedPosition = Vector2.SmoothDamp(transform.position, targetPosition, ref orbitVelocity, orbitSmoothTime, Mathf.Infinity, Time.fixedDeltaTime);
         rockRigidBody2D.MovePosition(smoothedPosition);
     }
 
     private void UpdatePreview()
     {
         currentPreviewRange = Mathf.MoveTowards(currentPreviewRange, maxPreviewRange, previewGrowSpeed * Time.deltaTime);
-        if (trajectoryLine == null) return;
+
+        if (trajectoryLine == null)
+        {
+            return;
+        }
 
         trajectoryLine.enabled = true;
         List<Vector3> previewPoints = new List<Vector3>();
@@ -167,12 +189,16 @@ public class Rock : UnityEngine.MonoBehaviour
         for (int step = 0; step < previewStepCount; step++)
         {
             float distanceThisStep = simulatedVelocity.magnitude * previewTimeStep;
-            if (traveledDistance + distanceThisStep > currentPreviewRange) break;
+            if (traveledDistance + distanceThisStep > currentPreviewRange)
+            {
+                break;
+            }
 
             Vector2 nextPosition = simulatedPosition + simulatedVelocity * previewTimeStep;
             simulatedVelocity += gravityVector * previewTimeStep;
 
             RaycastHit2D wallHit = Physics2D.Linecast(simulatedPosition, nextPosition, previewBlockLayer);
+
             if (wallHit.collider != null)
             {
                 previewPoints.Add(wallHit.point);
@@ -195,7 +221,10 @@ public class Rock : UnityEngine.MonoBehaviour
             float waitTime = baseRockTimer * Mathf.Pow(levelTimerGrowthRate, currentRockStage);
             yield return new WaitForSeconds(waitTime);
 
-            if (rockThrow == null || !rockThrow.inThrowState) break;
+            if (rockThrow == null || !rockThrow.inThrowState)
+            {
+                break;
+            }
 
             bool canAffordUpgrade = ownerEnergy.HasEnough(extraCostPerLevel);
             bool hasNextStage = currentRockStage < rockStage.Length - 1;
@@ -206,6 +235,7 @@ public class Rock : UnityEngine.MonoBehaviour
                 currentRockStage++;
                 currentRockDamage += extraDamagePerLevel;
                 rockSpriteRenderer.sprite = rockStage[currentRockStage];
+
                 ApplyMassForCurrentStage();
                 UpdateColliderSize();
 
@@ -219,13 +249,14 @@ public class Rock : UnityEngine.MonoBehaviour
             {
                 StartCoroutine(OverchargeDrainCoroutine());
                 break;
-            } 
+            }
         }
     }
 
     private IEnumerator OverchargeDrainCoroutine()
     {
         yield return new WaitForSeconds(overchargeDelay);
+
         while (rockThrow != null && rockThrow.inThrowState)
         {
             ownerEnergy.UseEnergy(overchargeDrainPerSecond * Time.deltaTime);
@@ -242,9 +273,20 @@ public class Rock : UnityEngine.MonoBehaviour
 
     public void ReleaseRock(Vector2 shootDirection)
     {
-        if (chargeParticles != null) chargeParticles.gameObject.SetActive(false);
-        if (levelUpCoroutine != null) StopCoroutine(levelUpCoroutine);
-        if (trajectoryLine != null) trajectoryLine.enabled = false;
+        if (chargeParticles != null)
+        {
+            chargeParticles.gameObject.SetActive(false);
+        }
+
+        if (levelUpCoroutine != null)
+        {
+            StopCoroutine(levelUpCoroutine);
+        }
+
+        if (trajectoryLine != null)
+        {
+            trajectoryLine.enabled = false;
+        }
 
         rockRigidBody2D.gravityScale = baseGravity;
         rockRigidBody2D.linearVelocity = shootDirection * baseSpeed;
@@ -262,8 +304,8 @@ public class Rock : UnityEngine.MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        // --- ROCK VS ROCK ---
         Rock otherRock = collision.gameObject.GetComponent<Rock>();
+
         if (otherRock != null)
         {
             bool thisIsMaxLevel = currentRockStage >= rockStage.Length - 1;
@@ -272,35 +314,40 @@ public class Rock : UnityEngine.MonoBehaviour
 
             if (thisIsMaxLevel && otherIsMinLevel)
             {
-                // Level 5 destroys level 1 but this rock survives
                 Destroy(otherRock.gameObject);
             }
             else if (thisIsHigherLevel)
             {
-                // Higher level stops the lower rock, mass handles the push
                 otherRock.rockRigidBody2D.linearVelocity = Vector2.zero;
             }
             return;
         }
 
-        // --- ROCK VS WORLD & PLAYERS ---
         bool hitDestructibleLayer = (whatDestroysRock.value & (1 << collision.gameObject.layer)) > 0;
         bool hitOwner = collision.gameObject == ownerObject;
 
-        if (hitOwner && !canHurtOwner) return;
+        if (hitOwner && !canHurtOwner)
+        {
+            return;
+        }
 
         PlayerController hitPlayer = collision.gameObject.GetComponent<PlayerController>();
-        if (!hitDestructibleLayer && hitPlayer == null) return;
+
+        if (!hitDestructibleLayer && hitPlayer == null)
+        {
+            return;
+        }
 
         ContactPoint2D contact = collision.GetContact(0);
-
-        // Deal damage
         IDamageable damageable = collision.gameObject.GetComponent<IDamageable>();
-        if (damageable != null)
-            damageable.Damage(currentRockDamage);
 
-        // Knockback only at max level (level 5)
+        if (damageable != null)
+        {
+            damageable.Damage(currentRockDamage);
+        }
+
         bool isMaxLevel = currentRockStage >= rockStage.Length - 1;
+
         if (isMaxLevel)
         {
             Vector2 knockbackDirection = (collision.transform.position - transform.position).normalized;
@@ -314,13 +361,10 @@ public class Rock : UnityEngine.MonoBehaviour
             }
             else
             {
-                // Dummies, props — anything with a Rigidbody
                 Rigidbody2D hitRigidbody = collision.gameObject.GetComponent<Rigidbody2D>();
+
                 if (hitRigidbody != null)
                 {
-                    Dummie dummie = collision.gameObject.GetComponent<Dummie>();
-                  //  if (dummie != null) dummie.ReceiveKnockback();
-
                     hitRigidbody.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
                 }
             }
@@ -332,11 +376,12 @@ public class Rock : UnityEngine.MonoBehaviour
     private void Explode(Vector2 hitPoint)
     {
         bool isHighEnoughLevelForShockwave = currentRockStage >= 3;
+
         if (isHighEnoughLevelForShockwave && shockWaveManager != null)
         {
-            if(CameraShake.Instance != null)
-            { 
-                CameraShake.Instance.ShakeCamera(/*4f, 1f*/);
+            if (CameraShake.Instance != null)
+            {
+                CameraShake.Instance.ShakeCamera();
                 Instantiate(shockWaveManager, hitPoint, transform.rotation);
             }
         }
@@ -345,8 +390,6 @@ public class Rock : UnityEngine.MonoBehaviour
         Destroy(gameObject);
     }
 
- 
-    #region Destruction
     private void DestroyPlatformPieces(Vector2 hitPoint)
     {
         int platformPieceMask = LayerMask.GetMask("PlatformPiece");
@@ -364,16 +407,22 @@ public class Rock : UnityEngine.MonoBehaviour
             poolManager.SpawnPoolObject("Debris", piece.transform.position, Quaternion.identity);
         }
     }
-    #endregion
 
     private void OnDestroy()
     {
         if (rockThrow != null && rockThrow.inThrowState)
         {
             rockThrow.ResetThrowState();
-            if (ownerEnergy != null) ownerEnergy.StartPassiveRegen();
+
+            if (ownerEnergy != null)
+            {
+                ownerEnergy.StartPassiveRegen();
+            }
         }
+
         if (SoundManager.Instance != null)
+        {
             SoundManager.Instance.PlayRockHit();
+        }
     }
 }

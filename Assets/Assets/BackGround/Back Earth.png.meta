@@ -1,0 +1,377 @@
+fileFormatVersion: 2
+guid: b54c41ad1543d6441a392fda3d0cb089
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -7179751388025791775
+    second: atras bg_0
+  - first:
+      213: -3550009773736870619
+    second: atras bg_1
+  - first:
+      213: 3442124178779648738
+    second: atras bg_2
+  - first:
+      213: 625465800664671760
+    second: atras bg_3
+  - first:
+      213: 7028310424953177498
+    second: atras bg_4
+  - first:
+      213: 561394981000034669
+    second: atras bg_5
+  - first:
+      213: 7838214149966251214
+    second: atras bg_6
+  - first:
+      213: 4426442937358610970
+    second: atras bg_7
+  - first:
+      213: 576593001311810734
+    second: atras bg_8
+  - first:
+      213: 5003035469433594791
+    second: atras bg_9
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: atras bg_0
+      rect:
+        serializedVersion: 2
+        x: 3374
+        y: 5878
+        width: 2804
+        height: 4607
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1eada1d07266c5c90800000000000000
+      internalID: -7179751388025791775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_1
+      rect:
+        serializedVersion: 2
+        x: 6020
+        y: 8687
+        width: 4885
+        height: 2727
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 52dbf376be4dbbec0800000000000000
+      internalID: -3550009773736870619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_2
+      rect:
+        serializedVersion: 2
+        x: 6206
+        y: 7845
+        width: 922
+        height: 1082
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2e2b1f414b1e4cf20800000000000000
+      internalID: 3442124178779648738
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_3
+      rect:
+        serializedVersion: 2
+        x: 7327
+        y: 7986
+        width: 867
+        height: 965
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 016e5c3f4d91ea800800000000000000
+      internalID: 625465800664671760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_4
+      rect:
+        serializedVersion: 2
+        x: 8361
+        y: 8420
+        width: 627
+        height: 556
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a95428a0813998160800000000000000
+      internalID: 7028310424953177498
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_5
+      rect:
+        serializedVersion: 2
+        x: 9528
+        y: 6211
+        width: 2340
+        height: 3041
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d69b135c2c97ac700800000000000000
+      internalID: 561394981000034669
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_6
+      rect:
+        serializedVersion: 2
+        x: 7895
+        y: 7982
+        width: 15
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec4cd22ad3ee6cc60800000000000000
+      internalID: 7838214149966251214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_7
+      rect:
+        serializedVersion: 2
+        x: 9003
+        y: 7876
+        width: 887
+        height: 677
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a12fbc33662ed6d30800000000000000
+      internalID: 4426442937358610970
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_8
+      rect:
+        serializedVersion: 2
+        x: 5864
+        y: 3731
+        width: 4040
+        height: 3268
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea4ba2f9748700800800000000000000
+      internalID: 576593001311810734
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: atras bg_9
+      rect:
+        serializedVersion: 2
+        x: 9880
+        y: 5168
+        width: 1364
+        height: 1041
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a3e442904a5e6540800000000000000
+      internalID: 5003035469433594791
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      atras bg_0: -7179751388025791775
+      atras bg_1: -3550009773736870619
+      atras bg_2: 3442124178779648738
+      atras bg_3: 625465800664671760
+      atras bg_4: 7028310424953177498
+      atras bg_5: 561394981000034669
+      atras bg_6: 7838214149966251214
+      atras bg_7: 4426442937358610970
+      atras bg_8: 576593001311810734
+      atras bg_9: 5003035469433594791
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

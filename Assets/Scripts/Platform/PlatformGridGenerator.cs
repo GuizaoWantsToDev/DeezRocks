@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlatformGridGenerator : UnityEngine.MonoBehaviour
+public class PlatformGridGenerator : MonoBehaviour
 {
     [Header("Grid Configuration")]
     public int gridColumns;
@@ -22,7 +22,9 @@ public class PlatformGridGenerator : UnityEngine.MonoBehaviour
     private void OnDrawGizmos()
     {
         if (!showGridInScene)
+        {
             return;
+        }
 
         Gizmos.color = gridColor;
 

@@ -1,13 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MouseDirection : UnityEngine.MonoBehaviour
+public class MouseDirection : MonoBehaviour
 {
-    public static MouseDirection Instance { get; private set; } = null;
+    public static MouseDirection Instance { get; private set; }
 
-    private Vector2 mousePosition = new();
-    public Vector2 direction = new();
+    public Vector2 direction;
+    private Vector2 mousePosition;
     private GameObject player;
+
     private void Awake()
     {
         if (Instance == null)
@@ -21,16 +22,22 @@ public class MouseDirection : UnityEngine.MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
     }
+
+    private void Update()
+    {
+        if (player == null)
+        {
+            return;
+        }
+        else
+        {
+            GetMouseDirection();
+        }
+    }
+
     private void GetMouseDirection()
     {
         mousePosition = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         direction = (mousePosition - (Vector2)player.transform.position).normalized;
-    }
-    private void Update()
-    {
-        if (player == null)
-            return;
-        else
-            GetMouseDirection();
     }
 }

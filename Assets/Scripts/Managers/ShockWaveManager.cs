@@ -6,16 +6,18 @@ public class ShockWaveManager : MonoBehaviour
     [SerializeField] private float shockWaveTime = 0.75f;
 
     private Coroutine shockWaveCoroutine;
-
     private Material material;
-
     private static int waveDistanceFromCenter = Shader.PropertyToID("_WaveDistanceFromCenter");
 
     private void Start()
     {
         material = GetComponent<SpriteRenderer>().material;
         CallShockWave();
-        SoundManager.Instance.PlayShockwave();
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayShockwave();
+        }
     }
 
     public void CallShockWave()
@@ -28,13 +30,11 @@ public class ShockWaveManager : MonoBehaviour
         material.SetFloat(waveDistanceFromCenter, startPosition);
 
         float lerpedAmount = 0f;
-
         float elapsedTime = 0f;
 
         while (elapsedTime < shockWaveTime)
         {
             elapsedTime += Time.deltaTime;
-
             lerpedAmount = Mathf.Lerp(startPosition, endPosition, (elapsedTime / shockWaveTime));
             material.SetFloat(waveDistanceFromCenter, lerpedAmount);
 

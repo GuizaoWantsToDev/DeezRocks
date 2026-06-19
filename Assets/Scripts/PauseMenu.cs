@@ -8,13 +8,13 @@ public class PauseMenu : MonoBehaviour
 {
     public static bool gameIsPaused = false;
 
-    [Header("=== MENUS UI ===")]
+    [Header("Menus UI")]
     [SerializeField] private GameObject pauseMenuUI;
     [SerializeField] private GameObject pauseMENU;
     [SerializeField] private GameObject optionsMenuUI;
     [SerializeField] private GameObject quitMenuUI;
 
-    [Header("=== PRIMEIROS BOTÕES ===")]
+    [Header("First Buttons")]
     [SerializeField] private GameObject firstPauseButton;
     [SerializeField] private GameObject firstOptionsButton;
     [SerializeField] private GameObject firstQuitButton;
@@ -42,9 +42,19 @@ public class PauseMenu : MonoBehaviour
         {
             if (Keyboard.current.escapeKey.wasPressedThisFrame || Keyboard.current.backspaceKey.wasPressedThisFrame)
             {
-                if (currentState == PauseState.Closed) OpenPauseMenu();
-                else if (currentState == PauseState.Main) Resume();
-                else CloseSubMenu();
+                if (currentState == PauseState.Closed)
+                {
+                    OpenPauseMenu();
+                }
+                else if (currentState == PauseState.Main)
+                {
+                    Resume();
+                }
+                else
+                {
+                    CloseSubMenu();
+                }
+
                 return;
             }
         }
@@ -53,15 +63,29 @@ public class PauseMenu : MonoBehaviour
         {
             if (pad.startButton.wasPressedThisFrame)
             {
-                if (currentState == PauseState.Closed) OpenPauseMenu();
-                else Resume();
+                if (currentState == PauseState.Closed)
+                {
+                    OpenPauseMenu();
+                }
+                else
+                {
+                    Resume();
+                }
+
                 return;
             }
 
             if (pad.buttonEast.wasPressedThisFrame)
             {
-                if (currentState == PauseState.Main) Resume();
-                else if (currentState != PauseState.Closed) CloseSubMenu();
+                if (currentState == PauseState.Main)
+                {
+                    Resume();
+                }
+                else if (currentState != PauseState.Closed)
+                {
+                    CloseSubMenu();
+                }
+
                 return;
             }
         }
@@ -81,8 +105,10 @@ public class PauseMenu : MonoBehaviour
         {
             foreach (GameObject player in GameManager.Instance.playersList)
             {
-                if (player != null && player.TryGetComponent<PlayerController>(out var controller))
+                if (player != null && player.TryGetComponent<PlayerController>(out PlayerController controller))
+                {
                     controller.canMove = false;
+                }
             }
         }
 
@@ -103,8 +129,10 @@ public class PauseMenu : MonoBehaviour
         {
             foreach (GameObject player in GameManager.Instance.playersList)
             {
-                if (player != null && player.TryGetComponent<PlayerController>(out var controller))
+                if (player != null && player.TryGetComponent<PlayerController>(out PlayerController controller))
+                {
                     controller.canMove = true;
+                }
             }
         }
 
@@ -148,6 +176,7 @@ public class PauseMenu : MonoBehaviour
     {
         yield return new WaitForEndOfFrame();
         EventSystem.current.SetSelectedGameObject(null);
+
         if (buttonToSelect != null)
         {
             EventSystem.current.SetSelectedGameObject(buttonToSelect);

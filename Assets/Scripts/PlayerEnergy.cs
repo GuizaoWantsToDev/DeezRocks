@@ -2,18 +2,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class PlayerEnergy : UnityEngine.MonoBehaviour
+public class PlayerEnergy : MonoBehaviour
 {
-    [Header("--- UI ----")]
-    public Image energyBar; // Agora é public
-    public GameObject energyWarning; // Agora é public
-    public float currentEnergy;
+    [Header("UI")]
+    public Image energyBar;
+    public GameObject energyWarning;
 
+    public float currentEnergy;
     private float lowEnough = 0.30f;
+    private float blinkDelay = 0.6f;
 
     private Coroutine passiveRegenCoroutine;
     private Coroutine warningCoroutine;
-    private float blinkDelay = 0.6f;
 
     private void Start()
     {
@@ -25,24 +25,39 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
     private void Update()
     {
         if (currentEnergy == 0f && energyWarning != null)
+        {
             energyWarning.SetActive(true);
+        }
     }
 
     private bool LowOnEnergy()
     {
         if (currentEnergy / EnergyManager.Instance.maxEnergy < lowEnough)
+        {
             return true;
+        }
         else
+        {
             return false;
+        }
     }
 
     private IEnumerator Warning()
     {
         while (true && currentEnergy != 0)
         {
-            if (energyWarning != null) energyWarning.SetActive(true);
+            if (energyWarning != null)
+            {
+                energyWarning.SetActive(true);
+            }
+
             yield return new WaitForSeconds(blinkDelay);
-            if (energyWarning != null) energyWarning.SetActive(false);
+
+            if (energyWarning != null)
+            {
+                energyWarning.SetActive(false);
+            }
+
             yield return new WaitForSeconds(blinkDelay);
         }
     }
@@ -53,8 +68,6 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
         currentEnergy = Mathf.Max(currentEnergy, 0f);
         UpdateBars();
 
-        // Adicionada a verificação: gameObject.activeInHierarchy
-        // Só tenta piscar o aviso se o boneco ainda estiver vivo/ativo na cena!
         if (gameObject.activeInHierarchy && LowOnEnergy() && warningCoroutine == null)
         {
             warningCoroutine = StartCoroutine(Warning());
@@ -69,7 +82,11 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
 
         if (warningCoroutine != null && currentEnergy / EnergyManager.Instance.maxEnergy > lowEnough)
         {
-            if (energyWarning != null) energyWarning.SetActive(false);
+            if (energyWarning != null)
+            {
+                energyWarning.SetActive(false);
+            }
+
             StopCoroutine(warningCoroutine);
             warningCoroutine = null;
         }
@@ -84,7 +101,6 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
     {
         StopPassiveRegen();
 
-        // Adicionada a verificação por segurança
         if (gameObject.activeInHierarchy)
         {
             passiveRegenCoroutine = StartCoroutine(PassiveRegenCoroutine());
@@ -107,7 +123,9 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
             yield return new WaitForSeconds(EnergyManager.Instance.passiveCooldown);
 
             if (currentEnergy < EnergyManager.Instance.maxEnergy)
+            {
                 RefillEnergy(EnergyManager.Instance.passiveRegenAmount);
+            }
         }
     }
 
@@ -116,6 +134,8 @@ public class PlayerEnergy : UnityEngine.MonoBehaviour
         float fillAmount = currentEnergy / EnergyManager.Instance.maxEnergy;
 
         if (energyBar != null)
+        {
             energyBar.fillAmount = fillAmount;
+        }
     }
 }

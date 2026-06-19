@@ -1,0 +1,407 @@
+fileFormatVersion: 2
+guid: f612154247095574bb326d8e493f0fe1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 4236168701524447627
+    second: teste 9 slice_0
+  - first:
+      213: -5725984420899279916
+    second: teste 9 slice_1
+  - first:
+      213: -7809441906859176040
+    second: teste 9 slice_2
+  - first:
+      213: 8811488664845053505
+    second: teste 9 slice_3
+  - first:
+      213: -4186284014346658531
+    second: teste 9 slice_4
+  - first:
+      213: -4070685911047986722
+    second: teste 9 slice_5
+  - first:
+      213: 6716279740905847119
+    second: teste 9 slice_6
+  - first:
+      213: 7659629513468061464
+    second: teste 9 slice_7
+  - first:
+      213: 5739828333784078852
+    second: teste 9 slice_8
+  - first:
+      213: 8126153653870072951
+    second: teste 9 slice_9
+  - first:
+      213: 5063444272355429094
+    second: teste 9 slice_10
+  - first:
+      213: 3490681900403386761
+    second: teste 9 slice_11
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 0
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: teste 9 slice_0
+      rect:
+        serializedVersion: 2
+        x: 871
+        y: 1410
+        width: 207
+        height: 93
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b811ef66df4e9ca30800000000000000
+      internalID: 4236168701524447627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_1
+      rect:
+        serializedVersion: 2
+        x: 852
+        y: 1315
+        width: 49
+        height: 46
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4dba0eab1873980b0800000000000000
+      internalID: -5725984420899279916
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_2
+      rect:
+        serializedVersion: 2
+        x: 860
+        y: 1236
+        width: 251
+        height: 134
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89f0c9f36f94f9390800000000000000
+      internalID: -7809441906859176040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_3
+      rect:
+        serializedVersion: 2
+        x: 624
+        y: 804
+        width: 734
+        height: 330
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 169, y: 129, z: 226, w: 81}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14e68726142b84a70800000000000000
+      internalID: 8811488664845053505
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_5
+      rect:
+        serializedVersion: 2
+        x: 1616
+        y: 899
+        width: 43
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed12cc73bb40287c0800000000000000
+      internalID: -4070685911047986722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_6
+      rect:
+        serializedVersion: 2
+        x: 1324
+        y: 805
+        width: 7
+        height: 10
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f4978d807d4053d50800000000000000
+      internalID: 6716279740905847119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_7
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 90
+        width: 99
+        height: 99
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 817ac55c5787c4a60800000000000000
+      internalID: 7659629513468061464
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_8
+      rect:
+        serializedVersion: 2
+        x: 238
+        y: 117
+        width: 29
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40a1cea6577f7af40800000000000000
+      internalID: 5739828333784078852
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_9
+      rect:
+        serializedVersion: 2
+        x: 267
+        y: 116
+        width: 23
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7741b29a1b5e5c070800000000000000
+      internalID: 8126153653870072951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_10
+      rect:
+        serializedVersion: 2
+        x: 290
+        y: 116
+        width: 22
+        height: 31
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ea4bb90db7f44640800000000000000
+      internalID: 5063444272355429094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: teste 9 slice_11
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 117
+        width: 24
+        height: 38
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 989ed69a1b4617030800000000000000
+      internalID: 3490681900403386761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: bdcb9fec903de8140a6866ae3fd249eb
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      teste 9 slice_0: 4236168701524447627
+      teste 9 slice_1: -5725984420899279916
+      teste 9 slice_10: 5063444272355429094
+      teste 9 slice_11: 3490681900403386761
+      teste 9 slice_2: -7809441906859176040
+      teste 9 slice_3: 8811488664845053505
+      teste 9 slice_4: -4186284014346658531
+      teste 9 slice_5: -4070685911047986722
+      teste 9 slice_6: 6716279740905847119
+      teste 9 slice_7: 7659629513468061464
+      teste 9 slice_8: 5739828333784078852
+      teste 9 slice_9: 8126153653870072951
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, ISelectHandler, IDeselectHandler
 {
     [SerializeField] private float sizeMultiplier = 1.1f;
+
     private Vector2 originalSize;
     private RectTransform rectTransform;
     private Button thisButton;
@@ -15,7 +16,6 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         InitIfNeeded();
     }
 
-    // Garante que o RectTransform é carregado mesmo que outro script chame isto antes do Awake
     private void InitIfNeeded()
     {
         if (rectTransform == null)
@@ -33,14 +33,21 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void ForceButtonAction()
     {
-        if (thisButton != null) thisButton.onClick.Invoke();
+        if (thisButton != null)
+        {
+            thisButton.onClick.Invoke();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
         InitIfNeeded();
         rectTransform.localScale = originalSize * sizeMultiplier;
-        if (SoundManager.Instance != null) SoundManager.Instance.PlayButtonHover();
+
+        if (SoundManager.Instance != null)
+        {
+            SoundManager.Instance.PlayButtonHover();
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)
@@ -56,12 +63,13 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void ForceSelect()
     {
-        InitIfNeeded(); // <-- Salva-te do erro do OnEnable
+        InitIfNeeded();
         rectTransform.localScale = originalSize * sizeMultiplier;
 
-        // Garante que não dá erro se o som ainda não carregou
         if (SoundManager.Instance != null)
+        {
             SoundManager.Instance.PlayButtonHover();
+        }
     }
 
     public void OnDeselect(BaseEventData eventData)
@@ -77,6 +85,9 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnChangeInteraction()
     {
-        if (thisButton != null) thisButton.interactable = false;
+        if (thisButton != null)
+        {
+            thisButton.interactable = false;
+        }
     }
 }

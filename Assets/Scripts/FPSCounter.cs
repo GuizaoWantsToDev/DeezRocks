@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 
-public class FPSCounter : UnityEngine.MonoBehaviour
+public class FPSCounter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI fpsText;
     [SerializeField] private float updateInterval = 0.5f;

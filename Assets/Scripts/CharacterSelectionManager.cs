@@ -10,35 +10,34 @@ public class CharacterSelectionManager : MonoBehaviour
 {
     public static CharacterSelectionManager Instance { get; private set; }
 
-    [Header("=== CORES DOS NOMES ===")]
+    [Header("Colors")]
     public Color defaultColor = Color.white;
-    public Color greenColor = new Color(0.2f, 0.8f, 0.2f); // Verde
-    public Color purpleColor = new Color(0.7f, 0.2f, 0.8f); // Roxo
-
+    public Color greenColor = new Color(0.2f, 0.8f, 0.2f);
+    public Color purpleColor = new Color(0.7f, 0.2f, 0.8f);
     public static Color p1Color = Color.white;
     public static Color p2Color = Color.white;
 
-    [Header("=== UI DO TIMER ===")]
+    [Header("Timer UI")]
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private float countdownStart = 5f;
 
-    [Header("=== PREFABS DOS PERSONAGENS (IN-GAME) ===")]
+    [Header("Player Prefabs")]
     public GameObject greenPlayerPrefab;
     public GameObject purplePlayerPrefab;
 
-    [Header("=== P1 - BOTOES, NOME E CANCELAR ===")]
+    [Header("Player 1 Settings")]
     public Button p1GreenHatButton;
     public Button p1PurpleHatButton;
     public TMP_InputField inputNamePlayer1;
     public UnityEvent p1CancelAction;
 
-    [Header("=== P2 - BOTOES, NOME E CANCELAR ===")]
+    [Header("Player 2 Settings")]
     public Button p2GreenHatButton;
     public Button p2PurpleHatButton;
     public TMP_InputField inputNamePlayer2;
     public UnityEvent p2CancelAction;
 
-    [Header("=== BOTAO VOLTAR AO MENU ===")]
+    [Header("Menu Settings")]
     public Button mainBackButton;
 
     public static InputDevice p1Device;
@@ -63,9 +62,13 @@ public class CharacterSelectionManager : MonoBehaviour
     private void Awake()
     {
         if (CharacterSelectionManager.Instance == null)
+        {
             Instance = this;
+        }
         else
+        {
             Destroy(gameObject);
+        }
 
         p1GreenHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 0));
         p1PurpleHatButton.onClick.AddListener(() => OnHatClickedFromMouse(1, 1));
@@ -79,8 +82,10 @@ public class CharacterSelectionManager : MonoBehaviour
     private void OnEnable()
     {
         timerText.gameObject.SetActive(false);
-        p1Device = null; p2Device = null;
-        p1Ready = false; p2Ready = false;
+        p1Device = null;
+        p2Device = null;
+        p1Ready = false;
+        p2Ready = false;
         canAcceptInput = false;
 
         p1HatIndex = 0;
@@ -88,24 +93,28 @@ public class CharacterSelectionManager : MonoBehaviour
         p1SelectedPrefab = greenPlayerPrefab;
         p2SelectedPrefab = greenPlayerPrefab;
 
-        // Reset às cores e nomes na memória
         p1Color = defaultColor;
         p2Color = defaultColor;
         customNamePlayer1 = "";
         customNamePlayer2 = "";
 
-        // Reset à UI
         inputNamePlayer1.text = "";
         inputNamePlayer2.text = "";
         inputNamePlayer1.interactable = true;
         inputNamePlayer2.interactable = true;
 
-        // Pinta logo a caixa com a cor default (branco)
         ChangeInputFieldColor(inputNamePlayer1, p1Color);
         ChangeInputFieldColor(inputNamePlayer2, p2Color);
 
-        if (p1CancelAction != null) p1CancelAction.Invoke();
-        if (p2CancelAction != null) p2CancelAction.Invoke();
+        if (p1CancelAction != null)
+        {
+            p1CancelAction.Invoke();
+        }
+
+        if (p2CancelAction != null)
+        {
+            p2CancelAction.Invoke();
+        }
 
         DisableButtonNavigation(p1GreenHatButton);
         DisableButtonNavigation(p1PurpleHatButton);
@@ -121,18 +130,19 @@ public class CharacterSelectionManager : MonoBehaviour
         StartCoroutine(InputCooldown());
     }
 
-    // --- NOVA FUNÇÃO: Muda a cor do texto e do placeholder instantaneamente ---
     private void ChangeInputFieldColor(TMP_InputField inputField, Color newColor)
     {
         if (inputField != null)
         {
-            // Muda a cor do texto que o jogador escreve
             if (inputField.textComponent != null)
+            {
                 inputField.textComponent.color = newColor;
+            }
 
-            // Muda a cor do texto fantasma "Write ur name"
             if (inputField.placeholder != null)
+            {
                 inputField.placeholder.color = newColor;
+            }
         }
     }
 
@@ -163,7 +173,9 @@ public class CharacterSelectionManager : MonoBehaviour
     private void Update()
     {
         if (inputNamePlayer1.isFocused || inputNamePlayer2.isFocused)
+        {
             return;
+        }
 
         if (canAcceptInput)
         {
@@ -178,16 +190,15 @@ public class CharacterSelectionManager : MonoBehaviour
                 currentTimer = countdownStart;
                 timerText.gameObject.SetActive(true);
 
-                // BLOQUEAR ESCRITA
                 inputNamePlayer1.interactable = false;
                 inputNamePlayer2.interactable = false;
 
-                // FORÇAR NOMES DEFAULT SE ESTIVEREM VAZIOS
                 if (string.IsNullOrWhiteSpace(inputNamePlayer1.text))
                 {
                     inputNamePlayer1.text = "PLAYER 1";
                     customNamePlayer1 = "PLAYER 1";
                 }
+
                 if (string.IsNullOrWhiteSpace(inputNamePlayer2.text))
                 {
                     inputNamePlayer2.text = "PLAYER 2";
@@ -210,7 +221,6 @@ public class CharacterSelectionManager : MonoBehaviour
                 timerRunning = false;
                 timerText.gameObject.SetActive(false);
 
-                // VOLTAR A PERMITIR ESCREVER
                 inputNamePlayer1.interactable = true;
                 inputNamePlayer2.interactable = true;
             }
@@ -220,16 +230,27 @@ public class CharacterSelectionManager : MonoBehaviour
     private void CheckInputs()
     {
         if (UnityEngine.EventSystems.EventSystem.current != null)
+        {
             UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(null);
+        }
 
         foreach (Gamepad pad in Gamepad.all)
         {
-            if (!canAcceptInput) return;
+            if (!canAcceptInput)
+            {
+                return;
+            }
 
             if (pad.buttonSouth.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == pad) HandleP1JoinOrReady(pad);
-                else if (p2Device == null || p2Device == pad) HandleP2JoinOrReady(pad);
+                if (p1Device == null || p1Device == pad)
+                {
+                    HandleP1JoinOrReady(pad);
+                }
+                else if (p2Device == null || p2Device == pad)
+                {
+                    HandleP2JoinOrReady(pad);
+                }
             }
             else if (pad.buttonEast.wasPressedThisFrame)
             {
@@ -237,55 +258,103 @@ public class CharacterSelectionManager : MonoBehaviour
             }
             else if (pad.dpad.up.wasPressedThisFrame || pad.leftStick.up.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == pad) HandleP1Hat(-1, pad);
-                else if (p2Device == null || p2Device == pad) HandleP2Hat(-1, pad);
+                if (p1Device == null || p1Device == pad)
+                {
+                    HandleP1Hat(-1, pad);
+                }
+                else if (p2Device == null || p2Device == pad)
+                {
+                    HandleP2Hat(-1, pad);
+                }
             }
             else if (pad.dpad.down.wasPressedThisFrame || pad.leftStick.down.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == pad) HandleP1Hat(1, pad);
-                else if (p2Device == null || p2Device == pad) HandleP2Hat(1, pad);
+                if (p1Device == null || p1Device == pad)
+                {
+                    HandleP1Hat(1, pad);
+                }
+                else if (p2Device == null || p2Device == pad)
+                {
+                    HandleP2Hat(1, pad);
+                }
             }
         }
 
         if (Keyboard.current != null)
         {
-            if (!canAcceptInput) return;
+            if (!canAcceptInput)
+            {
+                return;
+            }
 
             if (Keyboard.current.enterKey.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == Keyboard.current) HandleP1JoinOrReady(Keyboard.current);
-                else if (p2Device == null || p2Device == Keyboard.current) HandleP2JoinOrReady(Keyboard.current);
+                if (p1Device == null || p1Device == Keyboard.current)
+                {
+                    HandleP1JoinOrReady(Keyboard.current);
+                }
+                else if (p2Device == null || p2Device == Keyboard.current)
+                {
+                    HandleP2JoinOrReady(Keyboard.current);
+                }
             }
-            else if (Keyboard.current.backspaceKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame ||
-                    (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame))
+            else if (Keyboard.current.backspaceKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame || (Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame))
             {
                 HandleUnifiedBack();
             }
             else if (Keyboard.current.upArrowKey.wasPressedThisFrame || Keyboard.current.wKey.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == Keyboard.current) HandleP1Hat(-1, Keyboard.current);
-                else if (p2Device == null || p2Device == Keyboard.current) HandleP2Hat(-1, Keyboard.current);
+                if (p1Device == null || p1Device == Keyboard.current)
+                {
+                    HandleP1Hat(-1, Keyboard.current);
+                }
+                else if (p2Device == null || p2Device == Keyboard.current)
+                {
+                    HandleP2Hat(-1, Keyboard.current);
+                }
             }
             else if (Keyboard.current.downArrowKey.wasPressedThisFrame || Keyboard.current.sKey.wasPressedThisFrame)
             {
-                if (p1Device == null || p1Device == Keyboard.current) HandleP1Hat(1, Keyboard.current);
-                else if (p2Device == null || p2Device == Keyboard.current) HandleP2Hat(1, Keyboard.current);
+                if (p1Device == null || p1Device == Keyboard.current)
+                {
+                    HandleP1Hat(1, Keyboard.current);
+                }
+                else if (p2Device == null || p2Device == Keyboard.current)
+                {
+                    HandleP2Hat(1, Keyboard.current);
+                }
             }
         }
     }
 
     private void OnHatClickedFromMouse(int player, int hatIndex)
     {
-        if (!canAcceptInput) return;
+        if (!canAcceptInput)
+        {
+            return;
+        }
 
         if (player == 1 && !p1Ready)
         {
-            if (p1Device == null) p1Device = Keyboard.current;
-            p1HatIndex = hatIndex;
-            p1SelectedPrefab = (hatIndex == 0) ? greenPlayerPrefab : purplePlayerPrefab;
-            p1Color = (hatIndex == 0) ? greenColor : purpleColor;
+            if (p1Device == null)
+            {
+                p1Device = Keyboard.current;
+            }
 
-            ChangeInputFieldColor(inputNamePlayer1, p1Color); // Atualiza a cor no menu!
+            p1HatIndex = hatIndex;
+
+            if (hatIndex == 0)
+            {
+                p1SelectedPrefab = greenPlayerPrefab;
+                p1Color = greenColor;
+            }
+            else
+            {
+                p1SelectedPrefab = purplePlayerPrefab;
+                p1Color = purpleColor;
+            }
+
+            ChangeInputFieldColor(inputNamePlayer1, p1Color);
 
             p1Ready = true;
             UpdateInteractableStates();
@@ -293,12 +362,25 @@ public class CharacterSelectionManager : MonoBehaviour
         }
         else if (player == 2 && !p2Ready)
         {
-            if (p2Device == null) p2Device = Keyboard.current;
-            p2HatIndex = hatIndex;
-            p2SelectedPrefab = (hatIndex == 0) ? greenPlayerPrefab : purplePlayerPrefab;
-            p2Color = (hatIndex == 0) ? greenColor : purpleColor;
+            if (p2Device == null)
+            {
+                p2Device = Keyboard.current;
+            }
 
-            ChangeInputFieldColor(inputNamePlayer2, p2Color); // Atualiza a cor no menu!
+            p2HatIndex = hatIndex;
+
+            if (hatIndex == 0)
+            {
+                p2SelectedPrefab = greenPlayerPrefab;
+                p2Color = greenColor;
+            }
+            else
+            {
+                p2SelectedPrefab = purplePlayerPrefab;
+                p2Color = purpleColor;
+            }
+
+            ChangeInputFieldColor(inputNamePlayer2, p2Color);
 
             p2Ready = true;
             UpdateInteractableStates();
@@ -308,27 +390,21 @@ public class CharacterSelectionManager : MonoBehaviour
 
     private void HandleUnifiedBack()
     {
-        // Se alguém estiver Ready (ou seja, se o timer já começou ou ia começar)
         if (p1Ready || p2Ready)
         {
             p1Ready = false;
             p2Ready = false;
 
-            // --- A MAGIA ACONTECE AQUI ---
-            // 1. Volta as cores para branco
             p1Color = defaultColor;
             p2Color = defaultColor;
 
-            // 2. Apaga o texto para mostrar o "Write ur name"
             inputNamePlayer1.text = "";
             inputNamePlayer2.text = "";
             customNamePlayer1 = "";
             customNamePlayer2 = "";
 
-            // 3. Pinta logo as caixas com o default (Branco)
             ChangeInputFieldColor(inputNamePlayer1, p1Color);
             ChangeInputFieldColor(inputNamePlayer2, p2Color);
-            // -----------------------------
 
             p1CancelAction.Invoke();
             p2CancelAction.Invoke();
@@ -338,7 +414,6 @@ public class CharacterSelectionManager : MonoBehaviour
         }
         else
         {
-            // Se já não houver ninguém Ready e carregarem para voltar ao Main Menu
             p1Device = null;
             p2Device = null;
             p1HatIndex = 0;
@@ -369,11 +444,24 @@ public class CharacterSelectionManager : MonoBehaviour
 
     private void HandleP1JoinOrReady(InputDevice device)
     {
-        if (p1Device == null) p1Device = device;
+        if (p1Device == null)
+        {
+            p1Device = device;
+        }
 
         if (!p1Ready)
         {
-            Button btnToClick = (p1HatIndex == 0) ? p1GreenHatButton : p1PurpleHatButton;
+            Button btnToClick;
+
+            if (p1HatIndex == 0)
+            {
+                btnToClick = p1GreenHatButton;
+            }
+            else
+            {
+                btnToClick = p1PurpleHatButton;
+            }
+
             if (btnToClick.interactable)
             {
                 p1Ready = true;
@@ -386,11 +474,24 @@ public class CharacterSelectionManager : MonoBehaviour
 
     private void HandleP2JoinOrReady(InputDevice device)
     {
-        if (p2Device == null) p2Device = device;
+        if (p2Device == null)
+        {
+            p2Device = device;
+        }
 
         if (!p2Ready)
         {
-            Button btnToClick = (p2HatIndex == 0) ? p2GreenHatButton : p2PurpleHatButton;
+            Button btnToClick;
+
+            if (p2HatIndex == 0)
+            {
+                btnToClick = p2GreenHatButton;
+            }
+            else
+            {
+                btnToClick = p2PurpleHatButton;
+            }
+
             if (btnToClick.interactable)
             {
                 p2Ready = true;
@@ -403,11 +504,15 @@ public class CharacterSelectionManager : MonoBehaviour
 
     private void HandleP1Hat(int direction, InputDevice device)
     {
-        if (p1Device == null) p1Device = device;
+        if (p1Device == null)
+        {
+            p1Device = device;
+        }
 
         if (!p1Ready)
         {
             p1HatIndex = Mathf.Clamp(p1HatIndex + direction, 0, 1);
+
             if (p1HatIndex == 0)
             {
                 p1SelectedPrefab = greenPlayerPrefab;
@@ -423,18 +528,22 @@ public class CharacterSelectionManager : MonoBehaviour
                 p1PurpleHatButton.GetComponent<ButtonHover>().ForceSelect();
             }
 
-            ChangeInputFieldColor(inputNamePlayer1, p1Color); // Atualiza a cor
+            ChangeInputFieldColor(inputNamePlayer1, p1Color);
             StartCoroutine(InputCooldown());
         }
     }
 
     private void HandleP2Hat(int direction, InputDevice device)
     {
-        if (p2Device == null) p2Device = device;
+        if (p2Device == null)
+        {
+            p2Device = device;
+        }
 
         if (!p2Ready)
         {
             p2HatIndex = Mathf.Clamp(p2HatIndex + direction, 0, 1);
+
             if (p2HatIndex == 0)
             {
                 p2SelectedPrefab = greenPlayerPrefab;
@@ -450,17 +559,44 @@ public class CharacterSelectionManager : MonoBehaviour
                 p2PurpleHatButton.GetComponent<ButtonHover>().ForceSelect();
             }
 
-            ChangeInputFieldColor(inputNamePlayer2, p2Color); // Atualiza a cor
+            ChangeInputFieldColor(inputNamePlayer2, p2Color);
             StartCoroutine(InputCooldown());
         }
     }
 
     private void UpdateInteractableStates()
     {
-        p1GreenHatButton.interactable = true; p1PurpleHatButton.interactable = true;
-        p2GreenHatButton.interactable = true; p2PurpleHatButton.interactable = true;
+        p1GreenHatButton.interactable = true;
+        p1PurpleHatButton.interactable = true;
+        p2GreenHatButton.interactable = true;
+        p2PurpleHatButton.interactable = true;
 
-        if (p1Ready) { if (p1HatIndex == 0) { p1PurpleHatButton.interactable = false; p2GreenHatButton.interactable = false; } else { p1GreenHatButton.interactable = false; p2PurpleHatButton.interactable = false; } }
-        if (p2Ready) { if (p2HatIndex == 0) { p2PurpleHatButton.interactable = false; p1GreenHatButton.interactable = false; } else { p2GreenHatButton.interactable = false; p1PurpleHatButton.interactable = false; } }
+        if (p1Ready)
+        {
+            if (p1HatIndex == 0)
+            {
+                p1PurpleHatButton.interactable = false;
+                p2GreenHatButton.interactable = false;
+            }
+            else
+            {
+                p1GreenHatButton.interactable = false;
+                p2PurpleHatButton.interactable = false;
+            }
+        }
+
+        if (p2Ready)
+        {
+            if (p2HatIndex == 0)
+            {
+                p2PurpleHatButton.interactable = false;
+                p1GreenHatButton.interactable = false;
+            }
+            else
+            {
+                p2GreenHatButton.interactable = false;
+                p1PurpleHatButton.interactable = false;
+            }
+        }
     }
 }

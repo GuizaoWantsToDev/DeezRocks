@@ -1,20 +1,15 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 using UnityEngine.Audio;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SettingsMenu : UnityEngine.MonoBehaviour
+public class SettingsMenu : MonoBehaviour
 {
     public static SettingsMenu Instance { get; private set; }
 
     [SerializeField] private AudioMixer audioMixer;
-
     [SerializeField] private Slider masterSlider;
     [SerializeField] private Slider masterSliderGame;
     [SerializeField] private Slider musicSlider;
@@ -34,19 +29,14 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI fpsText;
     [SerializeField] private float updateInterval = 0.5f;
-    private float timer;
-    private bool fpsOn = false;
-
     [SerializeField] private RenderPipelineAsset[] qualityLevels;
 
-    Resolution[] resolutions;
-
+    private float timer;
+    private bool fpsOn = false;
+    private Resolution[] resolutions;
     private int savedWidth;
     private int savedHeight;
-
     private float maxRefreshRate;
-
-    RefreshRate wantedRefresh;
 
     private void Awake()
     {
@@ -56,8 +46,11 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
         else
+        {
             Destroy(gameObject);
+        }
     }
+
     private void Start()
     {
         SetMasterVolume(masterSlider.value);
@@ -66,38 +59,33 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
 
         qualityDropdown.value = QualitySettings.GetQualityLevel();
 
-        //To force High Quality to be default
         QualitySettings.SetQualityLevel(2);
         qualityDropdown.value = 2;
 
         resolutions = Screen.resolutions;
-
         resolutionDropdown.ClearOptions();
         resolutionDropdownGame.ClearOptions();
 
         Resolution resolution = resolutions[resolutions.Length - 1];
         savedHeight = resolution.height;
         savedWidth = resolution.width;
+
         Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
 
-        maxRefreshRate  = (float)resolutions[resolutions.Length - 1].refreshRateRatio.value;
+        maxRefreshRate = (float)resolutions[resolutions.Length - 1].refreshRateRatio.value;
 
-        List<string> options = new();
-
+        List<string> options = new List<string>();
         int currentResolutionIndex = 0;
+
         for (int i = 0; i < resolutions.Length; i++)
         {
-         //  if ((float)resolutions[i].refreshRateRatio.value == maxRefreshRate) { 
-            
-                //string option = resolutions[i].width + "x" + resolutions[i].height;
-                string option = resolutions[i].width + "x" + resolutions[i].height + "@" + Mathf.RoundToInt((float)resolutions[i].refreshRateRatio.value) + "Hz";
-                options.Add(option);
+            string option = resolutions[i].width + "x" + resolutions[i].height + "@" + Mathf.RoundToInt((float)resolutions[i].refreshRateRatio.value) + "Hz";
+            options.Add(option);
 
-                if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
-                {
-                    currentResolutionIndex = i;
-                }
-           // }
+            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
+            {
+                currentResolutionIndex = i;
+            }
         }
 
         resolutionDropdown.AddOptions(options);
@@ -105,9 +93,8 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         resolutionDropdown.value = currentResolutionIndex;
         resolutionDropdown.RefreshShownValue();
 
-
         fpsText.enabled = fpsOn;
-   }
+    }
 
     private void Update()
     {
@@ -120,19 +107,19 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
             timer = 0f;
         }
     }
+
     public void SetMasterVolume(float volume)
     {
-       // audioMixer.SetFloat("masterVolume", volume);
         audioMixer.SetFloat("masterVolume", Mathf.Log10(volume) * 20);
     }
+
     public void SetSFXVolume(float volume)
     {
-       // audioMixer.SetFloat("soundFXVolume", volume);
         audioMixer.SetFloat("soundFXVolume", Mathf.Log10(volume) * 20);
     }
+
     public void SetMusicVolume(float volume)
     {
-       // audioMixer.SetFloat("musicVolume", volume);
         audioMixer.SetFloat("musicVolume", Mathf.Log10(volume) * 20);
     }
 
@@ -146,7 +133,8 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         fullscreenToggleGame.isOn = fullscreenToggle.isOn;
         fpsCounterGameToggle.isOn = fpsCounterToggle.isOn;
     }
-     public void EqualToGame()
+
+    public void EqualToGame()
     {
         masterSlider.value = masterSliderGame.value;
         musicSlider.value = musicSliderGame.value;
@@ -157,20 +145,22 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
         fpsCounterToggle.isOn = fpsCounterGameToggle.isOn;
     }
 
-    public void SetQuality (int qualityIndex)
+    public void SetQuality(int qualityIndex)
     {
         QualitySettings.SetQualityLevel(qualityIndex, true);
         QualitySettings.renderPipeline = qualityLevels[qualityIndex];
     }
 
-    public void SetFPSCounter( bool isOn)
+    public void SetFPSCounter(bool isOn)
     {
         fpsText.enabled = isOn;
     }
-    public void SetFullscreen( bool isFullscreen)
+
+    public void SetFullscreen(bool isFullscreen)
     {
         Screen.fullScreen = isFullscreen;
-        if(isFullscreen == true)
+
+        if (isFullscreen == true)
         {
             Screen.SetResolution(savedWidth, savedHeight, FullScreenMode.ExclusiveFullScreen);
         }
@@ -179,16 +169,16 @@ public class SettingsMenu : UnityEngine.MonoBehaviour
     public void SetResolution(int resolutionIndex)
     {
         Resolution resolution = resolutions[resolutionIndex];
-
         savedHeight = resolution.height;
         savedWidth = resolution.width;
 
         if (Screen.fullScreen)
         {
-           Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
+            Screen.SetResolution(resolution.width, resolution.height, FullScreenMode.ExclusiveFullScreen, resolution.refreshRateRatio);
         }
-        
         else
-          Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        {
+            Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        }
     }
 }

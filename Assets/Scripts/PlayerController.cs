@@ -71,7 +71,6 @@ public class PlayerController : MonoBehaviour
     private bool isJumping;
     private bool canDash;
     private bool isDashing;
-    private bool dashOnCooldown;
     private Vector2 wallJumpDirection;
     private bool isWallJumping;
     private bool canWallJump;
@@ -229,9 +228,7 @@ public class PlayerController : MonoBehaviour
             ExecuteFastFall();
         }
 
-        dashOnCooldown = true;
         yield return new WaitForSeconds(dashCoolDown);
-        dashOnCooldown = false;
     }
 
     #endregion
@@ -298,11 +295,6 @@ public class PlayerController : MonoBehaviour
         isWallJumping = false;
     }
 
-    private void ResetDashCooldown()
-    {
-        dashOnCooldown = false;
-    }
-
     private void CheckGround()
     {
         bool rawGrounded = Physics2D.OverlapBox(groundCheck.position, groundCheckSize, 0f, groundLayer) != null;
@@ -351,9 +343,7 @@ public class PlayerController : MonoBehaviour
             slopeSideAngle = 0.0f;
         }
 
-        isOnSlope = slopeHitFront || slopeHitBack;
-
-        RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.down, slopeCheckDistance, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(checkPos, Vector2.down, slopeCheckDistance * 1.5f, groundLayer);
 
         if (hit)
         {
@@ -367,10 +357,14 @@ public class PlayerController : MonoBehaviour
 
             lastSlopeAngle = slopeDownAngle;
         }
+        else
+        {
+            isOnSlope = false;
+        }
 
         canWalkOnSlope = slopeDownAngle <= maxSlopeAngle && slopeSideAngle <= maxSlopeAngle;
 
-        if (isOnSlope && canWalkOnSlope && inputValue == 0f)
+        if (isOnSlope && canWalkOnSlope && inputValue == 0f && isGrounded && !isJumping)
         {
             myRigidBody2D.sharedMaterial = fullFriction;
         }
@@ -448,7 +442,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-                myRigidBody2D.linearVelocity = new Vector2(mSpeed * inputValue, 0.0f);
+                myRigidBody2D.linearVelocity = new Vector2(mSpeed * inputValue, myRigidBody2D.linearVelocityY);
             }
         }
         else if (!isGrounded)
@@ -582,8 +576,6 @@ public class PlayerController : MonoBehaviour
                 isDashing = false;
                 myTrailRenderer.emitting = false;
                 ResetGravity();
-                dashOnCooldown = true;
-                Invoke(nameof(ResetDashCooldown), dashCoolDown);
             }
             else
             {
